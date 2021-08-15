@@ -1,6 +1,5 @@
 ﻿using NLog;
 using MSC.Server.Models;
-using MSC.Server.Models.Data;
 
 namespace MSC.Server.Utils
 {

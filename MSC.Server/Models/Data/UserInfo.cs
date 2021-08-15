@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MSC.Server.Models.Data
+namespace MSC.Server.Models
 {
     public class UserInfo : IdentityUser
     {

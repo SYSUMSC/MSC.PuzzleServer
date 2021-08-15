@@ -10,7 +10,6 @@ using MSC.Server.Extensions;
 using MSC.Server.Hubs;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
-using MSC.Server.Models.Data;
 using MSC.Server.Services;
 using MSC.Server.Utils;
 using NLog;
@@ -18,6 +17,9 @@ using System;
 using System.Text;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
+using MSC.Server.Services.Interface;
+using MSC.Server.Repositories.Interface;
+using MSC.Server.Repositories;
 
 namespace MSC.Server
 {
@@ -93,6 +95,12 @@ namespace MSC.Server
 
             #region Google reCaptcha v3
             services.AddSingleton<IRecaptchaExtension, RecaptchaExtension>();
+            #endregion
+
+            #region Services and Repositories
+            services.AddTransient<IMailSender, MailSender>();
+
+            services.AddScoped<ILogRepository, LogRepository>();
             #endregion
 
             #region SignalR
