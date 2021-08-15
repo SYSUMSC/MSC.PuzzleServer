@@ -15,9 +15,9 @@ namespace MSC.Server.Utils
         /// <param name="context">当前请求</param>
         /// <param name="privilege">权限</param>
         /// <returns></returns>
-        public static async Task<bool> HasPrivilege(HttpContext context, Privilege privilege)
+        public static Task<bool> HasPrivilege(HttpContext context, Privilege privilege)
         {
-            return true;
+            return Task.FromResult(true);
         }
     }
 }

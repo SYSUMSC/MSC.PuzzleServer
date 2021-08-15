@@ -1,5 +1,6 @@
 ﻿using NLog;
 using NLog.Targets;
+
 namespace MSC.Server.Extensions
 {
     [Target("SignalR")]

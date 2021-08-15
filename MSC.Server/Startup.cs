@@ -16,7 +16,7 @@ using MSC.Server.Utils;
 using NLog;
 using System;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Sqlite;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
 
 namespace MSC.Server
@@ -36,8 +36,9 @@ namespace MSC.Server
 
             services.AddDbContext<AppDbContext>(
                 options =>
-                    options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                provideropt =>
+                    provideropt.EnableRetryOnFailure(3, TimeSpan.FromSeconds(10), null)));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
