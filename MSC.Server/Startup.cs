@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using MSC.Server.Services.Interface;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Repositories;
+using Microsoft.OpenApi.Models;
 
 namespace MSC.Server
 {
@@ -48,14 +49,19 @@ namespace MSC.Server
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+            });
+
             #region Identity
 
             services.AddAuthentication(o =>
             {
                 o.DefaultScheme = IdentityConstants.ApplicationScheme;
                 o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            })
-                .AddIdentityCookies();
+            }).AddIdentityCookies();
 
             services.AddIdentityCore<UserInfo>(options =>
             {
@@ -116,7 +122,11 @@ namespace MSC.Server
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
+            }
             else
                 app.UseExceptionHandler("/Error");
 

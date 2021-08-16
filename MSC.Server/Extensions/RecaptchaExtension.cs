@@ -20,11 +20,9 @@ namespace MSC.Server.Extensions
         private static string GoogleSecretKey { get; set; }
         private static string GoogleRecaptchaVerifyApi { get; set; }
         private static decimal RecaptchaThreshold { get; set; }
-        public RecaptchaExtension()
+        public RecaptchaExtension(IConfiguration configuration)
         {
-            _configuration = new ConfigurationBuilder()
-                                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                                .Build();
+            _configuration = configuration;
 
             GoogleRecaptchaVerifyApi = _configuration.GetSection("GoogleRecaptcha").GetSection("VefiyAPIAddress").Value ?? "";
             GoogleSecretKey = _configuration.GetSection("GoogleRecaptcha").GetSection("Secretkey").Value ?? "";

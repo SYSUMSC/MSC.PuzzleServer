@@ -16,7 +16,7 @@ namespace MSC.Server.Services
     public class MailSender : IMailSender
     {
         private readonly IConfiguration configuration;
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetLogger("MailSender");
 
         public MailSender(IConfiguration _configuration)
             => configuration = _configuration;

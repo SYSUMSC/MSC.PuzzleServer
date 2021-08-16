@@ -33,11 +33,17 @@ namespace MSC.Server.Middlewares
             var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             UserInfo currentUser = await dbContext.Users.FirstOrDefaultAsync(i => i.Id == userId);
 
+            if (currentUser is null)
+            {
+                context.Result = new ForbidResult();
+                return;
+            }
+
             //this method will be only called here
-            currentUser?.UpdateByHttpContext(context.HttpContext);
+            currentUser.UpdateByHttpContext(context.HttpContext);
             await dbContext.SaveChangesAsync();
 
-            if (currentUser is null || currentUser.Privilege < RequiredPrivilege)
+            if (currentUser.Privilege < RequiredPrivilege)
                 context.Result = new ForbidResult();
         }
     }
