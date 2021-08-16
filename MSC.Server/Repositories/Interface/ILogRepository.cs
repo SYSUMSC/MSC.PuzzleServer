@@ -15,6 +15,6 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="count">数量</param>
         /// <param name="level">等级</param>
         /// <returns>不超过指定数量的日志</returns>
-        public Task<List<LogModel>> GetLogs(int skip, int count, string level);
+        public Task<List<LogMessageModel>> GetLogs(int skip, int count, string level);
     }
 }

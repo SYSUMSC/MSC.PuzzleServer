@@ -11,37 +11,26 @@ using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
 {
-    public class AdminController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AdminController : ControllerBase
     {
         private static readonly Logger logger = LogManager.GetLogger("AdminController");
-        private readonly AppDbContext context;
         private readonly ILogRepository logRepository;
 
-        public AdminController(
-            AppDbContext _context,
-            ILogRepository _logRepository)
+        public AdminController(ILogRepository _logRepository)
         {
-            context = _context;
             logRepository = _logRepository;
         }
 
-        [HttpPost("/api/admin/log")]
+        [HttpGet]
         [RequireAdmin]
-        public async Task<IActionResult> GetLogs(LogRequestModel model)
+        public async Task<ActionResult<List<LogMessageModel>>> Logs(LogRequestModel model)
         {
             if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "请求无效!" });
+                return BadRequest();
 
-            var res = await logRepository.GetLogs(model.Skip, model.Count, model.Level);
-            var logs = from log in res select new LogMessageModel
-                        {
-                            Time = log.TimeUTC.ToLocalTime().ToString("M/d HH:mm:ss"),
-                            IP = log.RemoteIP,
-                            Msg = log.Message,
-                            Status = log.Status,
-                            UserName = log.UserName
-                        };
-            return new JsonResult(new { status = "OK", data = logs });
+            return await logRepository.GetLogs(model.Skip, model.Count, model.Level);
         }
     }
 }

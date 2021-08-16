@@ -13,7 +13,9 @@ using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
 {
-    public class AccountController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AccountController : ControllerBase
     {
         private static readonly Logger logger = LogManager.GetLogger("AccountController");
         private readonly AppDbContext context;
@@ -41,14 +43,11 @@ namespace MSC.Server.Controllers
         /// <summary>
         /// 注册API
         /// </summary>
-        [HttpPost("/api/account/register")]
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterModel model)
         {
-            if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "请求无效!" });
-
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
-                return new JsonResult(new { status = "Fail", msg = "Recaptcha校验未通过!" });
+                return BadRequest("Recaptcha校验未通过!");
 
             await signInManager.SignOutAsync();
             var user = new UserInfo
@@ -69,10 +68,10 @@ namespace MSC.Server.Controllers
                 var current = await userManager.FindByEmailAsync(model.Email);
 
                 if (current is null)
-                    return new JsonResult(new { status = "Fail", msg = result.Errors.FirstOrDefault().Description });
+                    return BadRequest(result.Errors.FirstOrDefault().Description);
 
                 if (await userManager.IsEmailConfirmedAsync(current))
-                    return new JsonResult(new { status = "Fail", msg = "此账户已存在。" });
+                    return BadRequest("此账户已存在。");
 
                 user = current;
             }
@@ -84,21 +83,21 @@ namespace MSC.Server.Controllers
                 + "/Account/Verify?token=" + Codec.Base64.Encode(await userManager.GenerateEmailConfirmationTokenAsync(user))
                 + "&email=" + Codec.Base64.Encode(model.Email));
 
-            return new JsonResult(new { status = "OK" });
+            return Ok();
         }
 
         /// <summary>
         /// 找回密码请求API
         /// </summary>
-        [HttpPost("/api/account/recovery")]
+        [HttpPost]
         public async Task<IActionResult> Recovery(RecoveryModel model)
         {
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
-                return new JsonResult(new { status = "Fail", msg = "Recaptcha校验未通过!" });
+                return BadRequest("Recaptcha校验未通过!");
 
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user is null)
-                return new JsonResult(new { status = "Fail", msg = "无效邮箱!" });
+                return NotFound();
 
             LogHelper.Log(logger, "发送用户密码重置邮件。", user, TaskStatus.Pending);
 
@@ -108,40 +107,35 @@ namespace MSC.Server.Controllers
                 + "/Account/PasswordReset?token=" + Codec.Base64.Encode(await userManager.GeneratePasswordResetTokenAsync(user))
                 + "&email=" + Codec.Base64.Encode(model.Email));
 
-            return new JsonResult(new { status = "OK" });
+            return Ok();
         }
 
         /// <summary>
         /// 密码重置API
         /// </summary>
-        [HttpPost("/api/account/pwdreset")]
+        [HttpPost("pwdreset")]
         public async Task<IActionResult> PasswordReset(PasswordResetModel model)
         {
-            if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
-
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
-                return new JsonResult(new { status = "Fail", msg = "Recaptcha校验未通过!" });
+                return BadRequest("Recaptcha校验未通过!");
 
             var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
             var result = await userManager.ResetPasswordAsync(user, Codec.Base64.Decode(model.RToken), model.Password);
 
             if (!result.Succeeded)
-                return new JsonResult(new { status = "Fail", msg = result.Errors.FirstOrDefault().Description });
+                return BadRequest(result.Errors.FirstOrDefault().Description);
 
             LogHelper.Log(logger, "用户成功重置密码。", user, TaskStatus.Success);
-            return new JsonResult(new { status = "OK" });
+
+            return Ok();
         }
 
         /// <summary>
         /// 邮箱确认API
         /// </summary>
-        [HttpPost("/api/account/verify")]
-        public async Task<IActionResult> AccountVerify(AccountVerifyModel model)
+        [HttpPost]
+        public async Task<IActionResult> Verify(AccountVerifyModel model)
         {
-            if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
-
             var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
             var result = await userManager.ConfirmEmailAsync(user, Codec.Base64.Decode(model.Token));
 
@@ -149,23 +143,20 @@ namespace MSC.Server.Controllers
             {
                 LogHelper.Log(logger, "通过邮箱验证。", user, TaskStatus.Success);
                 await signInManager.SignInAsync(user, true);
-                return new JsonResult(new { status = "OK" });
+                return SignIn(User);
             }
 
-            return new JsonResult(new { status = "Fail", msg = "验证失败。"});
+            return Unauthorized();
         }
 
         /// <summary>
         /// 登录API
         /// </summary>
-        [HttpPost("/api/account/login")]
-        public async Task<IActionResult> Login(LoginModel model)
+        [HttpPost("signin")]
+        public async Task<IActionResult> Signin(LoginModel model)
         {
-            if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail" });
-
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
-                return new JsonResult(new { status = "Fail" });
+                return BadRequest();
 
             await signInManager.SignOutAsync();
 
@@ -174,7 +165,7 @@ namespace MSC.Server.Controllers
                 user = await userManager.FindByNameAsync(model.UserName);
 
             if (user is null)
-                return new JsonResult(new { status = "Fail" });
+                return NotFound();
 
             user.LastSignedInUTC = DateTime.UtcNow;
             await context.SaveChangesAsync();
@@ -182,32 +173,31 @@ namespace MSC.Server.Controllers
             var result = await signInManager.PasswordSignInAsync(user, model.Password, true, false);
 
             if (!result.Succeeded)
-                return new JsonResult(new { status = "Fail" });
+                return Unauthorized();
 
             LogHelper.Log(logger, "用户成功登录。", user, TaskStatus.Success);
-            return new JsonResult(new { status = "OK" });
+
+            return SignIn(User);
         }
 
         /// <summary>
         /// 登出API
         /// </summary>
-        [HttpPost("/api/account/logout")]
+        [HttpDelete("signout")]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return new JsonResult(new { status = "OK" });
+
+            return SignOut();
         }
 
         /// <summary>
         /// 用户数据更新API
         /// </summary>
-        [HttpPost("/api/account/update")]
+        [HttpPut("update")]
         [RequireSignedIn]
         public async Task<IActionResult> UpdateProfile(ProfileUpdateModel model)
         {
-            if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
-
             var user = await userManager.GetUserAsync(User);
             var oname = user.UserName;
             user.UserName = model.UserName;
@@ -216,45 +206,41 @@ namespace MSC.Server.Controllers
             var result = await userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
-                return new JsonResult(new { status = "Fail", msg = result.Errors.FirstOrDefault().Description });
-            if (oname != model.UserName)
-                LogHelper.Log(logger, "用户更新：" + oname + "->" + model.UserName, user, TaskStatus.Success);
+                return BadRequest(result.Errors.FirstOrDefault().Description);
 
-            return new JsonResult(new { status = "OK" });
+            if (oname != model.UserName)
+                LogHelper.Log(logger, "用户更新：" + oname + "=>" + model.UserName, user, TaskStatus.Success);
+
+            return Ok();
         }
 
         /// <summary>
         /// 密码更改API
         /// </summary>
-        [HttpPost("/api/account/changepwd")]
+        [HttpPut("changepwd")]
         [RequireSignedIn]
         public async Task<IActionResult> ChangePassword(PasswordChangeModel model)
         {
-            if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
-
             var user = await userManager.GetUserAsync(User);
             var result = await userManager.ChangePasswordAsync(user, model.Old, model.New);
 
             if (!result.Succeeded)
-                return new JsonResult(new { status = "Fail", msg = result.Errors.FirstOrDefault().Description });
+                return BadRequest(result.Errors.FirstOrDefault().Description);
 
             LogHelper.Log(logger, "用户更新密码。", user, TaskStatus.Success);
-            return new JsonResult(new { status = "OK" });
+
+            return Ok();
         }
 
         /// <summary>
         /// 邮箱更改API
         /// </summary>
-        [HttpPost("/api/account/changemail")]
+        [HttpPut("changemail")]
         [RequireSignedIn]
         public async Task<IActionResult> ChangeEmail(MailChangeModel model)
         {
-            if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "无效邮箱。" });
-
             if (await userManager.FindByEmailAsync(model.NewMail) is not null)
-                return new JsonResult(new { status = "Fail", msg = "邮箱已经被占用。" });
+                return BadRequest("邮箱已经被占用。");
 
             var user = await userManager.GetUserAsync(User);
             LogHelper.Log(logger, "发送用户邮箱更改邮件。", user, TaskStatus.Pending);
@@ -265,29 +251,25 @@ namespace MSC.Server.Controllers
                 + "/Account/ChangeMail?token=" + Codec.Base64.Encode(await userManager.GenerateChangeEmailTokenAsync(user, model.NewMail))
                 + "&email=" + Codec.Base64.Encode(model.NewMail));
 
-            return new JsonResult(new { status = "OK" });
+            return Ok();
         }
 
         /// <summary>
         /// 邮箱确认API
         /// </summary>
-        [HttpPost("/api/account/mailconfirm")]
+        [HttpPost("mailconfirm")]
         [RequireSignedIn]
         public async Task<IActionResult> MailChangeConfirm(AccountVerifyModel model)
         {
-            if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
-
             var user = await userManager.GetUserAsync(User);
             var result = await userManager.ChangeEmailAsync(user, Codec.Base64.Decode(model.Email), Codec.Base64.Decode(model.Token));
 
-            if (result.Succeeded)
-            {
-                LogHelper.Log(logger, "更改邮箱成功。", user, TaskStatus.Success);
-                return new JsonResult(new { status = "OK" });
-            }
+            if (!result.Succeeded)
+                return BadRequest("无效邮箱。");
 
-            return new JsonResult(new { status = "Fail", msg = "无效邮箱。" });
+            LogHelper.Log(logger, "更改邮箱成功。", user, TaskStatus.Success);
+
+            return Ok();
         }
 
         #endregion APIs

@@ -37,17 +37,8 @@ namespace MSC.Server.Middlewares
             currentUser?.UpdateByHttpContext(context.HttpContext);
             await dbContext.SaveChangesAsync();
 
-            if (currentUser is null)
-            {
-                context.Result = new RedirectResult("/Account/Login?from=" +
-                    HttpUtility.UrlEncode(
-                        context.HttpContext.Request.Path.Value +
-                        context.HttpContext.Request.QueryString));
-                return;
-            }
-
-            if (currentUser.Privilege < RequiredPrivilege)
-                context.Result = new RedirectResult("/AccessDenied");
+            if (currentUser is null || currentUser.Privilege < RequiredPrivilege)
+                context.Result = new ForbidResult();
         }
     }
 

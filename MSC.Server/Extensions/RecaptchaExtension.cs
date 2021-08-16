@@ -35,6 +35,8 @@ namespace MSC.Server.Extensions
         }
         public async Task<bool> VerifyAsync(string token, string ip)
         {
+            if (RecaptchaThreshold == 0)
+                return true;
             if (string.IsNullOrEmpty(token))
                 return false;
             using (var client = new HttpClient())
