@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using MSC.Server.Hubs.Interface;
 using MSC.Server.Services;
+using MSC.Server.Utils;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Hubs
@@ -17,8 +18,8 @@ namespace MSC.Server.Hubs
 
         public override async Task OnConnectedAsync()
         {
-        //    if (!await HubHelper.HasPrivilege(Context.GetHttpContext(), Privilege.Admin))
-        //       Context.Abort();
+            if (!await HubHelper.HasPrivilege(Context.GetHttpContext(), Privilege.Admin))
+               Context.Abort();
 
             await base.OnConnectedAsync();
         }

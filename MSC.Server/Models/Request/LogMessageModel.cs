@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace MSC.Server.Hubs.Models
+namespace MSC.Server.Models
 {
-    public class LogMessageToSend
+    public class LogMessageModel
     {
         [JsonProperty("time")]
         public string Time { get; set; }

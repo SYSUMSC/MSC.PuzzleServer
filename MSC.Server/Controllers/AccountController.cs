@@ -45,7 +45,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "无效的提交!" });
+                return new JsonResult(new { status = "Fail", msg = "请求无效!" });
 
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
                 return new JsonResult(new { status = "Fail", msg = "Recaptcha校验未通过!" });
@@ -118,7 +118,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> PasswordReset(PasswordResetModel model)
         {
             if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "无效请求。" });
+                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
 
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
                 return new JsonResult(new { status = "Fail", msg = "Recaptcha校验未通过!" });
@@ -140,7 +140,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> AccountVerify(AccountVerifyModel model)
         {
             if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "无效请求。" });
+                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
 
             var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
             var result = await userManager.ConfirmEmailAsync(user, Codec.Base64.Decode(model.Token));
@@ -206,7 +206,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> UpdateProfile(ProfileUpdateModel model)
         {
             if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "无效请求。" });
+                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
 
             var user = await userManager.GetUserAsync(User);
             var oname = user.UserName;
@@ -231,7 +231,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> ChangePassword(PasswordChangeModel model)
         {
             if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "无效请求。" });
+                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
 
             var user = await userManager.GetUserAsync(User);
             var result = await userManager.ChangePasswordAsync(user, model.Old, model.New);
@@ -276,7 +276,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> MailChangeConfirm(AccountVerifyModel model)
         {
             if (!TryValidateModel(model))
-                return new JsonResult(new { status = "Fail", msg = "无效请求。" });
+                return new JsonResult(new { status = "Fail", msg = "请求无效！" });
 
             var user = await userManager.GetUserAsync(User);
             var result = await userManager.ChangeEmailAsync(user, Codec.Base64.Decode(model.Email), Codec.Base64.Decode(model.Token));

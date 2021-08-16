@@ -1,4 +1,4 @@
-# User API
+# Account API
 
 以下API均使用POST请求。
 

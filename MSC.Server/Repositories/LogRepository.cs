@@ -17,8 +17,7 @@ namespace MSC.Server.Repositories
             IQueryable<LogModel> data = context.Logs;
             if (level != "All")
                 data = data.Where(x => x.Level == level);
-            data = data.OrderByDescending(x => x.TimeUTC).Skip(skip).Take(count);
-            return data.ToListAsync();
+            return data.OrderByDescending(x => x.TimeUTC).Skip(skip).Take(count).ToListAsync();
         }
     }
 }

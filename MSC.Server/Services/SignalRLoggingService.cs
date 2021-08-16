@@ -2,7 +2,7 @@
 using MSC.Server.Extensions;
 using MSC.Server.Hubs;
 using MSC.Server.Hubs.Interface;
-using MSC.Server.Hubs.Models;
+using MSC.Server.Models;
 using NLog;
 using System;
 
@@ -32,7 +32,7 @@ namespace MSC.Server.Services
             try
             {
                 await Hub.Clients.All.RecivedLog(
-                    new LogMessageToSend
+                    new LogMessageModel
                     {
                         Time = logInfo.TimeStamp.ToLocalTime().ToString("M/d HH:mm:ss"),
                         UserName = (string)logInfo.Properties["uname"],

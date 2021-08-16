@@ -1,4 +1,4 @@
-﻿using MSC.Server.Hubs.Models;
+﻿using MSC.Server.Models;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Hubs.Interface
@@ -8,6 +8,6 @@ namespace MSC.Server.Hubs.Interface
         /// <summary>
         /// 接收到广播日志信息
         /// </summary>
-        public Task RecivedLog(LogMessageToSend log);
+        public Task RecivedLog(LogMessageModel log);
     }
 }

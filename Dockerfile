@@ -21,6 +21,14 @@ RUN apt-get update && \
 FROM build AS publish
 RUN dotnet publish "MSC.Server.csproj" -c Release -o /app/publish
 
+WORKDIR "/src/MSC.Server/ClientApp"
+RUN npx browserslist@latest --update-db
+
+RUN apt remove -y --auto-remove wget gnupg2 &&\
+    apt clean &&\
+    rm  -rf /var/lib/apt/lists/* &&\
+    npm update caniuse-lite
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
