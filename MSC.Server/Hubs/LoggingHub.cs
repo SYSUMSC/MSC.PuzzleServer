@@ -18,7 +18,7 @@ namespace MSC.Server.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            if (!await HubHelper.HasPrivilege(Context.GetHttpContext(), Privilege.Admin))
+            if (!await HubHelper.HasAdmin(Context.GetHttpContext()))
                Context.Abort();
 
             await base.OnConnectedAsync();
