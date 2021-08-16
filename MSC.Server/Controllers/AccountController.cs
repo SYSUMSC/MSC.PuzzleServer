@@ -15,7 +15,7 @@ namespace MSC.Server.Controllers
 {
     public class AccountController : Controller
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetLogger("AccountController");
         private readonly AppDbContext context;
         private readonly IMailSender mailSender;
         private readonly IRecaptchaExtension recaptcha;

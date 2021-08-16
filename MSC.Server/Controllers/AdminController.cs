@@ -13,7 +13,7 @@ namespace MSC.Server.Controllers
 {
     public class AdminController : Controller
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetLogger("AdminController");
         private readonly AppDbContext context;
         private readonly ILogRepository logRepository;
 
