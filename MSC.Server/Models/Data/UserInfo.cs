@@ -39,6 +39,11 @@ namespace MSC.Server.Models
         /// </summary>
         public string Description { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 访问权限
+        /// </summary>
+        public int AccessLevel { get; set; } = 0;
+
         #region 数据库关系
         public int RankId { get; set; }
 

@@ -67,6 +67,10 @@ namespace MSC.Server.Controllers
                 LastSignedInUTC = DateTime.UtcNow,
                 LastVisitedUTC = DateTime.UtcNow,
                 RegisterTimeUTC = DateTime.UtcNow,
+                Rank = new()
+                {
+                    UpdateTimeUTC = DateTime.UtcNow,
+                }
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
