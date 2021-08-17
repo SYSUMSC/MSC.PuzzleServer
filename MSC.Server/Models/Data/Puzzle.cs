@@ -7,55 +7,10 @@ using System.Threading.Tasks;
 
 namespace MSC.Server.Models
 {
-    public class Puzzle
+    public class Puzzle : PuzzleBase
     {
         [Key]
         public int Id { get; set; }
-
-        /// <summary>
-        /// 谜题名称
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// 谜题内容
-        /// </summary>
-        public string Content { get; set; }
-
-        /// <summary>
-        /// 谜题答案
-        /// </summary>
-        public string Answer { get; set; }
-
-        /// <summary>
-        /// 访问等级
-        /// </summary>
-        public int AccessLevel { get; set; } = 0;
-
-        /// <summary>
-        /// 解决谜题人数
-        /// </summary>
-        public int SolvedCount { get; set; } = 0;
-
-        /// <summary>
-        /// 初始分数
-        /// </summary>
-        public int OriginalScore { get; set; } = 10000;
-
-        /// <summary>
-        /// 最低分数
-        /// </summary>
-        public int MinScore { get; set; } = 3000;
-
-        /// <summary>
-        /// 预期最大解出人数
-        /// </summary>
-        public int ExpectMaxCount { get; set; } = 100;
-
-        /// <summary>
-        /// 奖励人数
-        /// </summary>
-        public int AwardCount { get; set; } = 10;
 
         /// <summary>
         /// 当前题目分值

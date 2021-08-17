@@ -107,6 +107,7 @@ namespace MSC.Server
             services.AddTransient<IMailSender, MailSender>();
 
             services.AddScoped<ILogRepository, LogRepository>();
+            services.AddScoped<IPuzzleRepository, PuzzleRepository>();
             #endregion
 
             #region SignalR
