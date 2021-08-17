@@ -12,7 +12,7 @@ namespace MSC.Server.Models.Request
         [MinLength(6)]
         public string Password { get; set; }
         [Required]
-        [EmailAddress(ErrorMessage = "无效的电子邮件地址。")]
+        [EmailAddress]
         public string Email { get; set; }
         public string GToken { get; set; }
     }

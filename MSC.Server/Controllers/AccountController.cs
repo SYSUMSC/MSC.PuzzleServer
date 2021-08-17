@@ -11,13 +11,15 @@ using NLog;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
 {
     [ApiController]
-    [Produces("application/json")]
+    [Produces(MediaTypeNames.Application.Json)]
     [Route("api/[controller]/[action]")]
+    [SwaggerTag("用户账户相关接口")]
     public class AccountController : ControllerBase
     {
         private static readonly Logger logger = LogManager.GetLogger("AccountController");
@@ -41,15 +43,17 @@ namespace MSC.Server.Controllers
             signInManager = _signInManager;
         }
 
-        #region APIs
-
         /// <summary>
         /// 注册API
         /// </summary>
         [HttpPost]
         [SwaggerResponse(400, "校验失败或用户已存在")]
         [SwaggerResponse(200, "注册成功")]
-        public async Task<IActionResult> Register(RegisterModel model)
+        [SwaggerOperation(
+            Summary = "用户注册接口",
+            Description = "使用此接口注册新用户"
+        )]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
                 return BadRequest("Recaptcha校验未通过!");
@@ -97,7 +101,11 @@ namespace MSC.Server.Controllers
         [SwaggerResponse(404, "用户不存在")]
         [SwaggerResponse(400, "校验失败")]
         [SwaggerResponse(200, "用户密码重置邮件发送成功")]
-        public async Task<IActionResult> Recovery(RecoveryModel model)
+        [SwaggerOperation(
+            Summary = "用户找回密码请求接口",
+            Description = "使用此接口请求找回密码，向用户邮箱发送邮件"
+        )]
+        public async Task<IActionResult> Recovery([FromBody] RecoveryModel model)
         {
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
                 return BadRequest("Recaptcha校验未通过!");
@@ -123,7 +131,11 @@ namespace MSC.Server.Controllers
         [HttpPost]
         [SwaggerResponse(400, "校验失败")]
         [SwaggerResponse(200, "用户成功重置密码")]
-        public async Task<IActionResult> PasswordReset(PasswordResetModel model)
+        [SwaggerOperation(
+            Summary = "用户重置密码接口",
+            Description = "使用此接口重置密码，需要邮箱验证码"
+        )]
+        public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel model)
         {
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
                 return BadRequest("Recaptcha校验未通过!");
@@ -146,7 +158,11 @@ namespace MSC.Server.Controllers
         [SwaggerResponse(400, "校验失败")]
         [SwaggerResponse(401, "邮箱验证失败")]
         [SwaggerResponse(200, "用户通过邮箱验证")]
-        public async Task<IActionResult> Verify(AccountVerifyModel model)
+        [SwaggerOperation(
+            Summary = "用户邮箱确认接口",
+            Description = "使用此接口通过邮箱验证码确认邮箱"
+        )]
+        public async Task<IActionResult> Verify([FromBody] AccountVerifyModel model)
         {
             var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
             var result = await userManager.ConfirmEmailAsync(user, Codec.Base64.Decode(model.Token));
@@ -169,7 +185,11 @@ namespace MSC.Server.Controllers
         [SwaggerResponse(401, "密码错误")]
         [SwaggerResponse(404, "用户不存在")]
         [SwaggerResponse(200, "用户成功登陆")]
-        public async Task<IActionResult> LogIn(LoginModel model)
+        [SwaggerOperation(
+            Summary = "用户登录接口",
+            Description = "使用此接口登录账户"
+        )]
+        public async Task<IActionResult> LogIn([FromBody] LoginModel model)
         {
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
                 return BadRequest();
@@ -201,6 +221,10 @@ namespace MSC.Server.Controllers
         /// </summary>
         [HttpPost]
         [SwaggerResponse(200, "用户已登出")]
+        [SwaggerOperation(
+            Summary = "用户登出接口",
+            Description = "使用此接口登出账户"
+        )]
         public async Task<IActionResult> LogOut()
         {
             await signInManager.SignOutAsync();
@@ -215,7 +239,11 @@ namespace MSC.Server.Controllers
         [RequireSignedIn]
         [SwaggerResponse(400, "校验失败或用户数据更新失败")]
         [SwaggerResponse(200, "用户数据成功更新")]
-        public async Task<IActionResult> Update(ProfileUpdateModel model)
+        [SwaggerOperation(
+            Summary = "用户数据更新接口",
+            Description = "使用此接口更新用户用户名和描述"
+        )]
+        public async Task<IActionResult> Update([FromBody] ProfileUpdateModel model)
         {
             var user = await userManager.GetUserAsync(User);
             var oname = user.UserName;
@@ -240,7 +268,11 @@ namespace MSC.Server.Controllers
         [RequireSignedIn]
         [SwaggerResponse(400, "校验失败或用户密码更新失败")]
         [SwaggerResponse(200, "用户成功更新密码")]
-        public async Task<IActionResult> ChangePassword(PasswordChangeModel model)
+        [SwaggerOperation(
+            Summary = "用户密码更改接口",
+            Description = "使用此接口更新用户密码"
+        )]
+        public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeModel model)
         {
             var user = await userManager.GetUserAsync(User);
             var result = await userManager.ChangePasswordAsync(user, model.Old, model.New);
@@ -260,7 +292,11 @@ namespace MSC.Server.Controllers
         [RequireSignedIn]
         [SwaggerResponse(400, "校验失败或邮箱已经被占用")]
         [SwaggerResponse(200, "成功发送用户邮箱更改邮件")]
-        public async Task<IActionResult> ChangeEmail(MailChangeModel model)
+        [SwaggerOperation(
+            Summary = "用户邮箱更改接口",
+            Description = "使用此接口更改用户邮箱"
+        )]
+        public async Task<IActionResult> ChangeEmail([FromBody] MailChangeModel model)
         {
             if (await userManager.FindByEmailAsync(model.NewMail) is not null)
                 return BadRequest("邮箱已经被占用。");
@@ -284,7 +320,11 @@ namespace MSC.Server.Controllers
         [RequireSignedIn]
         [SwaggerResponse(400, "校验失败或无效邮箱")]
         [SwaggerResponse(200, "用户成功更改邮箱")]
-        public async Task<IActionResult> MailChangeConfirm(AccountVerifyModel model)
+        [SwaggerOperation(
+            Summary = "用户邮箱更改确认接口",
+            Description = "使用此接口确认更改用户邮箱，需要邮箱验证码"
+        )]
+        public async Task<IActionResult> MailChangeConfirm([FromBody] AccountVerifyModel model)
         {
             var user = await userManager.GetUserAsync(User);
             var result = await userManager.ChangeEmailAsync(user, Codec.Base64.Decode(model.Email), Codec.Base64.Decode(model.Token));
@@ -296,7 +336,5 @@ namespace MSC.Server.Controllers
 
             return Ok();
         }
-
-        #endregion APIs
     }
 }
