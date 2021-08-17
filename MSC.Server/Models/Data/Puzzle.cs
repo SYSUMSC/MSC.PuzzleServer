@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Models
 {
@@ -35,5 +33,14 @@ namespace MSC.Server.Models
 
         public List<Submission> Submissions { get; set; } = new();
         #endregion
+
+        public void Update(PuzzleBase puzzle)
+        {
+            foreach (var item in typeof(PuzzleBase).GetProperties())
+                item.SetValue(this, item.GetValue(puzzle));
+        }
+
+        public Puzzle() : base() { }
+        public Puzzle(PuzzleBase puzzle) : base() => Update(puzzle);
     }
 }

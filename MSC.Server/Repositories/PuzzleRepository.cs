@@ -15,10 +15,7 @@ namespace MSC.Server.Repositories
 
         public async Task<Puzzle> AddPuzzle(PuzzleBase newPuzzle)
         {
-            Puzzle puzzle = newPuzzle as Puzzle;
-
-            if (puzzle is null)
-                return null;
+            Puzzle puzzle = new(newPuzzle);
 
             await context.AddAsync(puzzle);
             await context.SaveChangesAsync();
@@ -39,6 +36,16 @@ namespace MSC.Server.Repositories
                 Content = puzzle.Content,
                 SolvedCount = puzzle.SolvedCount
             };
+        }
+
+        public async Task<Puzzle> UpdatePuzzle(int id, PuzzleBase newPuzzle)
+        {
+            Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id);
+
+            puzzle.Update(newPuzzle);
+            await context.SaveChangesAsync();
+
+            return puzzle;
         }
     }
 }

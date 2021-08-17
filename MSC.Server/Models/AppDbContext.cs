@@ -28,22 +28,26 @@ namespace MSC.Server.Models
 
                 entity.HasMany(e => e.Processes)
                     .WithOne(e => e.User)
-                    .HasForeignKey(e => e.UserId);
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasMany(e => e.Submissions)
                     .WithOne(e => e.User)
-                    .HasForeignKey(e => e.UserId);
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             builder.Entity<Puzzle>(entity =>
             {
                 entity.HasMany(e => e.Processes)
                     .WithOne(e => e.Puzzle)
-                    .HasForeignKey(e => e.PuzzleId);
+                    .HasForeignKey(e => e.PuzzleId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasMany(e => e.Submissions)
                     .WithOne(e => e.Puzzle)
-                    .HasForeignKey(e => e.PuzzleId);
+                    .HasForeignKey(e => e.PuzzleId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
         }
