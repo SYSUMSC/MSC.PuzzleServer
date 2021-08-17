@@ -39,6 +39,16 @@ namespace MSC.Server.Models
         /// </summary>
         public string Description { get; set; } = string.Empty;
 
+        #region 数据库关系
+        public int RankId { get; set; }
+
+        public Rank Rank { get; set; }
+
+        public List<Process> Processes { get; set; } = new();
+
+        public List<Submission> Submissions { get; set; } = new();
+        #endregion
+
         /// <summary>
         /// 通过Http请求更新用户最新访问时间和IP
         /// </summary>
