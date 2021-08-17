@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,6 +46,34 @@ namespace MSC.Server.Models
         /// 最低分数
         /// </summary>
         public int MinScore { get; set; } = 3000;
+
+        /// <summary>
+        /// 预期最大解出人数
+        /// </summary>
+        public int ExpectMaxCount { get; set; } = 100;
+
+        /// <summary>
+        /// 奖励人数
+        /// </summary>
+        public int AwardCount { get; set; } = 10;
+
+        /// <summary>
+        /// 当前题目分值
+        /// </summary>
+        [NotMapped]
+        public int CurrentScore
+        {
+            get
+            {
+                if (SolvedCount <= AwardCount)
+                    return OriginalScore - SolvedCount;
+                if (SolvedCount > ExpectMaxCount)
+                    return MinScore;
+                var range = OriginalScore - AwardCount - MinScore;
+                return (int)(OriginalScore - AwardCount 
+                    - Math.Floor( range * (SolvedCount - AwardCount)/(float)(ExpectMaxCount - AwardCount)));
+            }
+        }
 
         #region 数据库关系
         public List<Process> Processes { get; set; } = new();
