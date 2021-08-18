@@ -23,6 +23,19 @@ namespace MSC.Server.Repositories
             return puzzle;
         }
 
+        public async Task<bool> DeletePuzzle(int id)
+        {
+            Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (puzzle is null)
+                return false;
+
+            context.Remove(puzzle);
+            await context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<UserPuzzleModel> GetUserPuzzle(int id, int accessLevel)
         {
             Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id);

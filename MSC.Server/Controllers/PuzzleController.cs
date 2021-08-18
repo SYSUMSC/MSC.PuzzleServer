@@ -47,6 +47,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> Add([FromBody] PuzzleBase model)
         {
             var puzzle = await puzzleRepository.AddPuzzle(model);
+
             if (puzzle is null)
                 return BadRequest(new BadRequestResponse("无效的题目。"));
 
@@ -88,9 +89,31 @@ namespace MSC.Server.Controllers
             var puzzle = await puzzleRepository.GetUserPuzzle(id, user.AccessLevel);
 
             if (puzzle is null)
-                return Unauthorized(new BadRequestResponse("无权访问。"));
+                return Unauthorized(new BadRequestResponse("无权访问或题目无效。"));
 
             return Ok(puzzle);
+        }
+
+
+        /// <summary>
+        /// 删除题目API
+        /// </summary>
+        [HttpDelete("{id}")]
+        [RequireAdmin]
+        [SwaggerResponse(400, "题目删除失败")]
+        [SwaggerResponse(200, "成功删除题目")]
+        [SwaggerOperation(
+            Summary = "删除题目接口",
+            Description = "使用此接删除题目"
+        )]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var res = await puzzleRepository.DeletePuzzle(id);
+
+            if(res)
+                return Ok();
+
+            return BadRequest(new BadRequestResponse("题目删除失败"));
         }
     }
 }

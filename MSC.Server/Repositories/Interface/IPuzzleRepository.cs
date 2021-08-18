@@ -29,5 +29,11 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="puzzle">更新的题目数据</param>
         /// <returns></returns>
         public Task<Puzzle> UpdatePuzzle(int id, PuzzleBase newPuzzle);
+        /// <summary>
+        /// 删除题目
+        /// </summary>
+        /// <param name="id">题目Id</param>
+        /// <returns></returns>
+        public Task<bool> DeletePuzzle(int id);
     }
 }
