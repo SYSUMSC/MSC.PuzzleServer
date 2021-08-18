@@ -1,5 +1,6 @@
 ﻿using MSC.Server.Models;
 using MSC.Server.Models.Request;
+using MSC.Server.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,5 +36,13 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="id">题目Id</param>
         /// <returns></returns>
         public Task<bool> DeletePuzzle(int id);
+        /// <summary>
+        /// 验证答案
+        /// </summary>
+        /// <param name="id">题目Id</param>
+        /// <param name="answer">答案</param>
+        /// <param name="accessLevel">用户访问权限</param>
+        /// <returns></returns>
+        public Task<VerifyResult> VerifyAnswer(int id, string answer, int accessLevel);
     }
 }

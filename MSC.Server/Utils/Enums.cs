@@ -56,4 +56,23 @@
         /// </summary>
         Denied = 3,
     }
+
+    /// <summary>
+    /// 判定结果
+    /// </summary>
+    public enum AnswerResult
+    {
+        /// <summary>
+        /// 答案正确
+        /// </summary>
+        Accepted = 1,
+        /// <summary>
+        /// 答案错误
+        /// </summary>
+        WrongAnswer = 2,
+        /// <summary>
+        /// 提交未授权
+        /// </summary>
+        Unauthorized = 3,
+    }
 }

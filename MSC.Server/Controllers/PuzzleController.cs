@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
-using MSC.Server.Utils.Response;
+using MSC.Server.Utils;
 using NLog;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
@@ -20,17 +22,20 @@ namespace MSC.Server.Controllers
     {
         private static readonly Logger logger = LogManager.GetLogger("PuzzleController");
         private readonly UserManager<UserInfo> userManager;
-        private readonly SignInManager<UserInfo> signInManager;
+        private readonly IRankRepository rankRepository;
+        private readonly ISubmissionRepository submissionRepository;
         private readonly IPuzzleRepository puzzleRepository;
 
         public PuzzleController(
             IPuzzleRepository _puzzleRepository,
+            ISubmissionRepository _submissionRepository,
             UserManager<UserInfo> _userManager,
-            SignInManager<UserInfo> _signInManager)
+            IRankRepository _rankRepository)
         {
             userManager = _userManager;
-            signInManager = _signInManager;
+            rankRepository = _rankRepository;
             puzzleRepository = _puzzleRepository;
+            submissionRepository = _submissionRepository;
         }
 
         /// <summary>
@@ -49,7 +54,7 @@ namespace MSC.Server.Controllers
             var puzzle = await puzzleRepository.AddPuzzle(model);
 
             if (puzzle is null)
-                return BadRequest(new BadRequestResponse("无效的题目。"));
+                return BadRequest(new RequestResponse("无效的题目"));
 
             return Ok(new PuzzleResponse(puzzle.Id));
         }
@@ -89,7 +94,7 @@ namespace MSC.Server.Controllers
             var puzzle = await puzzleRepository.GetUserPuzzle(id, user.AccessLevel);
 
             if (puzzle is null)
-                return Unauthorized(new BadRequestResponse("无权访问或题目无效。"));
+                return Unauthorized(new RequestResponse("无权访问或题目无效"));
 
             return Ok(puzzle);
         }
@@ -113,7 +118,48 @@ namespace MSC.Server.Controllers
             if(res)
                 return Ok();
 
-            return BadRequest(new BadRequestResponse("题目删除失败"));
+            return BadRequest(new RequestResponse("题目删除失败"));
+        }
+
+        /// <summary>
+        /// 提交题目API
+        /// </summary>
+        [HttpPost("{id}")]
+        [RequireSignedIn]
+        [SwaggerResponse(400, "错误的答案")]
+        [SwaggerResponse(401, "无权访问或题目无效")]
+        [SwaggerResponse(200, "提交题目")]
+        [SwaggerOperation(
+            Summary = "提交题目答案接口",
+            Description = "使用此接口提交题目答案，此接口限制为3次每60秒"
+        )]
+        public async Task<IActionResult> Submit(int id, [FromBody]string answer)
+        {
+            var user = await userManager.Users.Include(u => u.Rank)
+                .SingleAsync(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var result = await puzzleRepository.VerifyAnswer(id, answer, user.AccessLevel);
+
+            await submissionRepository.AddSubmission(id, user.Id, answer, result);
+
+            if (result.Result == AnswerResult.Unauthorized)
+                return Unauthorized(new RequestResponse("无权访问或题目无效", 401));
+
+            if (result.Result == AnswerResult.WrongAnswer)
+                return BadRequest(new RequestResponse("错误的答案"));
+
+            if (user.Rank is null)
+                user.Rank = new Rank() { UserId = user.Id };
+
+            await rankRepository.UpdateRank(user.Rank, result.Score);
+
+            /* TODO */
+
+            /* Update Process */
+            
+            
+
+            return Ok();
         }
     }
 }

@@ -38,6 +38,8 @@ namespace MSC.Server.Models
         {
             foreach (var item in typeof(PuzzleBase).GetProperties())
                 item.SetValue(this, item.GetValue(puzzle));
+
+            Answer = Answer.Trim();
         }
 
         public Puzzle() : base() { }

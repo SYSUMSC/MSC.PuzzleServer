@@ -24,6 +24,11 @@ namespace MSC.Server.Models
         public bool Solved { get; set; } = false;
 
         /// <summary>
+        /// 提交的得分
+        /// </summary>
+        public int Score { get; set; } = 0;
+
+        /// <summary>
         /// 答案提交的时间
         /// </summary>
         public DateTime SubmitTimeUTC { get; set; } = DateTime.Parse("1970-01-01T00:00:00");

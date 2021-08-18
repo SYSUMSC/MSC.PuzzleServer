@@ -6,6 +6,7 @@ using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using MSC.Server.Utils;
 
 namespace MSC.Server.Repositories
 {
@@ -59,6 +60,24 @@ namespace MSC.Server.Repositories
             await context.SaveChangesAsync();
 
             return puzzle;
+        }
+
+        public async Task<VerifyResult> VerifyAnswer(int id, string answer, int accessLevel)
+        {
+            if (string.IsNullOrWhiteSpace(answer))
+                return new VerifyResult();
+
+            Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (puzzle is null || puzzle.AccessLevel > accessLevel)
+                return new VerifyResult(AnswerResult.Unauthorized);
+
+            bool check = string.Equals(puzzle.Answer, answer.Trim());
+
+            if (check)
+                return new VerifyResult(AnswerResult.Accepted, puzzle.CurrentScore);
+
+            return new VerifyResult(AnswerResult.WrongAnswer);
         }
     }
 }

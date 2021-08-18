@@ -7,7 +7,6 @@ using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Services.Interface;
 using MSC.Server.Utils;
-using MSC.Server.Utils.Response;
 using NLog;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -57,7 +56,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
-                return BadRequest(new BadRequestResponse("Recaptcha校验未通过!"));
+                return BadRequest(new RequestResponse("Recaptcha校验未通过!"));
 
             await signInManager.SignOutAsync();
             var user = new UserInfo
@@ -81,10 +80,10 @@ namespace MSC.Server.Controllers
                 var current = await userManager.FindByEmailAsync(model.Email);
 
                 if (current is null)
-                    return BadRequest(new BadRequestResponse(result.Errors.FirstOrDefault().Description));
+                    return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
 
                 if (await userManager.IsEmailConfirmedAsync(current))
-                    return BadRequest(new BadRequestResponse("此账户已存在。"));
+                    return BadRequest(new RequestResponse("此账户已存在。"));
 
                 user = current;
             }
@@ -113,7 +112,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> Recovery([FromBody] RecoveryModel model)
         {
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
-                return BadRequest(new BadRequestResponse("Recaptcha校验未通过!"));
+                return BadRequest(new RequestResponse("Recaptcha校验未通过!"));
 
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user is null)
@@ -143,13 +142,13 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel model)
         {
             if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
-                return BadRequest(new BadRequestResponse("Recaptcha校验未通过!"));
+                return BadRequest(new RequestResponse("Recaptcha校验未通过!"));
 
             var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
             var result = await userManager.ResetPasswordAsync(user, Codec.Base64.Decode(model.RToken), model.Password);
 
             if (!result.Succeeded)
-                return BadRequest(new BadRequestResponse(result.Errors.FirstOrDefault().Description));
+                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
 
             LogHelper.Log(logger, "用户成功重置密码。", user, TaskStatus.Success);
 
@@ -258,7 +257,7 @@ namespace MSC.Server.Controllers
             var result = await userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
-                return BadRequest(new BadRequestResponse(result.Errors.FirstOrDefault().Description));
+                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
 
             if (oname != model.UserName)
                 LogHelper.Log(logger, "用户更新：" + oname + "=>" + model.UserName, user, TaskStatus.Success);
@@ -283,7 +282,7 @@ namespace MSC.Server.Controllers
             var result = await userManager.ChangePasswordAsync(user, model.Old, model.New);
 
             if (!result.Succeeded)
-                return BadRequest(new BadRequestResponse(result.Errors.FirstOrDefault().Description));
+                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
 
             LogHelper.Log(logger, "用户更新密码。", user, TaskStatus.Success);
 
@@ -304,7 +303,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> ChangeEmail([FromBody] MailChangeModel model)
         {
             if (await userManager.FindByEmailAsync(model.NewMail) is not null)
-                return BadRequest(new BadRequestResponse("邮箱已经被占用。"));
+                return BadRequest(new RequestResponse("邮箱已经被占用。"));
 
             var user = await userManager.GetUserAsync(User);
             LogHelper.Log(logger, "发送用户邮箱更改邮件。", user, TaskStatus.Pending);
@@ -335,7 +334,7 @@ namespace MSC.Server.Controllers
             var result = await userManager.ChangeEmailAsync(user, Codec.Base64.Decode(model.Email), Codec.Base64.Decode(model.Token));
 
             if (!result.Succeeded)
-                return BadRequest(new BadRequestResponse("无效邮箱。"));
+                return BadRequest(new RequestResponse("无效邮箱。"));
 
             LogHelper.Log(logger, "更改邮箱成功。", user, TaskStatus.Success);
 

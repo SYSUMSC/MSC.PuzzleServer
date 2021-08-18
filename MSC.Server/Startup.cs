@@ -108,6 +108,8 @@ namespace MSC.Server
 
             services.AddScoped<ILogRepository, LogRepository>();
             services.AddScoped<IPuzzleRepository, PuzzleRepository>();
+            services.AddScoped<IRankRepository, RankRepository>();
+            services.AddScoped<ISubmissionRepository, SubmissionRepository>();
             #endregion
 
             #region SignalR
