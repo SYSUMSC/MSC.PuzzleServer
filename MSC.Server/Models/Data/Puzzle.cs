@@ -29,8 +29,6 @@ namespace MSC.Server.Models
         }
 
         #region 数据库关系
-        public List<Process> Processes { get; set; } = new();
-
         public List<Submission> Submissions { get; set; } = new();
         #endregion
 

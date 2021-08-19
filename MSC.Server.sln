@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSC.Server", "MSC.Server\MSC.Server.csproj", "{49A1BDA1-F8AB-418A-92BE-4AC9794848DF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D270C86C-F293-4A9C-97C7-2A10404E8283}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
@@ -13,16 +11,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSC.Server", "MSC.Server\MSC.Server.csproj", "{9AAEFC0F-73F3-44F0-B8AC-140640792603}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{49A1BDA1-F8AB-418A-92BE-4AC9794848DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49A1BDA1-F8AB-418A-92BE-4AC9794848DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49A1BDA1-F8AB-418A-92BE-4AC9794848DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49A1BDA1-F8AB-418A-92BE-4AC9794848DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AAEFC0F-73F3-44F0-B8AC-140640792603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AAEFC0F-73F3-44F0-B8AC-140640792603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AAEFC0F-73F3-44F0-B8AC-140640792603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AAEFC0F-73F3-44F0-B8AC-140640792603}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

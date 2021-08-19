@@ -49,8 +49,6 @@ namespace MSC.Server.Models
 
         public Rank Rank { get; set; }
 
-        public List<Process> Processes { get; set; } = new();
-
         public List<Submission> Submissions { get; set; } = new();
         #endregion
 

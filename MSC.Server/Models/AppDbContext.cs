@@ -9,7 +9,6 @@ namespace MSC.Server.Models
 
         public DbSet<LogModel> Logs { get; set; }
         public DbSet<Submission> Submissions { get; set; }
-        public DbSet<Process> Processes { get; set; }
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<Puzzle> Puzzles { get; set; }
 
@@ -26,11 +25,6 @@ namespace MSC.Server.Models
                     .WithOne(e => e.User)
                     .HasForeignKey<Rank>(e => e.UserId);
 
-                entity.HasMany(e => e.Processes)
-                    .WithOne(e => e.User)
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.SetNull);
-
                 entity.HasMany(e => e.Submissions)
                     .WithOne(e => e.User)
                     .HasForeignKey(e => e.UserId)
@@ -39,11 +33,6 @@ namespace MSC.Server.Models
 
             builder.Entity<Puzzle>(entity =>
             {
-                entity.HasMany(e => e.Processes)
-                    .WithOne(e => e.Puzzle)
-                    .HasForeignKey(e => e.PuzzleId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
                 entity.HasMany(e => e.Submissions)
                     .WithOne(e => e.Puzzle)
                     .HasForeignKey(e => e.PuzzleId)
