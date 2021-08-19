@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace MSC.Server.Controllers
 {
     /// <summary>
-    /// 排名相关接口
+    /// 数据相关接口
     /// </summary>
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
@@ -57,6 +57,7 @@ namespace MSC.Server.Controllers
                 return Ok(result);
 
             result = new();
+            result.TopDetail = new();
             result.Rank = await rankRepository.GetRank(token);
 
             var top10 = result.Rank.Take(10);

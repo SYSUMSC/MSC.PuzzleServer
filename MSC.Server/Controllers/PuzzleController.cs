@@ -172,9 +172,9 @@ namespace MSC.Server.Controllers
 
             var result = await puzzleRepository.VerifyAnswer(id, model.Answer, user.AccessLevel, token);
 
-            var hasSubmitted = await submissionRepository.HasSubmitted(id, user.Id, token);
+            var hasSolved = await submissionRepository.HasSubmitted(id, user.Id, token);
 
-            await submissionRepository.AddSubmission(id, user.Id, model.Answer, result, token);
+            await submissionRepository.AddSubmission(id, user.Id, model.Answer, result, hasSolved, token);
 
             if (result.Result == AnswerResult.Unauthorized)
             {
@@ -188,11 +188,11 @@ namespace MSC.Server.Controllers
                 return BadRequest(new RequestResponse("答案错误"));
             }
 
-            if (user.Rank is null)
-                user.Rank = new Rank() { UserId = user.Id };
-
-            if(!hasSubmitted)
+            if(!hasSolved)
             {
+                if (user.Rank is null)
+                    user.Rank = new Rank() { UserId = user.Id };
+
                 await rankRepository.UpdateRank(user.Rank, result.Score, token);
                 await puzzleRepository.UpdateSolvedCount(id, token);
 

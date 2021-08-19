@@ -15,7 +15,7 @@ namespace MSC.Server.Repositories
     {
         public SubmissionRepository(AppDbContext context) : base(context) { }
 
-        public async Task AddSubmission(int puzzleId, string userid, string answer, VerifyResult result, CancellationToken token)
+        public async Task AddSubmission(int puzzleId, string userid, string answer, VerifyResult result, bool hasSolved, CancellationToken token)
         {
             Submission sub = new()
             {
@@ -23,7 +23,7 @@ namespace MSC.Server.Repositories
                 PuzzleId = puzzleId,
                 Answer = answer,
                 Solved = result.Result == AnswerResult.Accepted,
-                Score = result.Score
+                Score = hasSolved ? 0 : result.Score
             };
             await context.AddAsync(sub, token);
             await context.SaveChangesAsync(token);
