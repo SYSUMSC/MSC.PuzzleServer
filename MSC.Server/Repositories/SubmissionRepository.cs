@@ -70,6 +70,6 @@ namespace MSC.Server.Repositories
         }
 
         public Task<bool> HasSubmitted(int puzzleId, string userId, CancellationToken token)
-            => context.Submissions.AnyAsync(s => s.PuzzleId == puzzleId && s.UserId == userId, token);
+            => context.Submissions.AnyAsync(s => s.PuzzleId == puzzleId && s.UserId == userId && s.Solved, token);
     }
 }
