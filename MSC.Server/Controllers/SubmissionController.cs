@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
@@ -48,15 +50,16 @@ namespace MSC.Server.Controllers
         /// 使用此接口获取当前用户最新提交，限制为10个，需要SignedIn权限
         /// </remarks>
         /// <param name="id">题目Id</param>
-        /// <response code="200">成功获取提交</response>
+        /// <param name="token">操作取消token</param>
+        /// <response code="200">成功获取提交</response>        
         /// <response code="401">无权访问</response>
         [HttpGet("/api/[controller]/{id}")]
         [RequireSignedIn]
         [ProducesResponseType(typeof(List<Submission>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> SelfHistory(int id)
+        public async Task<IActionResult> SelfHistory(int id, CancellationToken token)
         {
-            var user = await userManager.GetUserAsync(User);
-            var submissions = await submissionRepository.GetSubmissions(0, 10, id, user.Id);
+            var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var submissions = await submissionRepository.GetSubmissions(token, 0, 10, id, userid);
 
             return Ok(submissions);
         }
@@ -68,12 +71,13 @@ namespace MSC.Server.Controllers
         /// 使用此接口获取当前用户最新提交，限制为50个，需要Monitor权限
         /// </remarks>
         /// <param name="id">题目Id</param>
+        /// <param name="token">操作取消token</param>
         /// <response code="200">成功获取提交</response>
         /// <response code="401">无权访问</response>
         [HttpGet("{id}")]
         [RequireMonitor]
         [ProducesResponseType(typeof(List<Submission>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> History(int id)
-            => Ok(await submissionRepository.GetSubmissions(0, 10, id));
+        public async Task<IActionResult> History(int id, CancellationToken token)
+            => Ok(await submissionRepository.GetSubmissions(token, 0, 10, id));
     }
 }

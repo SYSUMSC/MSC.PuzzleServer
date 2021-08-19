@@ -3,6 +3,7 @@ using MSC.Server.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Repositories.Interface
@@ -16,8 +17,9 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="userid">用户Id</param>
         /// <param name="answer">答案</param>
         /// <param name="result">验证结果</param>
+        /// <param name="token">操作取消token</param>
         /// <returns></returns>
-        public Task AddSubmission(int puzzleId, string userid, string answer, VerifyResult result);
+        public Task AddSubmission(int puzzleId, string userid, string answer, VerifyResult result, CancellationToken token);
         /// <summary>
         /// 根据题目Id获取提交记录
         /// </summary>
@@ -25,7 +27,8 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="userId">用户Id</param>
         /// <param name="skip">跳过数量</param>
         /// <param name="count">获取数量</param>
+        /// <param name="token">操作取消token</param>
         /// <returns></returns>
-        public Task<List<Submission>> GetSubmissions(int skip = 0, int count = 50, int puzzleId = 0, string userId = "All");
+        public Task<List<Submission>> GetSubmissions(CancellationToken token, int skip = 0, int count = 50, int puzzleId = 0, string userId = "All");
     }
 }

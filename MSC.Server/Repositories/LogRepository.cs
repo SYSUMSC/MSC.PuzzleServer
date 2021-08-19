@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MSC.Server.Models;
 using MSC.Server.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace MSC.Server.Repositories
 {
@@ -12,7 +13,7 @@ namespace MSC.Server.Repositories
     {
         public LogRepository(AppDbContext context) : base(context) { }
 
-        public Task<List<LogMessageModel>> GetLogs(int skip, int count, string level)
+        public Task<List<LogMessageModel>> GetLogs(int skip, int count, string level, CancellationToken token)
         {
             IQueryable<LogModel> data = context.Logs;
             if (level != "All")
@@ -26,7 +27,7 @@ namespace MSC.Server.Repositories
                        Msg = log.Message,
                        Status = log.Status,
                        UserName = log.UserName
-                   }).ToListAsync();
+                   }).ToListAsync(token);
         }
     }
 }

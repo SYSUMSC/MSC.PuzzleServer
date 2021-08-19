@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MSC.Server.Models;
@@ -13,7 +14,7 @@ namespace MSC.Server.Repositories
     {
         public RankRepository(AppDbContext context) : base(context) { }
 
-        public Task<List<RankMessageModel>> GetRank(int skip, int count)
+        public Task<List<RankMessageModel>> GetRank(int skip, int count, CancellationToken token)
             => (from rank in context.Ranks.OrderByDescending(r => r.Score)
                     .Skip(skip).Take(count).Include(r => r.User)
                 select new RankMessageModel
@@ -22,13 +23,13 @@ namespace MSC.Server.Repositories
                     UpdateTime = rank.UpdateTimeUTC.ToLocalTime().ToString("M/d HH:mm:ss"),
                     UserName = rank.User.UserName,
                     Descr = rank.User.Description
-                }).ToListAsync();
+                }).ToListAsync(token);
 
-        public async Task UpdateRank(Rank rank, int score)
+        public async Task UpdateRank(Rank rank, int score, CancellationToken token)
         {
             rank.UpdateTimeUTC = DateTime.UtcNow;
             rank.Score += score;
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
         }
     }
 }

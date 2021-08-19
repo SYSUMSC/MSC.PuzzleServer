@@ -9,6 +9,7 @@ using NLog;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mime;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
@@ -38,15 +39,16 @@ namespace MSC.Server.Controllers
         /// 使用此接口获取系统日志，需要Admin权限
         /// </remarks>
         /// <param name="model"></param>
+        /// <param name="token">操作取消token</param>
         /// <response code="200">成功获取日志</response>
         /// <response code="400">校验失败</response>
         /// <response code="401">无权访问</response>
         [HttpGet]
         [ProducesResponseType(typeof(IList<LogMessageModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<List<LogMessageModel>>> Logs([FromQuery] LogRequestModel model)
+        public async Task<ActionResult<List<LogMessageModel>>> Logs([FromQuery] LogRequestModel model, CancellationToken token)
         {
-            return await logRepository.GetLogs(model.Skip, model.Count, model.Level);
+            return await logRepository.GetLogs(model.Skip, model.Count, model.Level, token);
         }
     }
 }

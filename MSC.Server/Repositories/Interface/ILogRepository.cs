@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Repositories.Interface
@@ -14,7 +15,8 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="skip">跳过数量</param>
         /// <param name="count">数量</param>
         /// <param name="level">等级</param>
+        /// <param name="token">操作取消token</param>
         /// <returns>不超过指定数量的日志</returns>
-        public Task<List<LogMessageModel>> GetLogs(int skip, int count, string level);
+        public Task<List<LogMessageModel>> GetLogs(int skip, int count, string level, CancellationToken token);
     }
 }

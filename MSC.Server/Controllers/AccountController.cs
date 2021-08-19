@@ -11,6 +11,7 @@ using NLog;
 using System;
 using System.Linq;
 using System.Net.Mime;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
