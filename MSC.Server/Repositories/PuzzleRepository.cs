@@ -76,7 +76,7 @@ namespace MSC.Server.Repositories
             if (puzzle is null || puzzle.AccessLevel > accessLevel)
                 return new VerifyResult(AnswerResult.Unauthorized);
 
-            bool check = string.Equals(puzzle.Answer, answer.Trim());
+            bool check = string.Equals(puzzle.Answer, answer.ToUpper());
 
             if (check)
             {
