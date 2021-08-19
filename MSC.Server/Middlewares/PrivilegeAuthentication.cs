@@ -35,7 +35,7 @@ namespace MSC.Server.Middlewares
 
             if (currentUser is null)
             {
-                context.Result = new ForbidResult();
+                context.Result = new UnauthorizedResult();
                 return;
             }
 
@@ -44,7 +44,7 @@ namespace MSC.Server.Middlewares
             await dbContext.SaveChangesAsync();
 
             if (currentUser.Privilege < RequiredPrivilege)
-                context.Result = new ForbidResult();
+                context.Result = new UnauthorizedResult();
         }
     }
 

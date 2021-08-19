@@ -27,9 +27,9 @@ namespace MSC.Server.Controllers
         private readonly IPuzzleRepository puzzleRepository;
 
         public PuzzleController(
+            UserManager<UserInfo> _userManager,
             IPuzzleRepository _puzzleRepository,
             ISubmissionRepository _submissionRepository,
-            UserManager<UserInfo> _userManager,
             IRankRepository _rankRepository)
         {
             userManager = _userManager;
@@ -143,21 +143,23 @@ namespace MSC.Server.Controllers
             await submissionRepository.AddSubmission(id, user.Id, answer, result);
 
             if (result.Result == AnswerResult.Unauthorized)
+            {
+                LogHelper.Log(logger, "提交未授权的题目。", user, TaskStatus.Denied);
                 return Unauthorized(new RequestResponse("无权访问或题目无效", 401));
+            }
 
             if (result.Result == AnswerResult.WrongAnswer)
-                return BadRequest(new RequestResponse("错误的答案"));
+            {
+                LogHelper.Log(logger, "答案错误：[" + answer + "]", user, TaskStatus.Fail);
+                return BadRequest(new RequestResponse("答案错误"));
+            }
 
             if (user.Rank is null)
                 user.Rank = new Rank() { UserId = user.Id };
 
             await rankRepository.UpdateRank(user.Rank, result.Score);
 
-            /* TODO */
-
-            /* Update Process */
-            
-            
+            LogHelper.Log(logger, "答案正确：[" + answer + "]", user, TaskStatus.Success);
 
             return Ok();
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace MSC.Server.Models
 {
     [Index(nameof(UserId), nameof(PuzzleId))]
+    [JsonObject(MemberSerialization.OptIn)]
     public class Submission
     {
         [Key]
@@ -16,21 +18,25 @@ namespace MSC.Server.Models
         /// 提交的答案字符串
         /// </summary>
         [MaxLength(50)]
+        [JsonProperty]
         public string Answer { get; set; } = string.Empty;
 
         /// <summary>
         /// 提交的答案是否正确
         /// </summary>
+        [JsonProperty]
         public bool Solved { get; set; } = false;
 
         /// <summary>
         /// 提交的得分
         /// </summary>
+        [JsonProperty]
         public int Score { get; set; } = 0;
 
         /// <summary>
         /// 答案提交的时间
         /// </summary>
+        [JsonProperty]
         public DateTime SubmitTimeUTC { get; set; } = DateTime.Parse("1970-01-01T00:00:00");
 
         #region 数据库关系
