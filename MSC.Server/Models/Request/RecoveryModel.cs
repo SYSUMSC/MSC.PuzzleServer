@@ -2,6 +2,9 @@
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 找回账号
+    /// </summary>
     public class RecoveryModel
     {
         /// <summary>

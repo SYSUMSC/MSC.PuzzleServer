@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 用户端题目
+    /// </summary>
     public class UserPuzzleModel
     {
         /// <summary>

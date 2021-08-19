@@ -2,6 +2,9 @@
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 登录
+    /// </summary>
     public class LoginModel
     {
         /// <summary>

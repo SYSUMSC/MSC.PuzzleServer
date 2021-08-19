@@ -2,6 +2,9 @@
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 密码更改
+    /// </summary>
     public class PasswordChangeModel
     {
         /// <summary>

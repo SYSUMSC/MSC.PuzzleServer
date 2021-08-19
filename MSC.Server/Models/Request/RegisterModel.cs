@@ -2,6 +2,9 @@
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 注册账号
+    /// </summary>
     public class RegisterModel
     {
         /// <summary>

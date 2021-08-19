@@ -2,6 +2,9 @@
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 密码重置
+    /// </summary>
     public class PasswordResetModel
     {
         /// <summary>

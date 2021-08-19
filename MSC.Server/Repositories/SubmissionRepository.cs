@@ -42,9 +42,31 @@ namespace MSC.Server.Repositories
             return result.Skip(skip).Take(count).ToListAsync(token);
         }
 
-        public Task<List<TimeLineModel>> GetTimeLine(string userId, CancellationToken token)
+        public async Task<List<TimeLineModel>> GetTimeLine(string userId, CancellationToken token)
         {
-            throw new NotImplementedException();
+            var allSubmissions = await context.Submissions.Where(s => s.Solved && s.UserId == userId)
+                .OrderBy(s => s.SubmitTimeUTC).ToListAsync(token);
+
+            int currentScore = 0;
+            HashSet<int> puzzleIds = new();
+            List<TimeLineModel> result = new();
+
+            foreach (var sub in allSubmissions)
+            {
+                if(!puzzleIds.Contains(sub.PuzzleId))
+                {
+                    currentScore += sub.Score;
+                    result.Add(new TimeLineModel()
+                    {
+                        PuzzleId = sub.PuzzleId,
+                        Time = sub.SubmitTime,
+                        TotalScore = currentScore
+                    });
+                    puzzleIds.Add(sub.PuzzleId);
+                }
+            }
+
+            return result;
         }
 
         public Task<bool> HasSubmitted(int puzzleId, string userId, CancellationToken token)

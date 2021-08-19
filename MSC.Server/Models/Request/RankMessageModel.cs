@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 排名信息
+    /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class RankMessageModel
     {
         /// <summary>
@@ -28,5 +32,9 @@ namespace MSC.Server.Models.Request
         /// </summary>
         [JsonProperty("descr")]
         public string Descr { get; set; }
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public string UserId { get; set; }
     }
 }

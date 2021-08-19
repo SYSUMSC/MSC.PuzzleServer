@@ -2,6 +2,9 @@
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 邮箱更改
+    /// </summary>
     public class MailChangeModel
     {
         /// <summary>

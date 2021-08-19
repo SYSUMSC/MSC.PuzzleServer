@@ -2,6 +2,9 @@
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 个人信息更改
+    /// </summary>
     public class ProfileUpdateModel
     {
         /// <summary>

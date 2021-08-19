@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 答案提交
+    /// </summary>
     public class AnswerSubmitModel
     {
         /// <summary>

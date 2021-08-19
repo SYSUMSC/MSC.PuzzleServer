@@ -14,7 +14,7 @@ namespace MSC.Server.Repositories
     {
         public RankRepository(AppDbContext context) : base(context) { }
 
-        public Task<List<RankMessageModel>> GetRank(int skip, int count, CancellationToken token)
+        public Task<List<RankMessageModel>> GetRank(CancellationToken token, int skip = 0, int count = 100)
             => (from rank in context.Ranks.OrderByDescending(r => r.Score)
                     .Skip(skip).Take(count).Include(r => r.User)
                 select new RankMessageModel
@@ -22,7 +22,8 @@ namespace MSC.Server.Repositories
                     Score = rank.Score,
                     UpdateTime = rank.UpdateTimeUTC.ToLocalTime().ToString("M/d HH:mm:ss"),
                     UserName = rank.User.UserName,
-                    Descr = rank.User.Description
+                    Descr = rank.User.Description,
+                    UserId = rank.UserId
                 }).ToListAsync(token);
 
         public async Task UpdateRank(Rank rank, int score, CancellationToken token)

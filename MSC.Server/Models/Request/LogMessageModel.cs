@@ -2,6 +2,9 @@
 
 namespace MSC.Server.Models
 {
+    /// <summary>
+    /// 日志信息
+    /// </summary>
     public class LogMessageModel
     {
         /// <summary>

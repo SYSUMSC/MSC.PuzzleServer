@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 日志请求
+    /// </summary>
     public class LogRequestModel
     {
         /// <summary>

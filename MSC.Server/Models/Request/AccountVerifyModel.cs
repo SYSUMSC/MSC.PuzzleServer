@@ -2,6 +2,9 @@
 
 namespace MSC.Server.Models.Request
 {
+    /// <summary>
+    /// 账号验证
+    /// </summary>
     public class AccountVerifyModel
     {
         /// <summary>
