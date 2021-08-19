@@ -23,16 +23,13 @@ namespace MSC.Server.Controllers
     [Route("api/[controller]/[action]")]
     public class InfoController : ControllerBase
     {
-        private readonly UserManager<UserInfo> userManager;
         private readonly IRankRepository rankRepository;
         private readonly ISubmissionRepository submissionRepository;
 
         public InfoController(
-            UserManager<UserInfo> _userManager,
             ISubmissionRepository _submissionRepository,
             IRankRepository _rankRepository)
         {
-            userManager = _userManager;
             rankRepository = _rankRepository;
             submissionRepository = _submissionRepository;
         }
