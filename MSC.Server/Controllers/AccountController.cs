@@ -113,7 +113,7 @@ namespace MSC.Server.Controllers
         /// <response code="404">用户不存在</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Recovery([FromBody] RecoveryModel model)
         {
