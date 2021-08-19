@@ -224,6 +224,7 @@ namespace MSC.Server.Controllers
         /// 登出API
         /// </summary>
         [HttpPost]
+        [RequireSignedIn]
         [SwaggerResponse(200, "用户已登出")]
         [SwaggerOperation(
             Summary = "用户登出接口",

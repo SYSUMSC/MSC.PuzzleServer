@@ -35,7 +35,9 @@ namespace MSC.Server.Middlewares
 
             if (currentUser is null)
             {
-                context.Result = new UnauthorizedResult();
+                var result = new JsonResult(new RequestResponse("请先登录", 401));
+                result.StatusCode = 401;
+                context.Result = result;
                 return;
             }
 
@@ -44,7 +46,11 @@ namespace MSC.Server.Middlewares
             await dbContext.SaveChangesAsync();
 
             if (currentUser.Privilege < RequiredPrivilege)
-                context.Result = new UnauthorizedResult();
+            {
+                var result = new JsonResult(new RequestResponse("无权访问", 401));
+                result.StatusCode = 401;
+                context.Result = result;
+            }
         }
     }
 

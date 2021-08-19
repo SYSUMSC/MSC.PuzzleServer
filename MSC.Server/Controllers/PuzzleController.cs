@@ -82,7 +82,7 @@ namespace MSC.Server.Controllers
         /// </summary>
         [HttpGet("{id}")]
         [RequireSignedIn]
-        [SwaggerResponse(400, "校验失败")]
+        [SwaggerResponse(401, "无权访问或题目无效")]
         [SwaggerResponse(200, "成功获取题目", typeof(UserPuzzleModel))]
         [SwaggerOperation(
             Summary = "获取题目接口",
