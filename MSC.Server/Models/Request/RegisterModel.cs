@@ -4,16 +4,28 @@ namespace MSC.Server.Models.Request
 {
     public class RegisterModel
     {
+        /// <summary>
+        /// 用户名
+        /// </summary>
         [Required]
         [MinLength(6)]
         [MaxLength(25)]
         public string UserName { get; set; }
+        /// <summary>
+        /// 密码
+        /// </summary>
         [Required]
         [MinLength(6)]
         public string Password { get; set; }
+        /// <summary>
+        /// 邮箱
+        /// </summary>
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+        /// <summary>
+        /// 谷歌验证码
+        /// </summary>
         public string GToken { get; set; }
     }
 }
