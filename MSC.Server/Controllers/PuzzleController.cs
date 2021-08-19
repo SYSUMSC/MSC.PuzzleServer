@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
@@ -29,13 +30,16 @@ namespace MSC.Server.Controllers
         private readonly IRankRepository rankRepository;
         private readonly ISubmissionRepository submissionRepository;
         private readonly IPuzzleRepository puzzleRepository;
+        private readonly IMemoryCache cache;
 
         public PuzzleController(
+            IMemoryCache memoryCache,
             UserManager<UserInfo> _userManager,
             IPuzzleRepository _puzzleRepository,
             ISubmissionRepository _submissionRepository,
             IRankRepository _rankRepository)
         {
+            cache = memoryCache;
             userManager = _userManager;
             rankRepository = _rankRepository;
             puzzleRepository = _puzzleRepository;
@@ -191,6 +195,8 @@ namespace MSC.Server.Controllers
             {
                 await rankRepository.UpdateRank(user.Rank, result.Score, token);
                 await puzzleRepository.UpdateSolvedCount(id, token);
+
+                cache.Remove(CacheKey.ScoreBoard);
             }
 
             LogHelper.Log(logger, "答案正确：" + model.Answer, user, TaskStatus.Success);

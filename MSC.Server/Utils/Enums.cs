@@ -75,4 +75,15 @@
         /// </summary>
         Unauthorized = 3,
     }
+
+    /// <summary>
+    /// 缓存标识
+    /// </summary>
+    public static class CacheKey
+    {
+        /// <summary>
+        /// 积分榜缓存
+        /// </summary>
+        public static string ScoreBoard => "_ScoreBoard";
+    }
 }

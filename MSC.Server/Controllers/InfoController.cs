@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
@@ -25,11 +26,14 @@ namespace MSC.Server.Controllers
     {
         private readonly IRankRepository rankRepository;
         private readonly ISubmissionRepository submissionRepository;
+        private readonly IMemoryCache cache;
 
         public InfoController(
+            IMemoryCache memoryCache,
             ISubmissionRepository _submissionRepository,
             IRankRepository _rankRepository)
         {
+            cache = memoryCache;
             rankRepository = _rankRepository;
             submissionRepository = _submissionRepository;
         }
@@ -47,7 +51,12 @@ namespace MSC.Server.Controllers
         [ProducesResponseType(typeof(ScoreBoardMessageModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> ScoreBoard(CancellationToken token)
         {
-            ScoreBoardMessageModel result = new();
+            ScoreBoardMessageModel result;
+
+            if (cache.TryGetValue(CacheKey.ScoreBoard, out result))
+                return Ok(result);
+
+            result = new();
             result.Rank = await rankRepository.GetRank(token);
 
             var top10 = result.Rank.Take(10);
@@ -61,6 +70,8 @@ namespace MSC.Server.Controllers
             }
 
             result.UpdateTime = DateTime.Now;
+
+            cache.Set(CacheKey.ScoreBoard, result, TimeSpan.FromHours(6));
 
             return Ok(result);
         }

@@ -47,6 +47,7 @@ namespace MSC.Server
                 configuration.RootPath = "ClientApp/build";
             });
 
+            #region OpenApiDocument
             services.AddOpenApiDocument(settings =>
             {
                 settings.DocumentName = "v1";
@@ -55,6 +56,11 @@ namespace MSC.Server
                 settings.Description = "MSC Puzzle ╫с©знд╣╣";
                 settings.UseControllerSummaryAsTagDescription = true;
             });
+            #endregion
+
+            #region MemoryCache
+            services.AddMemoryCache();
+            #endregion
 
             #region Identity
 
