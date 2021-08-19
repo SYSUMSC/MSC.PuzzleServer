@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MSC.Server.Models;
+using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Utils;
 
@@ -40,5 +41,13 @@ namespace MSC.Server.Repositories
 
             return result.Skip(skip).Take(count).ToListAsync(token);
         }
+
+        public Task<List<TimeLineModel>> GetTimeLine(string userId, CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> HasSubmitted(int puzzleId, string userId, CancellationToken token)
+            => context.Submissions.AnyAsync(s => s.PuzzleId == puzzleId && s.UserId == userId, token);
     }
 }

@@ -31,5 +31,6 @@ namespace MSC.Server.Repositories
             rank.Score += score;
             await context.SaveChangesAsync(token);
         }
+
     }
 }

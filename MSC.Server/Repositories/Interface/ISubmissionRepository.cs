@@ -1,4 +1,5 @@
 ﻿using MSC.Server.Models;
+using MSC.Server.Models.Request;
 using MSC.Server.Utils;
 using System;
 using System.Collections.Generic;
@@ -30,5 +31,20 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task<List<Submission>> GetSubmissions(CancellationToken token, int skip = 0, int count = 50, int puzzleId = 0, string userId = "All");
+        /// <summary>
+        /// 获取用户时间线
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <param name="token">操作取消Token</param>
+        /// <returns></returns>
+        public Task<List<TimeLineModel>> GetTimeLine(string userId, CancellationToken token);
+        /// <summary>
+        /// 是否已经提交
+        /// </summary>
+        /// <param name="puzzleId">题目Id</param>
+        /// <param name="userId">用户Id</param>
+        /// <param name="token">操作取消Token</param>
+        /// <returns></returns>
+        public Task<bool> HasSubmitted(int puzzleId, string userId, CancellationToken token);
     }
 }

@@ -66,6 +66,15 @@ namespace MSC.Server.Repositories
             return puzzle;
         }
 
+        public async Task UpdateSolvedCount(int id, CancellationToken token)
+        {
+            Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
+
+            ++puzzle.SolvedCount;
+
+            await context.SaveChangesAsync(token);
+        }
+
         public async Task<VerifyResult> VerifyAnswer(int id, string answer, int accessLevel, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(answer))
@@ -79,11 +88,7 @@ namespace MSC.Server.Repositories
             bool check = string.Equals(puzzle.Answer, answer.ToUpper());
 
             if (check)
-            {
-                puzzle.SolvedCount += 1;
-                await context.SaveChangesAsync(token);
                 return new VerifyResult(AnswerResult.Accepted, puzzle.CurrentScore);
-            }
 
             return new VerifyResult(AnswerResult.WrongAnswer);
         }

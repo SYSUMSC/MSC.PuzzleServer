@@ -50,5 +50,12 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task<VerifyResult> VerifyAnswer(int id, string answer, int accessLevel, CancellationToken token);
+        /// <summary>
+        /// 更新成功解题人数
+        /// </summary>
+        /// <param name="id">题目Id</param>
+        /// <param name="token">操作取消token</param>
+        /// <returns></returns>
+        public Task UpdateSolvedCount(int id, CancellationToken token);
     }
 }

@@ -168,6 +168,8 @@ namespace MSC.Server.Controllers
 
             var result = await puzzleRepository.VerifyAnswer(id, model.Answer, user.AccessLevel, token);
 
+            var hasSubmitted = await submissionRepository.HasSubmitted(id, user.Id, token);
+
             await submissionRepository.AddSubmission(id, user.Id, model.Answer, result, token);
 
             if (result.Result == AnswerResult.Unauthorized)
@@ -185,7 +187,11 @@ namespace MSC.Server.Controllers
             if (user.Rank is null)
                 user.Rank = new Rank() { UserId = user.Id };
 
-            await rankRepository.UpdateRank(user.Rank, result.Score, token);
+            if(!hasSubmitted)
+            {
+                await rankRepository.UpdateRank(user.Rank, result.Score, token);
+                await puzzleRepository.UpdateSolvedCount(id, token);
+            }
 
             LogHelper.Log(logger, "答案正确：" + model.Answer, user, TaskStatus.Success);
 
