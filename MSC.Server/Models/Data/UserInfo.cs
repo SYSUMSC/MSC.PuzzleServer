@@ -43,6 +43,18 @@ namespace MSC.Server.Models
         /// 访问权限
         /// </summary>
         public int AccessLevel { get; set; } = 0;
+        /// <summary>
+        /// 学号
+        /// </summary>
+        public string StudentId { get; set; } = string.Empty;
+        /// <summary>
+        /// 真实姓名
+        /// </summary>
+        public string RealName { get; set; } = string.Empty;
+        /// <summary>
+        /// 是否为中山大学学生
+        /// </summary>
+        public bool IsSYSU { get; set; } = false;
 
         #region 数据库关系
         public int RankId { get; set; }

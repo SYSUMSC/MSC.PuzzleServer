@@ -183,14 +183,21 @@ namespace MSC.Server.Controllers
             var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
             var result = await userManager.ConfirmEmailAsync(user, Codec.Base64.Decode(model.Token));
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
+                return Unauthorized();
+
+            LogHelper.Log(logger, "通过邮箱验证。", user, TaskStatus.Success);
+            await signInManager.SignInAsync(user, true);
+
+            if(Codec.Base64.Decode(model.Email).EndsWith("@mail2.sysu.edu.cn"))
             {
-                LogHelper.Log(logger, "通过邮箱验证。", user, TaskStatus.Success);
-                await signInManager.SignInAsync(user, true);
-                return Ok();
+                user.IsSYSU = true;
+                result = await userManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                    return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
             }
 
-            return Unauthorized();
+            return Ok();
         }
 
         /// <summary>
@@ -272,8 +279,12 @@ namespace MSC.Server.Controllers
         {
             var user = await userManager.GetUserAsync(User);
             var oname = user.UserName;
+
             user.UserName = model.UserName;
             user.Description = model.Des;
+            user.PhoneNumber = model.PhoneNumber;
+            user.StudentId = model.StudentId;
+            user.RealName = model.RealName;
 
             var result = await userManager.UpdateAsync(user);
 

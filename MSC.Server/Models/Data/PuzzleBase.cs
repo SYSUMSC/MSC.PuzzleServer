@@ -72,5 +72,12 @@ namespace MSC.Server.Models
         [Required]
         [DefaultValue(10)]
         public int AwardCount { get; set; } = 10;
+
+        /// <summary>
+        /// 升级访问权限（为0则不变）
+        /// </summary>
+        [Required]
+        [DefaultValue(0)]
+        public int UpgradeAccessLevel { get; set; } = 0;
     }
 }
