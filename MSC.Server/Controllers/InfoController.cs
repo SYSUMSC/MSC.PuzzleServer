@@ -44,7 +44,7 @@ namespace MSC.Server.Controllers
         /// 使用此接口获取积分榜，需要已登录权限
         /// </remarks>
         /// <param name="token">操作取消token</param>
-        /// <response code="200">成功新建题目</response>
+        /// <response code="200">成功获取积分榜</response>
         [HttpGet]
         [RequireSignedIn]
         [ProducesResponseType(typeof(ScoreBoardMessageModel), StatusCodes.Status200OK)]
