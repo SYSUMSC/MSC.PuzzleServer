@@ -1,21 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
+using MSC.Server.Utils;
 using NLog;
-using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
 {
+    /// <summary>
+    /// 管理员数据交互接口
+    /// </summary>
     [RequireAdmin]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
     [Route("api/[controller]/[action]")]
-    [SwaggerTag("管理员数据交互接口")]
     public class AdminController : ControllerBase
     {
         private static readonly Logger logger = LogManager.GetLogger("AdminController");
@@ -26,13 +31,19 @@ namespace MSC.Server.Controllers
             logRepository = _logRepository;
         }
 
+        /// <summary>
+        /// 系统日志获取接口
+        /// </summary>
+        /// <remarks>
+        /// 使用此接口获取系统日志，需要Admin权限
+        /// </remarks>
+        /// <param name="model"></param>
+        /// <response code="200">成功获取日志</response>
+        /// <response code="400">校验失败</response>
+        /// <response code="401">无权访问</response>
         [HttpGet]
-        [SwaggerResponse(400, "校验失败")]
-        [SwaggerResponse(200, "成功获取日志", typeof(IList<LogMessageModel>))]
-        [SwaggerOperation(
-            Summary = "系统日志获取接口",
-            Description = "使用此接口获取系统日志，需要Admin权限"
-        )]
+        [ProducesResponseType(typeof(IList<LogMessageModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<LogMessageModel>>> Logs([FromQuery] LogRequestModel model)
         {
             return await logRepository.GetLogs(model.Skip, model.Count, model.Level);

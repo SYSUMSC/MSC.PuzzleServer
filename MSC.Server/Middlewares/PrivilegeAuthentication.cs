@@ -71,7 +71,7 @@ namespace MSC.Server.Middlewares
     }
 
     /// <summary>
-    /// 需要管理员权限
+    /// 需要Admin权限
     /// </summary>
     public class RequireAdminAttribute : RequirePrivilegeAttribute
     {

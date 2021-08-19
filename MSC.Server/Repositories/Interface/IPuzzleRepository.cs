@@ -13,7 +13,7 @@ namespace MSC.Server.Repositories.Interface
         /// <summary>
         /// 添加一个题目对象
         /// </summary>
-        /// <param name="puzzle">待添加的题目</param>
+        /// <param name="newPuzzle">待添加的题目</param>
         /// <returns></returns>
         public Task<Puzzle> AddPuzzle(PuzzleBase newPuzzle);
         /// <summary>
@@ -27,7 +27,7 @@ namespace MSC.Server.Repositories.Interface
         /// 更新一个题目对象
         /// </summary>
         /// <param name="id">题目Id</param>
-        /// <param name="puzzle">更新的题目数据</param>
+        /// <param name="newPuzzle">更新的题目数据</param>
         /// <returns></returns>
         public Task<Puzzle> UpdatePuzzle(int id, PuzzleBase newPuzzle);
         /// <summary>

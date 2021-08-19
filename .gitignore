@@ -236,3 +236,4 @@ appsettings.*.json
 !appsettings.template.json
 /.VSCodeCounter/*
 */db/*
+**/MSC.Server.xml

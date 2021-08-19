@@ -15,12 +15,10 @@ using MSC.Server.Utils;
 using NLog;
 using System;
 using System.Text;
-using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using MSC.Server.Services.Interface;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Repositories;
-using Microsoft.OpenApi.Models;
 
 namespace MSC.Server
 {
@@ -49,10 +47,13 @@ namespace MSC.Server
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services.AddSwaggerGen(c =>
+            services.AddOpenApiDocument(settings =>
             {
-                c.EnableAnnotations();
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+                settings.DocumentName = "v1";
+                settings.Version = "v0.1";
+                settings.Title = "MSC Puzzle API";
+                settings.Description = "MSC Puzzle ½Ó¿ÚÎÄµµ";
+                settings.UseControllerSummaryAsTagDescription = true;
             });
 
             #region Identity
@@ -127,8 +128,8 @@ namespace MSC.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
+                app.UseOpenApi();
+                app.UseSwaggerUi3();
             }
             else
                 app.UseExceptionHandler("/Error");
