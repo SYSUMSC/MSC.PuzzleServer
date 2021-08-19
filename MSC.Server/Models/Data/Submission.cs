@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,26 +19,32 @@ namespace MSC.Server.Models
         /// 提交的答案字符串
         /// </summary>
         [MaxLength(50)]
-        [JsonProperty]
+        [JsonProperty("answer")]
         public string Answer { get; set; } = string.Empty;
 
         /// <summary>
         /// 提交的答案是否正确
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("solved")]
         public bool Solved { get; set; } = false;
 
         /// <summary>
         /// 提交的得分
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("score")]
         public int Score { get; set; } = 0;
 
         /// <summary>
         /// 答案提交的时间
         /// </summary>
-        [JsonProperty]
         public DateTime SubmitTimeUTC { get; set; } = DateTime.Parse("1970-01-01T00:00:00");
+
+        [NotMapped]
+        [JsonProperty("time")]
+        public string SubmitTime
+        {
+            get => SubmitTimeUTC.ToLocalTime().ToString("M/d HH:mm:ss");
+        }
 
         #region 数据库关系
         /// <summary>

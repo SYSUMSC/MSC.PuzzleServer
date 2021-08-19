@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSC.Server.Models
 {
+
 	public class LogModel
 	{
 		[Key]

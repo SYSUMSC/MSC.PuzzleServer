@@ -50,10 +50,10 @@ namespace MSC.Server.Controllers
         /// <param name="id">题目Id</param>
         /// <response code="200">成功获取提交</response>
         /// <response code="401">无权访问</response>
-        [HttpGet("{id}")]
+        [HttpGet("/api/[controller]/{id}")]
         [RequireSignedIn]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> My(int id)
+        [ProducesResponseType(typeof(List<Submission>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SelfHistory(int id)
         {
             var user = await userManager.GetUserAsync(User);
             var submissions = await submissionRepository.GetSubmissions(0, 10, id, user.Id);
@@ -72,8 +72,8 @@ namespace MSC.Server.Controllers
         /// <response code="401">无权访问</response>
         [HttpGet("{id}")]
         [RequireMonitor]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Log(int id)
+        [ProducesResponseType(typeof(List<Submission>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> History(int id)
             => Ok(await submissionRepository.GetSubmissions(0, 10, id));
     }
 }
