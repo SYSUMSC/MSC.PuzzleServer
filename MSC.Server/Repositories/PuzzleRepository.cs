@@ -7,6 +7,7 @@ using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 using MSC.Server.Utils;
+using NLog;
 
 namespace MSC.Server.Repositories
 {
@@ -24,17 +25,19 @@ namespace MSC.Server.Repositories
             return puzzle;
         }
 
-        public async Task<bool> DeletePuzzle(int id)
+        public async Task<(bool result, string title)> DeletePuzzle(int id)
         {
             Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id);
 
             if (puzzle is null)
-                return false;
+                return (false, string.Empty);
+
+            string title = puzzle.Title;
 
             context.Remove(puzzle);
             await context.SaveChangesAsync();
 
-            return true;
+            return (true, title);
         }
 
         public async Task<UserPuzzleModel> GetUserPuzzle(int id, int accessLevel)

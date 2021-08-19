@@ -35,7 +35,7 @@ namespace MSC.Server.Repositories.Interface
         /// </summary>
         /// <param name="id">题目Id</param>
         /// <returns></returns>
-        public Task<bool> DeletePuzzle(int id);
+        public Task<(bool result, string title)> DeletePuzzle(int id);
         /// <summary>
         /// 验证答案
         /// </summary>

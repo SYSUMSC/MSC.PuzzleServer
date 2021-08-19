@@ -94,7 +94,10 @@ namespace MSC.Server.Controllers
             var puzzle = await puzzleRepository.GetUserPuzzle(id, user.AccessLevel);
 
             if (puzzle is null)
+            {
+                LogHelper.Log(logger, $"试图获取未授权题目#{id}", user, TaskStatus.Denied);
                 return Unauthorized(new RequestResponse("无权访问或题目无效"));
+            }
 
             return Ok(puzzle);
         }
@@ -113,12 +116,16 @@ namespace MSC.Server.Controllers
         )]
         public async Task<IActionResult> Delete(int id)
         {
-            var res = await puzzleRepository.DeletePuzzle(id);
+            var (res, title) = await puzzleRepository.DeletePuzzle(id);
 
-            if(res)
-                return Ok();
+            if(!res)
+                return BadRequest(new RequestResponse("题目删除失败"));
 
-            return BadRequest(new RequestResponse("题目删除失败"));
+            var user = await userManager.GetUserAsync(User);
+
+            LogHelper.Log(logger, $"删除题目#{id} {title}", user, TaskStatus.Success);
+
+            return Ok();
         }
 
         /// <summary>
