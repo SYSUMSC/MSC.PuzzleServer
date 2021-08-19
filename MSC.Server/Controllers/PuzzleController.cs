@@ -151,24 +151,24 @@ namespace MSC.Server.Controllers
         /// 使用此接口提交题目答案，此接口限制为3次每60秒，需要SignedIn权限
         /// </remarks>
         /// <param name="id">题目Id</param>
-        /// <param name="answer">题目答案</param>
+        /// <param name="model"></param>
         /// <param name="token">操作取消token</param>
-        /// <response code="200">成功获取题目</response>
-        /// <response code="400">错误的答案</response>
+        /// <response code="200">答案正确</response>
+        /// <response code="400">答案错误</response>
         /// <response code="401">无权访问或题目无效</response>
         [HttpPost("{id}")]
         [RequireSignedIn]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Submit(int id, [FromBody] string answer, CancellationToken token)
+        public async Task<IActionResult> Submit(int id, [FromBody] AnswerSubmitModel model, CancellationToken token)
         {
             var user = await userManager.Users.Include(u => u.Rank)
                 .SingleAsync(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var result = await puzzleRepository.VerifyAnswer(id, answer, user.AccessLevel, token);
+            var result = await puzzleRepository.VerifyAnswer(id, model.Answer, user.AccessLevel, token);
 
-            await submissionRepository.AddSubmission(id, user.Id, answer, result, token);
+            await submissionRepository.AddSubmission(id, user.Id, model.Answer, result, token);
 
             if (result.Result == AnswerResult.Unauthorized)
             {
@@ -178,7 +178,7 @@ namespace MSC.Server.Controllers
 
             if (result.Result == AnswerResult.WrongAnswer)
             {
-                LogHelper.Log(logger, "答案错误：[" + answer + "]", user, TaskStatus.Fail);
+                LogHelper.Log(logger, "答案错误：" + model.Answer, user, TaskStatus.Fail);
                 return BadRequest(new RequestResponse("答案错误"));
             }
 
@@ -187,7 +187,7 @@ namespace MSC.Server.Controllers
 
             await rankRepository.UpdateRank(user.Rank, result.Score, token);
 
-            LogHelper.Log(logger, "答案正确：[" + answer + "]", user, TaskStatus.Success);
+            LogHelper.Log(logger, "答案正确：" + model.Answer, user, TaskStatus.Success);
 
             return Ok();
         }

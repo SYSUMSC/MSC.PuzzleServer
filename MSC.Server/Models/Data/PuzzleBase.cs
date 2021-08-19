@@ -28,6 +28,7 @@ namespace MSC.Server.Models
         [Required]
         [MaxLength(30)]
         [MinLength(1)]
+        [RegularExpression("^msc{[a-zA-Z0-9_-]+}$")]
         public string Answer { get; set; }
 
         /// <summary>
