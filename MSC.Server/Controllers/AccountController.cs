@@ -276,7 +276,7 @@ public class AccountController : ControllerBase
         var oname = user.UserName;
 
         user.UserName = model.UserName;
-        user.Description = model.Des ?? string.Empty;
+        user.Description = model.Descr ?? string.Empty;
         user.PhoneNumber = model.PhoneNumber ?? string.Empty;
         user.StudentId = model.StudentId ?? string.Empty;
         user.RealName = model.RealName ?? string.Empty;
@@ -380,7 +380,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// 用户邮箱更改确认接口
+    /// 获取用户信息接口
     /// </summary>
     /// <remarks>
     /// 使用此接口获取用户信息，需要SignedIn权限

@@ -18,7 +18,7 @@ public class ProfileUpdateModel
     /// <summary>
     /// 描述
     /// </summary>
-    public string? Des { get; set; }
+    public string? Descr { get; set; }
 
     /// <summary>
     /// 学号
