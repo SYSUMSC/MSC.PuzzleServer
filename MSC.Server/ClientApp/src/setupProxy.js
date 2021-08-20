@@ -6,6 +6,7 @@ const target = env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http:/
 const context =  [
   "/api",
   "/swagger",
+  "/hub"
 ];
 
 module.exports = function(app) {
