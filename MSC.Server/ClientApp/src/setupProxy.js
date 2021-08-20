@@ -3,9 +3,10 @@ const { env } = require('process');
 
 const target = env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:5000';
 
-const context = [
-    "/api",
-    "/swagger",
+const context =  [
+  "/api",
+  "/swagger",
+  "/hub"
 ];
 
 module.exports = function (app) {
