@@ -44,10 +44,13 @@ namespace MSC.Server.Services
                     Host = smtpHost,
                     Port = smtpPort,
                     EnableSsl = true,
-                    Credentials = new NetworkCredential(username, password)
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential($"{username}@{domain}", password)
                 };
 
                 await smtp.SendMailAsync(msg);
+
+                isSuccess = true;
             }
             catch (Exception e)
             {
