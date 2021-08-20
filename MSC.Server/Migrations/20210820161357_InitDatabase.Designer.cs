@@ -10,15 +10,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSC.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210817161224_UpdateRelationship")]
-    partial class UpdateRelationship
+    [Migration("20210820161357_InitDatabase")]
+    partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.9")
+                .HasAnnotation("ProductVersion", "6.0.0-preview.7.21378.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("MSC.Server.Models.LogModel", b =>
@@ -42,6 +42,7 @@ namespace MSC.Server.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Message")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RemoteIP")
@@ -64,37 +65,6 @@ namespace MSC.Server.Migrations
                     b.ToTable("Logs");
                 });
 
-            modelBuilder.Entity("MSC.Server.Models.Process", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("FirstAccessTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PuzzleId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PuzzleSolveTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PuzzleId");
-
-                    b.HasIndex("UserId", "PuzzleId");
-
-                    b.ToTable("Processes");
-                });
-
             modelBuilder.Entity("MSC.Server.Models.Puzzle", b =>
                 {
                     b.Property<int>("Id")
@@ -107,8 +77,8 @@ namespace MSC.Server.Migrations
 
                     b.Property<string>("Answer")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("AwardCount")
                         .HasColumnType("int");
@@ -133,7 +103,12 @@ namespace MSC.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UpgradeAccessLevel")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AccessLevel");
 
                     b.ToTable("Puzzles");
                 });
@@ -171,10 +146,14 @@ namespace MSC.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Answer")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("PuzzleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
                         .HasColumnType("int");
 
                     b.Property<bool>("Solved")
@@ -211,6 +190,7 @@ namespace MSC.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -221,7 +201,11 @@ namespace MSC.Server.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("IP")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsSYSU")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("LastSignedInUTC")
                         .HasColumnType("datetime2");
@@ -258,10 +242,18 @@ namespace MSC.Server.Migrations
                     b.Property<int>("RankId")
                         .HasColumnType("int");
 
+                    b.Property<string>("RealName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("RegisterTimeUTC")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -281,7 +273,7 @@ namespace MSC.Server.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -308,7 +300,7 @@ namespace MSC.Server.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -332,7 +324,7 @@ namespace MSC.Server.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -356,7 +348,7 @@ namespace MSC.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -378,7 +370,7 @@ namespace MSC.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -393,7 +385,7 @@ namespace MSC.Server.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -412,25 +404,7 @@ namespace MSC.Server.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("MSC.Server.Models.Process", b =>
-                {
-                    b.HasOne("MSC.Server.Models.Puzzle", "Puzzle")
-                        .WithMany("Processes")
-                        .HasForeignKey("PuzzleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MSC.Server.Models.UserInfo", "User")
-                        .WithMany("Processes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Puzzle");
-
-                    b.Navigation("User");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("MSC.Server.Models.Rank", b =>
@@ -513,15 +487,11 @@ namespace MSC.Server.Migrations
 
             modelBuilder.Entity("MSC.Server.Models.Puzzle", b =>
                 {
-                    b.Navigation("Processes");
-
                     b.Navigation("Submissions");
                 });
 
             modelBuilder.Entity("MSC.Server.Models.UserInfo", b =>
                 {
-                    b.Navigation("Processes");
-
                     b.Navigation("Rank");
 
                     b.Navigation("Submissions");

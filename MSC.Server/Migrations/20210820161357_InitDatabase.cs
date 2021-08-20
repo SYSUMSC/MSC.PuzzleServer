@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MSC.Server.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class InitDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,11 +27,16 @@ namespace MSC.Server.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Privilege = table.Column<int>(type: "int", nullable: false),
-                    IP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IP = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastSignedInUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastVisitedUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RegisterTimeUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AccessLevel = table.Column<int>(type: "int", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RealName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsSYSU = table.Column<bool>(type: "bit", nullable: false),
+                    RankId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -62,13 +68,35 @@ namespace MSC.Server.Migrations
                     Logger = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     RemoteIP = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Exception = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Logs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Puzzles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Answer = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    AccessLevel = table.Column<int>(type: "int", nullable: false),
+                    SolvedCount = table.Column<int>(type: "int", nullable: false),
+                    OriginalScore = table.Column<int>(type: "int", nullable: false),
+                    MinScore = table.Column<int>(type: "int", nullable: false),
+                    ExpectMaxCount = table.Column<int>(type: "int", nullable: false),
+                    AwardCount = table.Column<int>(type: "int", nullable: false),
+                    UpgradeAccessLevel = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Puzzles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -177,6 +205,57 @@ namespace MSC.Server.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Ranks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    UpdateTimeUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ranks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ranks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Submissions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Answer = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Solved = table.Column<bool>(type: "bit", nullable: false),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    SubmitTimeUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PuzzleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Submissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Submissions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Submissions_Puzzles_PuzzleId",
+                        column: x => x.PuzzleId,
+                        principalTable: "Puzzles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -215,6 +294,28 @@ namespace MSC.Server.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Puzzles_AccessLevel",
+                table: "Puzzles",
+                column: "AccessLevel");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ranks_UserId",
+                table: "Ranks",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Submissions_PuzzleId",
+                table: "Submissions",
+                column: "PuzzleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Submissions_UserId_PuzzleId",
+                table: "Submissions",
+                columns: new[] { "UserId", "PuzzleId" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -238,10 +339,19 @@ namespace MSC.Server.Migrations
                 name: "Logs");
 
             migrationBuilder.DropTable(
+                name: "Ranks");
+
+            migrationBuilder.DropTable(
+                name: "Submissions");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Puzzles");
         }
     }
 }
