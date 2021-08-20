@@ -92,7 +92,7 @@ namespace MSC.Server.Repositories
             await context.SaveChangesAsync(token);
         }
 
-        public async Task<VerifyResult?> VerifyAnswer(int id, string answer, int accessLevel, CancellationToken token)
+        public async Task<VerifyResult> VerifyAnswer(int id, string? answer, int accessLevel, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(answer))
                 return new VerifyResult();

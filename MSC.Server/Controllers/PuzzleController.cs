@@ -91,9 +91,13 @@ namespace MSC.Server.Controllers
         [HttpPut("{id}")]
         [RequireAdmin]
         [ProducesResponseType(typeof(PuzzleResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Update(int id, [FromBody] PuzzleBase model, CancellationToken token)
         {
             var puzzle = await puzzleRepository.UpdatePuzzle(id, model, token);
+
+            if (puzzle is null)
+                return BadRequest(new RequestResponse("未找到题目"));
 
             for (int i = model.AccessLevel; i <= MAX_ACCESS_LEVEL; ++i)
                 cache.Remove(CacheKey.AccessiblePuzzles(i));

@@ -276,10 +276,10 @@ namespace MSC.Server.Controllers
             var oname = user.UserName;
 
             user.UserName = model.UserName;
-            user.Description = model.Des;
-            user.PhoneNumber = model.PhoneNumber;
-            user.StudentId = model.StudentId;
-            user.RealName = model.RealName;
+            user.Description = model.Des ?? string.Empty;
+            user.PhoneNumber = model.PhoneNumber ?? string.Empty;
+            user.StudentId = model.StudentId ?? string.Empty;
+            user.RealName = model.RealName ?? string.Empty;
 
             var result = await userManager.UpdateAsync(user);
 

@@ -14,6 +14,6 @@ namespace MSC.Server.Models.Request
         [MinLength(1)]
         [MaxLength(50)]
         [RegularExpression("^msc{[a-zA-Z0-9_-]+}$")]
-        public string? Answer { get; set; }
+        public string Answer { get; set; } = string.Empty;
     }
 }

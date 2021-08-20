@@ -48,7 +48,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="accessLevel">用户访问权限</param>
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
-        public Task<VerifyResult?> VerifyAnswer(int id, string answer, int accessLevel, CancellationToken token);
+        public Task<VerifyResult> VerifyAnswer(int id, string? answer, int accessLevel, CancellationToken token);
 
         /// <summary>
         /// 更新成功解题人数

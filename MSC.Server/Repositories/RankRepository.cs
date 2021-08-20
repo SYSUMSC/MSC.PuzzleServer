@@ -18,7 +18,7 @@ namespace MSC.Server.Repositories
                 {
                     Score = rank.Score,
                     UpdateTime = rank.UpdateTimeUTC.ToLocalTime().ToString("M/d HH:mm:ss"),
-                    UserName = rank.User.UserName,
+                    UserName = rank.User!.UserName,
                     Descr = rank.User.Description,
                     UserId = rank.UserId
                 }).ToListAsync(token);
