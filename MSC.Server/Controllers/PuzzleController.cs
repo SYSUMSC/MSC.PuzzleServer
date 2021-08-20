@@ -213,7 +213,7 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> Submit(int id, [FromBody] AnswerSubmitModel model, CancellationToken token)
         {
             var user = await userManager.Users.Include(u => u.Rank)
-                .SingleAsync(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                .SingleAsync(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier), cancellationToken: token);
 
             var result = await puzzleRepository.VerifyAnswer(id, model.Answer, user.AccessLevel, token);
 

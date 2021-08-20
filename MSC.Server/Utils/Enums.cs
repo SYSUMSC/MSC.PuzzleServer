@@ -84,11 +84,11 @@
         /// <summary>
         /// 最高访问等级
         /// </summary>
-        public static string MaxAccessLevel = "_MaxAccessLevel";
+        public const string MaxAccessLevel = "_MaxAccessLevel";
         /// <summary>
         /// 积分榜缓存
         /// </summary>
-        public static string ScoreBoard => "_ScoreBoard";
+        public const string ScoreBoard = "_ScoreBoard";
         /// <summary>
         /// 可访问的谜题列表
         /// </summary>

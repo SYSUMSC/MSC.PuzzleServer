@@ -16,18 +16,18 @@ namespace MSC.Server.Extensions
 
     public class RecaptchaExtension : IRecaptchaExtension
     {
-        private IConfiguration _configuration { get; }
-        private static string GoogleSecretKey { get; set; }
-        private static string GoogleRecaptchaVerifyApi { get; set; }
-        private static decimal RecaptchaThreshold { get; set; }
+        private IConfiguration Configuration { get; }
+        private string GoogleSecretKey { get; set; }
+        private string GoogleRecaptchaVerifyApi { get; set; }
+        private decimal RecaptchaThreshold { get; set; }
         public RecaptchaExtension(IConfiguration configuration)
         {
-            _configuration = configuration;
+            Configuration = configuration;
 
-            GoogleRecaptchaVerifyApi = _configuration.GetSection("GoogleRecaptcha").GetSection("VefiyAPIAddress").Value ?? "";
-            GoogleSecretKey = _configuration.GetSection("GoogleRecaptcha").GetSection("Secretkey").Value ?? "";
+            GoogleRecaptchaVerifyApi = Configuration.GetSection("GoogleRecaptcha").GetSection("VefiyAPIAddress").Value ?? "";
+            GoogleSecretKey = Configuration.GetSection("GoogleRecaptcha").GetSection("Secretkey").Value ?? "";
 
-            var hasThresholdValue = decimal.TryParse(_configuration.GetSection("RecaptchaThreshold").Value ?? "", out var threshold);
+            var hasThresholdValue = decimal.TryParse(Configuration.GetSection("RecaptchaThreshold").Value ?? "", out var threshold);
             if (hasThresholdValue)
                 RecaptchaThreshold = threshold;
         }
@@ -41,7 +41,7 @@ namespace MSC.Server.Extensions
             {
                 var response = await client.GetStringAsync($"{GoogleRecaptchaVerifyApi}?secret={GoogleSecretKey}&response={token}&remoteip={ip}");
                 var tokenResponse = JsonConvert.DeserializeObject<TokenResponseModel>(response);
-                if (!tokenResponse.Success || tokenResponse.Score < RecaptchaThreshold)
+                if (tokenResponse is null || !tokenResponse.Success || tokenResponse.Score < RecaptchaThreshold)
                     return false;
             }
             return true;

@@ -10,8 +10,9 @@ namespace MSC.Server.Services
 {
     public class SignalRLoggingService : IDisposable
     {
+        private bool disposed = false;
         private IHubContext<LoggingHub, ILoggingClient> Hub { get; set; }
-        public SignalRTarget Target { get; set; }
+        public SignalRTarget? Target { get; set; }
 
         public SignalRLoggingService(IHubContext<LoggingHub, ILoggingClient> _Hub)
         {
@@ -21,10 +22,20 @@ namespace MSC.Server.Services
                 Target.LogEventHandler += OnLog;
         }
 
+        ~SignalRLoggingService()
+        {
+            Dispose();
+        }
+
         public void Dispose()
         {
-            if (Target is not null)
-                Target.LogEventHandler -= OnLog;
+            if (!disposed)
+            {
+                disposed = true;
+                if (Target is not null)
+                    Target.LogEventHandler -= OnLog;
+                GC.SuppressFinalize(this);
+            }
         }
 
         public async void OnLog(LogEventInfo logInfo)

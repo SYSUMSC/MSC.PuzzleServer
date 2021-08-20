@@ -19,12 +19,12 @@ namespace MSC.Server.Utils
         /// <returns></returns>
         public static async Task<bool> HasPrivilege(HttpContext context, Privilege privilege)
         {
-            AppDbContext dbContext = (AppDbContext)context?.RequestServices?.GetService(typeof(AppDbContext));
-            var userId = context?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            var dbContext = context.RequestServices.GetRequiredService<AppDbContext>();
+            var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (dbContext is null || userId is null)
                 return false;
 
-            UserInfo currentUser = await dbContext.Users.FirstOrDefaultAsync(i => i.Id == userId);
+            var currentUser = await dbContext.Users.FirstOrDefaultAsync(i => i.Id == userId);
 
             return currentUser is not null && currentUser.Privilege >= privilege;
         }

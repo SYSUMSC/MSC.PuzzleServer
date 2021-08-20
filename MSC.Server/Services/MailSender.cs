@@ -38,19 +38,17 @@ namespace MSC.Server.Services
 
             try
             {
-                using (var smtp = new SmtpClient())
+                using var smtp = new SmtpClient();
+                smtp.MessageSent += (sender, args) =>
                 {
-                    smtp.MessageSent += (sender, args) =>
-                    {
-                        isSuccess = true;
-                        LogHelper.Log(logger, "已发送邮件至" + to, "-", TaskStatus.Success);
-                    };
-                    smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                    await smtp.ConnectAsync(smtpHost, smtpPort, SecureSocketOptions.StartTls);
-                    await smtp.AuthenticateAsync(username + "@" + domain, password);
-                    await smtp.SendAsync(message);
-                    await smtp.DisconnectAsync(true);
-                }
+                    isSuccess = true;
+                    LogHelper.Log(logger, "已发送邮件至" + to, "-", TaskStatus.Success);
+                };
+                smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                await smtp.ConnectAsync(smtpHost, smtpPort, SecureSocketOptions.StartTls);
+                await smtp.AuthenticateAsync(username + "@" + domain, password);
+                await smtp.SendAsync(message);
+                await smtp.DisconnectAsync(true);
             }
             catch (Exception e)
             {
@@ -63,11 +61,11 @@ namespace MSC.Server.Services
 
         public async void SendUrl(string title, string infomation, string btnmsg, string userName, string email, string url)
         {
-            string _namespace = MethodBase.GetCurrentMethod().DeclaringType.Namespace;
+            string _namespace = MethodBase.GetCurrentMethod()!.DeclaringType!.Namespace!;
             Assembly _assembly = Assembly.GetExecutingAssembly();
             string resourceName = _namespace + ".Assets.URLEmailTemplate.html";
             string emailContent = await
-                new StreamReader(_assembly.GetManifestResourceStream(resourceName))
+                new StreamReader(_assembly.GetManifestResourceStream(resourceName)!)
                 .ReadToEndAsync();
             emailContent = emailContent
                 .Replace("{title}", title)
@@ -77,7 +75,7 @@ namespace MSC.Server.Services
                 .Replace("{userName}", userName)
                 .Replace("{url}", url)
                 .Replace("{nowtime}", DateTime.UtcNow.ToString("u"));
-            if (!(await SendEmailAsync(title, emailContent, email)))
+            if (!await SendEmailAsync(title, emailContent, email))
                 LogHelper.Log(logger, "邮件发送失败！", "-", TaskStatus.Fail);
         }
 

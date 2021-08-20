@@ -17,6 +17,7 @@ namespace MSC.Server.Middlewares
     /// <summary>
     /// 需要权限访问
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class RequirePrivilegeAttribute : Attribute, IAsyncAuthorizationFilter
     { 
         /// <summary>
@@ -29,9 +30,9 @@ namespace MSC.Server.Middlewares
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            AppDbContext dbContext = (AppDbContext)context.HttpContext.RequestServices.GetService(typeof(AppDbContext));
+            AppDbContext dbContext = context.HttpContext.RequestServices.GetRequiredService<AppDbContext>();
             var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            UserInfo currentUser = await dbContext.Users.FirstOrDefaultAsync(i => i.Id == userId);
+            UserInfo? currentUser = await dbContext.Users.FirstOrDefaultAsync(i => i.Id == userId);
 
             if (currentUser is null)
             {

@@ -1,5 +1,6 @@
 ﻿using NLog;
 using MSC.Server.Models;
+using LogLevel = NLog.LogLevel;
 
 namespace MSC.Server.Utils
 {
@@ -13,7 +14,7 @@ namespace MSC.Server.Utils
         /// <param name="user">用户对象</param>
         /// <param name="status">操作执行结果</param>
         /// <param name="level">Log 级别</param>
-        public static void Log(Logger _logger, string msg, UserInfo user, TaskStatus status, LogLevel level = null)
+        public static void Log(Logger _logger, string msg, UserInfo user, TaskStatus status, LogLevel? level = null)
         {
             LogEventInfo logEventInfo = new(level ?? LogLevel.Info, _logger.Name, msg);
             logEventInfo.Properties["uname"] = user.UserName;
@@ -30,7 +31,7 @@ namespace MSC.Server.Utils
         /// <param name="ip">连接IP</param>
         /// <param name="status">操作执行结果</param>
         /// <param name="level">Log 级别</param>
-        public static void Log(Logger _logger, string msg, string ip, TaskStatus status, LogLevel level = null)
+        public static void Log(Logger _logger, string msg, string ip, TaskStatus status, LogLevel? level = null)
         {
             LogEventInfo logEventInfo = new(level ?? LogLevel.Info, _logger.Name, msg);
             logEventInfo.Properties["uname"] = "Anonymous";
@@ -48,7 +49,7 @@ namespace MSC.Server.Utils
         /// <param name="ip">当前IP</param>
         /// <param name="status">操作执行结果</param>
         /// <param name="level">Log 级别</param>
-        public static void Log(Logger _logger, string msg, string username, string ip, TaskStatus status, LogLevel level = null)
+        public static void Log(Logger _logger, string msg, string username, string ip, TaskStatus status, LogLevel? level = null)
         {
             LogEventInfo logEventInfo = new(level ?? LogLevel.Info, _logger.Name, msg);
             logEventInfo.Properties["uname"] = username;
