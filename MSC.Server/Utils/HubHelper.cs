@@ -4,6 +4,7 @@ using MSC.Server.Models;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MSC.Server.Utils
 {

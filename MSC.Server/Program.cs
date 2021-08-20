@@ -8,7 +8,9 @@ using MSC.Server.Services;
 using MSC.Server.Utils;
 using NLog;
 using NLog.Web;
+using System;
 using System.Text;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using MSC.Server.Services.Interface;
 using MSC.Server.Repositories.Interface;
@@ -131,7 +133,6 @@ else
 app.UseMiddleware<ProxyMiddleware>();
 app.UseIpRateLimiting();
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
