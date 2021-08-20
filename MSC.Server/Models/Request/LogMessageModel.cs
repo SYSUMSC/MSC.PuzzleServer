@@ -34,6 +34,6 @@ public class LogMessageModel
     /// <summary>
     /// 任务状态
     /// </summary>
-    [JsonProperty("status")]
+    [JsonPropertyName("status")]
     public string? Status { get; set; }
 }
