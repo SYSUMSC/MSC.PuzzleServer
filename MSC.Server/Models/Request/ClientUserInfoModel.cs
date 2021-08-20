@@ -20,13 +20,13 @@ public class ClientUserInfoModel
     /// 学号
     /// </summary>
     [JsonPropertyName("stdId")]
-    public string StudentId { get; set; } = string.Empty;
+    public string? StudentId { get; set; }
 
     /// <summary>
     /// 真实姓名
     /// </summary>
     [JsonPropertyName("realName")]
-    public string RealName { get; set; } = string.Empty;
+    public string? RealName { get; set; }
 
     /// <summary>
     /// 是否为中山大学学生
@@ -38,7 +38,7 @@ public class ClientUserInfoModel
     /// 手机号
     /// </summary>
     [JsonPropertyName("phone")]
-    public string PhoneNumber { get; set; } = string.Empty;
+    public string? PhoneNumber { get; set; }
 
     /// <summary>
     /// 邮箱

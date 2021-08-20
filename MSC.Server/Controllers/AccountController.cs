@@ -378,4 +378,31 @@ public class AccountController : ControllerBase
 
         return Ok();
     }
+
+    /// <summary>
+    /// 用户邮箱更改确认接口
+    /// </summary>
+    /// <remarks>
+    /// 使用此接口获取用户信息，需要SignedIn权限
+    /// </remarks>
+    /// <response code="200">用户成功获取信息</response>
+    /// <response code="401">无权访问</response>
+    [HttpGet]
+    [RequireSignedIn]
+    [ProducesResponseType(typeof(ClientUserInfoModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Me()
+    {
+        var user = await userManager.GetUserAsync(User);
+        return Ok(new ClientUserInfoModel()
+        {
+                Description = user.Description,
+                Email = user.Email, 
+                UserName = user.UserName,
+                IsSYSU = user.IsSYSU,
+                PhoneNumber = user.PhoneNumber,
+                RealName = user.RealName,
+                StudentId = user.StudentId,
+        });
+    }
 }
