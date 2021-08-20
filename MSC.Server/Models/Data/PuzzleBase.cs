@@ -22,7 +22,7 @@ namespace MSC.Server.Models
         /// 谜题答案
         /// </summary>
         [Required]
-        [MaxLength(30)]
+        [MaxLength(50)]
         [MinLength(1)]
         [RegularExpression("^msc{[a-zA-Z0-9_-]+}$")]
         public string Answer { get; set; }

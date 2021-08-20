@@ -12,7 +12,7 @@ namespace MSC.Server.Models.Request
         /// </summary>
         [Required]
         [MinLength(1)]
-        [MaxLength(30)]
+        [MaxLength(50)]
         [RegularExpression("^msc{[a-zA-Z0-9_-]+}$")]
         public string Answer { get; set; }
     }
