@@ -1,5 +1,5 @@
 ﻿using MSC.Server.Models;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace MSC.Server.Extensions;
 
@@ -36,7 +36,7 @@ public class RecaptchaExtension : IRecaptchaExtension
         using (var client = new HttpClient())
         {
             var response = await client.GetStringAsync($"{GoogleRecaptchaVerifyApi}?secret={GoogleSecretKey}&response={token}&remoteip={ip}");
-            var tokenResponse = JsonConvert.DeserializeObject<TokenResponseModel>(response);
+            var tokenResponse = JsonSerializer.Deserialize<TokenResponseModel>(response);
             if (tokenResponse is null || !tokenResponse.Success || tokenResponse.Score < RecaptchaThreshold)
                 return false;
         }

@@ -87,11 +87,8 @@ builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection(
 
 //注入计数器和规则存储
 builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
-
 builder.Services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
-
 builder.Services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
-
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
 #endregion IP Rate Limit

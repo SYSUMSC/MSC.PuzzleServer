@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace MSC.Server.Models;
 
@@ -7,15 +7,15 @@ namespace MSC.Server.Models;
 /// </summary>
 public class TokenResponseModel
 {
-    [JsonProperty("success")]
+    [JsonPropertyName("success")]
     public bool Success { get; set; }
 
-    [JsonProperty("score")]
+    [JsonPropertyName("score")]
     public decimal Score { get; set; }
 
-    [JsonProperty("action")]
+    [JsonPropertyName("action")]
     public string? Action { get; set; }
 
-    [JsonProperty("error-codes")]
+    [JsonPropertyName("error-codes")]
     public List<string>? ErrorCodes { get; set; }
 }
