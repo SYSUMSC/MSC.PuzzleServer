@@ -58,7 +58,7 @@ namespace MSC.Server.Models
 
         public int RankId { get; set; }
 
-        public Rank Rank { get; set; }
+        public Rank? Rank { get; set; }
 
         public List<Submission> Submissions { get; set; } = new();
 
@@ -70,13 +70,18 @@ namespace MSC.Server.Models
         /// <param name="context"></param>
         public void UpdateByHttpContext(HttpContext context)
         {
+            LastVisitedUTC = DateTime.UtcNow;
+
             var remoteAddress = context.Connection.RemoteIpAddress;
+
+            if (remoteAddress is null)
+                return;
+
             if (remoteAddress.IsIPv4MappedToIPv6)
                 IP = remoteAddress.MapToIPv4().ToString();
             else
                 IP = remoteAddress.MapToIPv6().ToString().Replace("::ffff:", "");
 
-            LastVisitedUTC = DateTime.UtcNow;
         }
     }
 }

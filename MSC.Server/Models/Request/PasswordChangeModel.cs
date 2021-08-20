@@ -12,13 +12,13 @@ namespace MSC.Server.Models.Request
         /// </summary>
         [Required]
         [MinLength(6)]
-        public string Old { get; set; }
+        public string? Old { get; set; }
 
         /// <summary>
         /// 新密码
         /// </summary>
         [Required]
         [MinLength(6)]
-        public string New { get; set; }
+        public string? New { get; set; }
     }
 }

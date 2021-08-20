@@ -13,23 +13,23 @@ namespace MSC.Server.Models
 
         [Required]
         [MaxLength(50)]
-        public string Level { get; set; }
+        public string? Level { get; set; }
 
         [Required]
         [MaxLength(250)]
-        public string Logger { get; set; }
+        public string? Logger { get; set; }
 
         [MaxLength(25)]
-        public string RemoteIP { get; set; }
+        public string? RemoteIP { get; set; }
 
         [MaxLength(25)]
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
 
         [MaxLength(20)]
-        public string Status { get; set; }
+        public string? Status { get; set; }
 
-        public string Exception { get; set; }
+        public string? Exception { get; set; }
     }
 }

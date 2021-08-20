@@ -48,12 +48,12 @@ namespace MSC.Server.Models
         /// <summary>
         /// 用户数据库Id
         /// </summary>
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         /// <summary>
         /// 用户
         /// </summary>
-        public UserInfo User { get; set; }
+        public UserInfo? User { get; set; }
 
         /// <summary>
         /// 谜题数据库Id
@@ -63,7 +63,7 @@ namespace MSC.Server.Models
         /// <summary>
         /// 谜题
         /// </summary>
-        public Puzzle Puzzle { get; set; }
+        public Puzzle? Puzzle { get; set; }
 
         #endregion 数据库关系
     }

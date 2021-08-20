@@ -24,12 +24,12 @@ namespace MSC.Server.Repositories
 
         public async Task<(bool result, string title)> DeletePuzzle(int id, CancellationToken token)
         {
-            Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
+            Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
 
             if (puzzle is null)
                 return (false, string.Empty);
 
-            string title = puzzle.Title;
+            string title = puzzle.Title!;
 
             context.Remove(puzzle);
             await context.SaveChangesAsync(token);
@@ -52,9 +52,9 @@ namespace MSC.Server.Repositories
         public int GetMaxAccessLevel()
             => context.Puzzles.Max(p => p.AccessLevel);
 
-        public async Task<UserPuzzleModel> GetUserPuzzle(int id, int accessLevel, CancellationToken token)
+        public async Task<UserPuzzleModel?> GetUserPuzzle(int id, int accessLevel, CancellationToken token)
         {
-            Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
+            Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
 
             if (puzzle is null || puzzle.AccessLevel > accessLevel)
                 return null;
@@ -67,9 +67,12 @@ namespace MSC.Server.Repositories
             };
         }
 
-        public async Task<Puzzle> UpdatePuzzle(int id, PuzzleBase newPuzzle, CancellationToken token)
+        public async Task<Puzzle?> UpdatePuzzle(int id, PuzzleBase newPuzzle, CancellationToken token)
         {
-            Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
+            Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
+
+            if (puzzle is null)
+                return null;
 
             puzzle.Update(newPuzzle);
             await context.SaveChangesAsync(token);
@@ -79,19 +82,22 @@ namespace MSC.Server.Repositories
 
         public async Task UpdateSolvedCount(int id, CancellationToken token)
         {
-            Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
+            Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
+
+            if (puzzle is null)
+                return;
 
             ++puzzle.SolvedCount;
 
             await context.SaveChangesAsync(token);
         }
 
-        public async Task<VerifyResult> VerifyAnswer(int id, string answer, int accessLevel, CancellationToken token)
+        public async Task<VerifyResult?> VerifyAnswer(int id, string answer, int accessLevel, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(answer))
                 return new VerifyResult();
 
-            Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
+            Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
 
             if (puzzle is null || puzzle.AccessLevel > accessLevel)
                 return new VerifyResult(AnswerResult.Unauthorized);

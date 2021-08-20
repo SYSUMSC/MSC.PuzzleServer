@@ -12,7 +12,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="count">获取数量</param>
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
-        public Task<List<RankMessageModel>> GetRank(CancellationToken token, int skip = 0, int count = 100);
+        public Task<List<RankMessageModel>?> GetRank(CancellationToken token, int skip = 0, int count = 100);
 
         /// <summary>
         /// 更新排名对象

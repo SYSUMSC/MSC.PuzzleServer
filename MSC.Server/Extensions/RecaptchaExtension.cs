@@ -5,7 +5,7 @@ namespace MSC.Server.Extensions
 {
     public interface IRecaptchaExtension
     {
-        Task<bool> VerifyAsync(string token, string ip);
+        Task<bool> VerifyAsync(string? token, string? ip);
     }
 
     public class RecaptchaExtension : IRecaptchaExtension
@@ -27,7 +27,7 @@ namespace MSC.Server.Extensions
                 RecaptchaThreshold = threshold;
         }
 
-        public async Task<bool> VerifyAsync(string token, string ip)
+        public async Task<bool> VerifyAsync(string? token, string? ip)
         {
             if (RecaptchaThreshold == 0)
                 return true;

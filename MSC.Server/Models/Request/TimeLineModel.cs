@@ -17,7 +17,7 @@ namespace MSC.Server.Models.Request
         /// 时间
         /// </summary>
         [JsonProperty("time")]
-        public string Time { get; set; }
+        public string? Time { get; set; }
 
         /// <summary>
         /// 当前总分值

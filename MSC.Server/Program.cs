@@ -128,7 +128,7 @@ LogManager.Setup().SetupExtensions(s =>
     s.RegisterTarget<SignalRTarget>("SignalR");
 });
 
-var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+var logger = NLogBuilder.ConfigureNLog("nlog.config").GetLogger("Main");
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

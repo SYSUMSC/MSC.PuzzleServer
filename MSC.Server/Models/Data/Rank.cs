@@ -24,12 +24,12 @@ namespace MSC.Server.Models
         /// <summary>
         /// 用户数据库Id
         /// </summary>
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         /// <summary>
         /// 用户
         /// </summary>
-        public UserInfo User { get; set; }
+        public UserInfo? User { get; set; }
 
         #endregion 数据库关系
     }

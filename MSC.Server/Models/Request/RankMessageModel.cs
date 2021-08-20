@@ -18,23 +18,23 @@ namespace MSC.Server.Models.Request
         /// 更新时间
         /// </summary>
         [JsonProperty("time")]
-        public string UpdateTime { get; set; }
+        public string? UpdateTime { get; set; }
 
         /// <summary>
         /// 用户名
         /// </summary>
         [JsonProperty("name")]
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         /// <summary>
         /// 用户描述
         /// </summary>
         [JsonProperty("descr")]
-        public string Descr { get; set; }
+        public string? Descr { get; set; }
 
         /// <summary>
         /// 用户Id
         /// </summary>
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
     }
 }

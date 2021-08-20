@@ -10,14 +10,14 @@ namespace MSC.Server.Utils
         /// </summary>
         public static class Base64
         {
-            public static string Decode(string str, string type = "utf-8")
-                => Encoding.GetEncoding(type).GetString(Convert.FromBase64String(str));
+            public static string Decode(string? str, string type = "utf-8")
+                => str is null ? string.Empty : Encoding.GetEncoding(type).GetString(Convert.FromBase64String(str));
 
-            public static string Encode(string str, string type = "utf-8")
-                => Convert.ToBase64String(Encoding.GetEncoding(type).GetBytes(str));
+            public static string Encode(string? str, string type = "utf-8")
+                => str is null ? string.Empty : Convert.ToBase64String(Encoding.GetEncoding(type).GetBytes(str));
 
-            public static byte[] DecodeToBytes(string str)
-                => Convert.FromBase64String(str);
+            public static byte[]? DecodeToBytes(string? str)
+                => str is null ? null : Convert.FromBase64String(str);
         }
 
         /// <summary>

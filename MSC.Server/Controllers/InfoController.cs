@@ -42,14 +42,15 @@ namespace MSC.Server.Controllers
         [ProducesResponseType(typeof(ScoreBoardMessageModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> ScoreBoard(CancellationToken token)
         {
-            ScoreBoardMessageModel result;
-
-            if (cache.TryGetValue(CacheKey.ScoreBoard, out result))
+            if (cache.TryGetValue(CacheKey.ScoreBoard, out ScoreBoardMessageModel result))
                 return Ok(result);
 
             result = new();
             result.TopDetail = new();
             result.Rank = await rankRepository.GetRank(token);
+
+            if (result.Rank is null)
+                return Ok(result);
 
             var top10 = result.Rank.Take(10);
             foreach (var r in top10)
@@ -57,7 +58,7 @@ namespace MSC.Server.Controllers
                 result.TopDetail.Add(new ScoreBoardTimeLine()
                 {
                     UserName = r.UserName,
-                    TimeLine = await submissionRepository.GetTimeLine(r.UserId, token)
+                    TimeLine = await submissionRepository.GetTimeLine(r.UserId!, token)
                 });
             }
 

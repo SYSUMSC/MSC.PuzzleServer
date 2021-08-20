@@ -10,13 +10,13 @@ namespace MSC.Server.Models
         /// </summary>
         [Required]
         [MinLength(1)]
-        public string Title { get; set; }
+        public string ?Title { get; set; }
 
         /// <summary>
         /// 谜题内容
         /// </summary>
         [Required]
-        public string Content { get; set; }
+        public string ?Content { get; set; }
 
         /// <summary>
         /// 谜题答案
@@ -25,7 +25,7 @@ namespace MSC.Server.Models
         [MaxLength(50)]
         [MinLength(1)]
         [RegularExpression("^msc{[a-zA-Z0-9_-]+}$")]
-        public string Answer { get; set; }
+        public string ?Answer { get; set; }
 
         /// <summary>
         /// 访问等级

@@ -14,9 +14,9 @@ namespace MSC.Server.Models
         public decimal Score { get; set; }
 
         [JsonProperty("action")]
-        public string Action { get; set; }
+        public string? Action { get; set; }
 
         [JsonProperty("error-codes")]
-        public List<string> ErrorCodes { get; set; }
+        public List<string>? ErrorCodes { get; set; }
     }
 }

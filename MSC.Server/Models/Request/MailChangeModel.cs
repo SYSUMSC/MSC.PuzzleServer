@@ -12,6 +12,6 @@ namespace MSC.Server.Models.Request
         /// </summary>
         [Required]
         [EmailAddress]
-        public string NewMail { get; set; }
+        public string? NewMail { get; set; }
     }
 }

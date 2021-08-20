@@ -54,7 +54,7 @@ namespace MSC.Server.Controllers
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
+            if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString()))
                 return BadRequest(new RequestResponse("Recaptcha校验未通过!"));
 
             await signInManager.SignOutAsync();
@@ -79,7 +79,7 @@ namespace MSC.Server.Controllers
                 var current = await userManager.FindByEmailAsync(model.Email);
 
                 if (current is null)
-                    return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
+                    return BadRequest(new RequestResponse(result.Errors.FirstOrDefault()?.Description ?? "Unknown"));
 
                 if (await userManager.IsEmailConfirmedAsync(current))
                     return BadRequest(new RequestResponse("此账户已存在。"));
@@ -113,7 +113,7 @@ namespace MSC.Server.Controllers
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Recovery([FromBody] RecoveryModel model)
         {
-            if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
+            if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString()))
                 return BadRequest(new RequestResponse("Recaptcha校验未通过!"));
 
             var user = await userManager.FindByEmailAsync(model.Email);
@@ -145,14 +145,14 @@ namespace MSC.Server.Controllers
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel model)
         {
-            if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
+            if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString()))
                 return BadRequest(new RequestResponse("Recaptcha校验未通过!"));
 
             var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
             var result = await userManager.ResetPasswordAsync(user, Codec.Base64.Decode(model.RToken), model.Password);
 
             if (!result.Succeeded)
-                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
+                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault()?.Description ?? "Unknown"));
 
             LogHelper.Log(logger, "用户成功重置密码。", user, TaskStatus.Success);
 
@@ -189,7 +189,7 @@ namespace MSC.Server.Controllers
                 user.IsSYSU = true;
                 result = await userManager.UpdateAsync(user);
                 if (!result.Succeeded)
-                    return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
+                    return BadRequest(new RequestResponse(result.Errors.FirstOrDefault()?.Description ?? "Unknown"));
             }
 
             return Ok();
@@ -213,7 +213,7 @@ namespace MSC.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> LogIn([FromBody] LoginModel model)
         {
-            if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()))
+            if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString() ?? string.Empty))
                 return BadRequest();
 
             await signInManager.SignOutAsync();
@@ -284,7 +284,7 @@ namespace MSC.Server.Controllers
             var result = await userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
-                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
+                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault()?.Description ?? "Unknown"));
 
             if (oname != model.UserName)
                 LogHelper.Log(logger, "用户更新：" + oname + "=>" + model.UserName, user, TaskStatus.Success);
@@ -312,7 +312,7 @@ namespace MSC.Server.Controllers
             var result = await userManager.ChangePasswordAsync(user, model.Old, model.New);
 
             if (!result.Succeeded)
-                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault().Description));
+                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault()?.Description ?? "Unknown"));
 
             LogHelper.Log(logger, "用户更新密码。", user, TaskStatus.Success);
 

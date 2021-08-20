@@ -13,12 +13,12 @@
         /// <summary>
         /// 排名
         /// </summary>
-        public List<RankMessageModel> Rank { get; set; }
+        public List<RankMessageModel>? Rank { get; set; }
 
         /// <summary>
         /// 前十名的时间线
         /// </summary>
-        public List<ScoreBoardTimeLine> TopDetail { get; set; }
+        public List<ScoreBoardTimeLine>? TopDetail { get; set; }
     }
 
     /// <summary>
@@ -29,11 +29,11 @@
         /// <summary>
         /// 用户名
         /// </summary>
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         /// <summary>
         /// 时间线
         /// </summary>
-        public List<TimeLineModel> TimeLine { get; set; }
+        public List<TimeLineModel>? TimeLine { get; set; }
     }
 }

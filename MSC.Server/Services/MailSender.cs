@@ -55,8 +55,13 @@ namespace MSC.Server.Services
             return isSuccess;
         }
 
-        public async void SendUrl(string title, string infomation, string btnmsg, string userName, string email, string url)
+        public async void SendUrl(string? title, string? infomation, string? btnmsg, string? userName, string? email, string? url)
         {
+            if (email is null || userName is null || title is null)
+            {
+                LogHelper.Log(logger, "无效调用！", "-", TaskStatus.Fail);
+                return;
+            }
             string _namespace = MethodBase.GetCurrentMethod()!.DeclaringType!.Namespace!;
             Assembly _assembly = Assembly.GetExecutingAssembly();
             string resourceName = _namespace + ".Assets.URLEmailTemplate.html";
@@ -75,22 +80,22 @@ namespace MSC.Server.Services
                 LogHelper.Log(logger, "邮件发送失败！", "-", TaskStatus.Fail);
         }
 
-        public void SendConfirmEmailUrl(string userName, string email, string confirmLink)
+        public void SendConfirmEmailUrl(string? userName, string? email, string? confirmLink)
             => SendUrl("验证你的注册邮箱",
                 "需要验证你的邮箱：" + email,
                 "确认邮箱", userName, email, confirmLink);
 
-        public void SendResetPwdUrl(string userName, string email, string resetLink)
+        public void SendResetPwdUrl(string? userName, string? email, string? resetLink)
             => SendUrl("重置密码",
                 "点击下方按钮重置你的密码。",
                 "重置密码", userName, email, resetLink);
 
-        public void SendChangeEmailUrl(string userName, string email, string resetLink)
+        public void SendChangeEmailUrl(string? userName, string? email, string? resetLink)
             => SendUrl("更改邮箱",
                 "点击下方按钮更改你的邮箱。",
                 "更改邮箱", userName, email, resetLink);
 
-        public void SendResetPasswordUrl(string userName, string email, string resetLink)
+        public void SendResetPasswordUrl(string? userName, string? email, string? resetLink)
             => SendUrl("重置密码",
                 "点击下方按钮重置你的密码。",
                 "重置密码", userName, email, resetLink);

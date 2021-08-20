@@ -21,7 +21,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="accessLevel">用户访问权限</param>
         /// <param name="token">操作取消token</param>
         /// <returns>用户题目</returns>
-        public Task<UserPuzzleModel> GetUserPuzzle(int id, int accessLevel, CancellationToken token);
+        public Task<UserPuzzleModel?> GetUserPuzzle(int id, int accessLevel, CancellationToken token);
 
         /// <summary>
         /// 更新一个题目对象
@@ -30,7 +30,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="newPuzzle">更新的题目数据</param>
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
-        public Task<Puzzle> UpdatePuzzle(int id, PuzzleBase newPuzzle, CancellationToken token);
+        public Task<Puzzle?> UpdatePuzzle(int id, PuzzleBase newPuzzle, CancellationToken token);
 
         /// <summary>
         /// 删除题目
@@ -48,7 +48,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="accessLevel">用户访问权限</param>
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
-        public Task<VerifyResult> VerifyAnswer(int id, string answer, int accessLevel, CancellationToken token);
+        public Task<VerifyResult?> VerifyAnswer(int id, string answer, int accessLevel, CancellationToken token);
 
         /// <summary>
         /// 更新成功解题人数
