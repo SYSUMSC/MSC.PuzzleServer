@@ -53,6 +53,9 @@ namespace MSC.Server.Repositories
             return puzzleList;
         }
 
+        public int GetMaxAccessLevel()
+            => context.Puzzles.Max(p => p.AccessLevel);
+
         public async Task<UserPuzzleModel> GetUserPuzzle(int id, int accessLevel, CancellationToken token)
         {
             Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);

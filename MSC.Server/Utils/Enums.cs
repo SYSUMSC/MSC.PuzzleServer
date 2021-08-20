@@ -82,6 +82,10 @@
     public static class CacheKey
     {
         /// <summary>
+        /// 最高访问等级
+        /// </summary>
+        public static string MaxAccessLevel = "_MaxAccessLevel";
+        /// <summary>
         /// 积分榜缓存
         /// </summary>
         public static string ScoreBoard => "_ScoreBoard";

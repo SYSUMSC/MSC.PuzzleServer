@@ -27,6 +27,7 @@ namespace MSC.Server.Controllers
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
     public class PuzzleController : ControllerBase
     {
+        private readonly int MAX_ACCESS_LEVEL = 0;
         private static readonly Logger logger = LogManager.GetLogger("PuzzleController");
         private readonly UserManager<UserInfo> userManager;
         private readonly IRankRepository rankRepository;
@@ -46,6 +47,12 @@ namespace MSC.Server.Controllers
             rankRepository = _rankRepository;
             puzzleRepository = _puzzleRepository;
             submissionRepository = _submissionRepository;
+
+            if(!cache.TryGetValue(CacheKey.MaxAccessLevel,out MAX_ACCESS_LEVEL))
+            {
+                MAX_ACCESS_LEVEL = puzzleRepository.GetMaxAccessLevel();
+                cache.Set(CacheKey.MaxAccessLevel, MAX_ACCESS_LEVEL, TimeSpan.FromDays(7));
+            }
         }
 
         /// <summary>
@@ -69,7 +76,7 @@ namespace MSC.Server.Controllers
             if (puzzle is null)
                 return BadRequest(new RequestResponse("无效的题目"));
 
-            for (int i = model.AccessLevel; i < 5; ++i)
+            for (int i = model.AccessLevel; i <= MAX_ACCESS_LEVEL; ++i)
                 cache.Remove(CacheKey.AccessiblePuzzles(i));
 
             return Ok(new PuzzleResponse(puzzle.Id));
@@ -93,7 +100,7 @@ namespace MSC.Server.Controllers
         {
             var puzzle = await puzzleRepository.UpdatePuzzle(id, model, token);
 
-            for (int i = model.AccessLevel; i < 5; ++i)
+            for (int i = model.AccessLevel; i <= MAX_ACCESS_LEVEL; ++i)
                 cache.Remove(CacheKey.AccessiblePuzzles(i));
 
             return Ok(new PuzzleResponse(puzzle.Id));
@@ -148,7 +155,7 @@ namespace MSC.Server.Controllers
             if(!res)
                 return BadRequest(new RequestResponse("题目删除失败"));
 
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i <= MAX_ACCESS_LEVEL; ++i)
                 cache.Remove(CacheKey.AccessiblePuzzles(i));
 
             var user = await userManager.GetUserAsync(User);
