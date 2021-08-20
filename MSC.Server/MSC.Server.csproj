@@ -18,7 +18,6 @@
   
   <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="4.0.1" />
-    <PackageReference Include="MailKit" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.7.21378.6" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.Json" Version="6.0.0-preview.7.21378.6" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.0-preview.7.21378.6" />
@@ -29,7 +28,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0-preview.7.21377.19" />
-    <PackageReference Include="MimeKit" Version="2.15.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.13.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.13.2" />
   </ItemGroup>

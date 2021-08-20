@@ -13,11 +13,11 @@ namespace MSC.Server.Models
 
         [Required]
         [MaxLength(50)]
-        public string? Level { get; set; }
+        public string Level { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(250)]
-        public string? Logger { get; set; }
+        public string Logger { get; set; } = string.Empty;
 
         [MaxLength(25)]
         public string? RemoteIP { get; set; }

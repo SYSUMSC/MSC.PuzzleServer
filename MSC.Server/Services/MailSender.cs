@@ -1,11 +1,10 @@
-﻿using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit;
-using MimeKit.Text;
-using MSC.Server.Services.Interface;
+﻿using MSC.Server.Services.Interface;
 using MSC.Server.Utils;
 using NLog;
+using System.Net;
+using System.Net.Mail;
 using System.Reflection;
+using System.Text;
 
 namespace MSC.Server.Services
 {
@@ -26,25 +25,29 @@ namespace MSC.Server.Services
             var smtpPort = int.Parse(configuration["EmailConfig:Smtp:Port"]);
             bool isSuccess = false;
 
-            MimeMessage message = new();
-            message.Subject = subject;
-            message.From.Add(MailboxAddress.Parse(username + "@" + domain));
-            message.To.Add(MailboxAddress.Parse(to));
-            message.Body = new TextPart(TextFormat.Html) { Text = content };
+            var msg = new MailMessage
+            {
+                From = new MailAddress($"{username}@{domain}"),
+                Subject = subject,
+                SubjectEncoding = Encoding.UTF8,
+                Body = content,
+                BodyEncoding = Encoding.UTF8,
+                IsBodyHtml = true,
+            };
+
+            msg.To.Add(to);
 
             try
             {
-                using var smtp = new SmtpClient();
-                smtp.MessageSent += (sender, args) =>
+                using var smtp = new SmtpClient()
                 {
-                    isSuccess = true;
-                    LogHelper.Log(logger, "已发送邮件至" + to, "-", TaskStatus.Success);
+                    Host = smtpHost,
+                    Port = smtpPort,
+                    EnableSsl = true,
+                    Credentials = new NetworkCredential(username, password)
                 };
-                smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                await smtp.ConnectAsync(smtpHost, smtpPort, SecureSocketOptions.StartTls);
-                await smtp.AuthenticateAsync(username + "@" + domain, password);
-                await smtp.SendAsync(message);
-                await smtp.DisconnectAsync(true);
+
+                await smtp.SendMailAsync(msg);
             }
             catch (Exception e)
             {

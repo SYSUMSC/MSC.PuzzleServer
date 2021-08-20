@@ -9,10 +9,10 @@ namespace MSC.Server.Models
         {
         }
 
-        public DbSet<LogModel> Logs { get; set; } = default!;
-        public DbSet<Submission> Submissions { get; set; } = default!;
-        public DbSet<Rank> Ranks { get; set; } = default!;
-        public DbSet<Puzzle> Puzzles { get; set; } = default!;
+        public DbSet<LogModel>? Logs { get; set; }
+        public DbSet<Submission>? Submissions { get; set; }
+        public DbSet<Rank>? Ranks { get; set; }
+        public DbSet<Puzzle>? Puzzles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

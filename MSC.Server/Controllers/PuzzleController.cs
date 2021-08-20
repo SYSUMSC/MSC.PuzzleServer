@@ -18,7 +18,7 @@ namespace MSC.Server.Controllers
     /// </summary>
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
     public class PuzzleController : ControllerBase
     {
@@ -60,11 +60,11 @@ namespace MSC.Server.Controllers
         /// <param name="token">操作取消token</param>
         /// <response code="200">成功新建题目</response>
         /// <response code="400">校验失败</response>
-        [HttpPost]
+        [HttpPost("New")]
         [RequireAdmin]
         [ProducesResponseType(typeof(PuzzleResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Add([FromBody] PuzzleBase model, CancellationToken token)
+        public async Task<IActionResult> New([FromBody] PuzzleBase model, CancellationToken token)
         {
             var puzzle = await puzzleRepository.AddPuzzle(model, token);
 
@@ -173,7 +173,7 @@ namespace MSC.Server.Controllers
         /// <param name="token">操作取消token</param>
         /// <response code="200">答案正确</response>
         /// <response code="401">无权访问</response>
-        [HttpGet]
+        [HttpGet("List")]
         [RequireSignedIn]
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
@@ -204,7 +204,7 @@ namespace MSC.Server.Controllers
         /// <response code="200">答案正确</response>
         /// <response code="400">答案错误</response>
         /// <response code="401">无权访问或题目无效</response>
-        [HttpPost("{id}")]
+        [HttpPost("Submit/{id}")]
         [RequireSignedIn]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
