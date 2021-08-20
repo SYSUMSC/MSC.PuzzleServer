@@ -41,6 +41,18 @@ namespace MSC.Server.Repositories
             return (true, title);
         }
 
+        public async Task<List<int>> GetAccessiblePuzzles(int accessLevel, CancellationToken token)
+        {
+            var puzzles = await context.Puzzles.Where(p => p.AccessLevel <= accessLevel).ToListAsync(token);
+
+            List<int> puzzleList = new();
+
+            foreach (var p in puzzles)
+                puzzleList.Add(p.Id);
+
+            return puzzleList;
+        }
+
         public async Task<UserPuzzleModel> GetUserPuzzle(int id, int accessLevel, CancellationToken token)
         {
             Puzzle puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);

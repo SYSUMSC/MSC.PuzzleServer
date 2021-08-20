@@ -9,6 +9,8 @@ using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Utils;
 using NLog;
+using System;
+using System.Collections.Generic;
 using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading;
@@ -67,6 +69,9 @@ namespace MSC.Server.Controllers
             if (puzzle is null)
                 return BadRequest(new RequestResponse("无效的题目"));
 
+            for (int i = model.AccessLevel; i < 5; ++i)
+                cache.Remove(CacheKey.AccessiblePuzzles(i));
+
             return Ok(new PuzzleResponse(puzzle.Id));
         }
 
@@ -87,6 +92,9 @@ namespace MSC.Server.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] PuzzleBase model, CancellationToken token)
         {
             var puzzle = await puzzleRepository.UpdatePuzzle(id, model, token);
+
+            for (int i = model.AccessLevel; i < 5; ++i)
+                cache.Remove(CacheKey.AccessiblePuzzles(i));
 
             return Ok(new PuzzleResponse(puzzle.Id));
         }
@@ -119,7 +127,6 @@ namespace MSC.Server.Controllers
             return Ok(puzzle);
         }
 
-
         /// <summary>
         /// 删除题目接口
         /// </summary>
@@ -141,11 +148,42 @@ namespace MSC.Server.Controllers
             if(!res)
                 return BadRequest(new RequestResponse("题目删除失败"));
 
+            for (int i = 0; i < 5; ++i)
+                cache.Remove(CacheKey.AccessiblePuzzles(i));
+
             var user = await userManager.GetUserAsync(User);
 
             LogHelper.Log(logger, $"删除题目#{id} {title}", user, TaskStatus.Success);
 
             return Ok();
+        }
+
+        /// <summary>
+        /// 获取当前可访问题目列表
+        /// </summary>
+        /// <remarks>
+        /// 使用此接口获取当前用户可访问题目列表，需要SignedIn权限
+        /// </remarks>
+        /// <param name="token">操作取消token</param>
+        /// <response code="200">答案正确</response>
+        /// <response code="401">无权访问</response>
+        [HttpGet]
+        [RequireSignedIn]
+        [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetPuzzleList(CancellationToken token)
+        {
+            var user = await userManager.GetUserAsync(User);
+            int accessLevel = user.AccessLevel;
+
+            if (cache.TryGetValue(CacheKey.AccessiblePuzzles(accessLevel), out List<int> accessiblePuzzles))
+                return Ok(accessiblePuzzles);
+
+            accessiblePuzzles = await puzzleRepository.GetAccessiblePuzzles(accessLevel, token);
+
+            cache.Set(CacheKey.AccessiblePuzzles(accessLevel), accessiblePuzzles, TimeSpan.FromDays(6));
+
+            return Ok(accessiblePuzzles);
         }
 
         /// <summary>

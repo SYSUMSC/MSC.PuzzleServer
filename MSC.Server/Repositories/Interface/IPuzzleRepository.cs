@@ -57,5 +57,12 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task UpdateSolvedCount(int id, CancellationToken token);
+        /// <summary>
+        /// 获取可访问题目列表
+        /// </summary>
+        /// <param name="accessLevel">用户访问权限</param>
+        /// <param name="token">操作取消token</param>
+        /// <returns></returns>
+        public Task<List<int>> GetAccessiblePuzzles(int accessLevel, CancellationToken token);
     }
 }

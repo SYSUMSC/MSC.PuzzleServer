@@ -85,5 +85,11 @@
         /// 积分榜缓存
         /// </summary>
         public static string ScoreBoard => "_ScoreBoard";
+        /// <summary>
+        /// 可访问的谜题列表
+        /// </summary>
+        /// <param name="accessLevel">访问等级</param>
+        /// <returns></returns>
+        public static string AccessiblePuzzles(int accessLevel) => $"_AccessiblePuzzle_{accessLevel}";
     }
 }
