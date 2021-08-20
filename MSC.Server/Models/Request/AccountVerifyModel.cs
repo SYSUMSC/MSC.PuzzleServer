@@ -12,6 +12,7 @@ namespace MSC.Server.Models.Request
         /// </summary>
         [Required]
         public string Token { get; set; }
+
         /// <summary>
         /// 用户邮箱的Base64格式
         /// </summary>

@@ -1,18 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Utils;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mime;
 using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
 {
@@ -51,7 +45,7 @@ namespace MSC.Server.Controllers
         /// </remarks>
         /// <param name="id">题目Id</param>
         /// <param name="token">操作取消token</param>
-        /// <response code="200">成功获取提交</response>        
+        /// <response code="200">成功获取提交</response>
         /// <response code="401">无权访问</response>
         [HttpGet("/api/[controller]/{id}")]
         [RequireSignedIn]

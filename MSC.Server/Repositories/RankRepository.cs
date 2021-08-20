@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
@@ -12,7 +7,9 @@ namespace MSC.Server.Repositories
 {
     public class RankRepository : RepositoryBase, IRankRepository
     {
-        public RankRepository(AppDbContext context) : base(context) { }
+        public RankRepository(AppDbContext context) : base(context)
+        {
+        }
 
         public Task<List<RankMessageModel>> GetRank(CancellationToken token, int skip = 0, int count = 100)
             => (from rank in context.Ranks.OrderByDescending(r => r.Score)
@@ -32,6 +29,5 @@ namespace MSC.Server.Repositories
             rank.Score += score;
             await context.SaveChangesAsync(token);
         }
-
     }
 }

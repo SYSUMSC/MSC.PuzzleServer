@@ -1,20 +1,18 @@
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MSC.Server.Extensions;
 using MSC.Server.Hubs;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
+using MSC.Server.Repositories;
+using MSC.Server.Repositories.Interface;
 using MSC.Server.Services;
+using MSC.Server.Services.Interface;
 using MSC.Server.Utils;
 using NLog;
 using NLog.Web;
-using System;
 using System.Text;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using MSC.Server.Services.Interface;
-using MSC.Server.Repositories.Interface;
-using MSC.Server.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +30,7 @@ builder.Services.AddDbContext<AppDbContext>(
     provideropt => provideropt.EnableRetryOnFailure(3, TimeSpan.FromSeconds(10), null)));
 
 #region OpenApiDocument
+
 builder.Services.AddOpenApiDocument(settings =>
 {
     settings.DocumentName = "v1";
@@ -40,11 +39,14 @@ builder.Services.AddOpenApiDocument(settings =>
     settings.Description = "MSC Puzzle 接口文档";
     settings.UseControllerSummaryAsTagDescription = true;
 });
-#endregion
+
+#endregion OpenApiDocument
 
 #region MemoryCache
+
 builder.Services.AddMemoryCache();
-#endregion
+
+#endregion MemoryCache
 
 #region Identity
 
@@ -72,11 +74,14 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(o =>
 #endregion Identity
 
 #region Nlog
+
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 LogManager.Configuration.Variables["connectionString"] = builder.Configuration.GetConnectionString("DefaultConnection");
-#endregion
+
+#endregion Nlog
 
 #region IP Rate Limit
+
 //从appsettings.json获取相应配置
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
 
@@ -88,26 +93,33 @@ builder.Services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
 
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-#endregion
+
+#endregion IP Rate Limit
 
 #region Google reCaptcha v3
+
 builder.Services.AddSingleton<IRecaptchaExtension, RecaptchaExtension>();
-#endregion
+
+#endregion Google reCaptcha v3
 
 #region Services and Repositories
+
 builder.Services.AddTransient<IMailSender, MailSender>();
 
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IPuzzleRepository, PuzzleRepository>();
 builder.Services.AddScoped<IRankRepository, RankRepository>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
-#endregion
+
+#endregion Services and Repositories
 
 #region SignalR
+
 builder.Services.AddSignalR().AddJsonProtocol();
 
 builder.Services.AddSingleton<SignalRLoggingService>();
-#endregion
+
+#endregion SignalR
 
 builder.Services.AddControllersWithViews();
 

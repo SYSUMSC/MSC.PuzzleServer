@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,14 +23,16 @@ namespace MSC.Server.Models
                 if (SolvedCount > ExpectMaxCount)
                     return MinScore;
                 var range = OriginalScore - AwardCount - MinScore;
-                return (int)(OriginalScore - AwardCount 
-                    - Math.Floor( range * (SolvedCount - AwardCount)/(float)(ExpectMaxCount - AwardCount)));
+                return (int)(OriginalScore - AwardCount
+                    - Math.Floor(range * (SolvedCount - AwardCount) / (float)(ExpectMaxCount - AwardCount)));
             }
         }
 
         #region 数据库关系
+
         public List<Submission> Submissions { get; set; } = new();
-        #endregion
+
+        #endregion 数据库关系
 
         public void Update(PuzzleBase puzzle)
         {
@@ -42,7 +42,10 @@ namespace MSC.Server.Models
             Answer = Answer.ToUpper();
         }
 
-        public Puzzle() : base() { }
+        public Puzzle() : base()
+        {
+        }
+
         public Puzzle(PuzzleBase puzzle) : base() => Update(puzzle);
     }
 }

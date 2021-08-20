@@ -1,10 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MSC.Server.Models.Request
+﻿namespace MSC.Server.Models.Request
 {
     /// <summary>
     /// 用户端题目
@@ -15,10 +9,12 @@ namespace MSC.Server.Models.Request
         /// 题目标题
         /// </summary>
         public string Title { get; set; }
+
         /// <summary>
         /// 题目内容
         /// </summary>
         public string Content { get; set; }
+
         /// <summary>
         /// 已解出人数
         /// </summary>

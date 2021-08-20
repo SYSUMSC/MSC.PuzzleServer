@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace MSC.Server.Models
 {
@@ -43,26 +38,31 @@ namespace MSC.Server.Models
         /// 访问权限
         /// </summary>
         public int AccessLevel { get; set; } = 0;
+
         /// <summary>
         /// 学号
         /// </summary>
         public string StudentId { get; set; } = string.Empty;
+
         /// <summary>
         /// 真实姓名
         /// </summary>
         public string RealName { get; set; } = string.Empty;
+
         /// <summary>
         /// 是否为中山大学学生
         /// </summary>
         public bool IsSYSU { get; set; } = false;
 
         #region 数据库关系
+
         public int RankId { get; set; }
 
         public Rank Rank { get; set; }
 
         public List<Submission> Submissions { get; set; } = new();
-        #endregion
+
+        #endregion 数据库关系
 
         /// <summary>
         /// 通过Http请求更新用户最新访问时间和IP

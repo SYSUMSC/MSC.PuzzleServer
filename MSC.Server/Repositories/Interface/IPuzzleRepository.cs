@@ -1,11 +1,6 @@
 ﻿using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Repositories.Interface
 {
@@ -18,6 +13,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task<Puzzle> AddPuzzle(PuzzleBase newPuzzle, CancellationToken token);
+
         /// <summary>
         /// 获取用户题目数据
         /// </summary>
@@ -26,6 +22,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns>用户题目</returns>
         public Task<UserPuzzleModel> GetUserPuzzle(int id, int accessLevel, CancellationToken token);
+
         /// <summary>
         /// 更新一个题目对象
         /// </summary>
@@ -34,6 +31,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task<Puzzle> UpdatePuzzle(int id, PuzzleBase newPuzzle, CancellationToken token);
+
         /// <summary>
         /// 删除题目
         /// </summary>
@@ -41,6 +39,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task<(bool result, string title)> DeletePuzzle(int id, CancellationToken token);
+
         /// <summary>
         /// 验证答案
         /// </summary>
@@ -50,6 +49,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task<VerifyResult> VerifyAnswer(int id, string answer, int accessLevel, CancellationToken token);
+
         /// <summary>
         /// 更新成功解题人数
         /// </summary>
@@ -57,6 +57,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task UpdateSolvedCount(int id, CancellationToken token);
+
         /// <summary>
         /// 获取可访问题目列表
         /// </summary>
@@ -64,6 +65,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task<List<int>> GetAccessiblePuzzles(int accessLevel, CancellationToken token);
+
         /// <summary>
         /// 获取最高访问权限
         /// </summary>

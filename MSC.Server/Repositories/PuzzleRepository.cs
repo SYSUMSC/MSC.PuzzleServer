@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
-using Microsoft.EntityFrameworkCore;
 using MSC.Server.Utils;
-using NLog;
-using System.Threading;
 
 namespace MSC.Server.Repositories
 {
     public class PuzzleRepository : RepositoryBase, IPuzzleRepository
     {
-        public PuzzleRepository(AppDbContext context) : base(context) { }
+        public PuzzleRepository(AppDbContext context) : base(context)
+        {
+        }
 
         public async Task<Puzzle> AddPuzzle(PuzzleBase newPuzzle, CancellationToken token)
         {

@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Models
 {
@@ -15,6 +11,7 @@ namespace MSC.Server.Models
     {
         [Key]
         public int Id { get; set; }
+
         /// <summary>
         /// 提交的答案字符串
         /// </summary>
@@ -47,6 +44,7 @@ namespace MSC.Server.Models
         }
 
         #region 数据库关系
+
         /// <summary>
         /// 用户数据库Id
         /// </summary>
@@ -66,6 +64,7 @@ namespace MSC.Server.Models
         /// 谜题
         /// </summary>
         public Puzzle Puzzle { get; set; }
-        #endregion
+
+        #endregion 数据库关系
     }
 }

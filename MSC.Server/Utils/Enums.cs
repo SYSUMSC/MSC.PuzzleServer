@@ -66,10 +66,12 @@
         /// 答案正确
         /// </summary>
         Accepted = 1,
+
         /// <summary>
         /// 答案错误
         /// </summary>
         WrongAnswer = 2,
+
         /// <summary>
         /// 提交未授权
         /// </summary>
@@ -85,10 +87,12 @@
         /// 最高访问等级
         /// </summary>
         public const string MaxAccessLevel = "_MaxAccessLevel";
+
         /// <summary>
         /// 积分榜缓存
         /// </summary>
         public const string ScoreBoard = "_ScoreBoard";
+
         /// <summary>
         /// 可访问的谜题列表
         /// </summary>

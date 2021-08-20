@@ -1,17 +1,10 @@
-﻿using MSC.Server.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using NLog;
+using MSC.Server.Models;
 using MSC.Server.Utils;
+using NLog;
+using System.Security.Claims;
 
 namespace MSC.Server.Middlewares
 {
@@ -20,12 +13,14 @@ namespace MSC.Server.Middlewares
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class RequirePrivilegeAttribute : Attribute, IAsyncAuthorizationFilter
-    { 
+    {
         /// <summary>
         /// 所需权限
         /// </summary>
         private readonly Privilege RequiredPrivilege;
+
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         public RequirePrivilegeAttribute(Privilege privilege)
             => RequiredPrivilege = privilege;
 
@@ -61,7 +56,9 @@ namespace MSC.Server.Middlewares
     /// </summary>
     public class RequireSignedInAttribute : RequirePrivilegeAttribute
     {
-        public RequireSignedInAttribute() : base(Privilege.User) { }
+        public RequireSignedInAttribute() : base(Privilege.User)
+        {
+        }
     }
 
     /// <summary>
@@ -69,7 +66,9 @@ namespace MSC.Server.Middlewares
     /// </summary>
     public class RequireMonitorAttribute : RequirePrivilegeAttribute
     {
-        public RequireMonitorAttribute() : base(Privilege.Monitor) { }
+        public RequireMonitorAttribute() : base(Privilege.Monitor)
+        {
+        }
     }
 
     /// <summary>
@@ -77,6 +76,8 @@ namespace MSC.Server.Middlewares
     /// </summary>
     public class RequireAdminAttribute : RequirePrivilegeAttribute
     {
-        public RequireAdminAttribute() : base(Privilege.Admin) { }
+        public RequireAdminAttribute() : base(Privilege.Admin)
+        {
+        }
     }
 }

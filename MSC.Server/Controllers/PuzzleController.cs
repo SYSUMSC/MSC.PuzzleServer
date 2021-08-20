@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -9,12 +8,8 @@ using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Utils;
 using NLog;
-using System;
-using System.Collections.Generic;
 using System.Net.Mime;
 using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
 {
@@ -48,7 +43,7 @@ namespace MSC.Server.Controllers
             puzzleRepository = _puzzleRepository;
             submissionRepository = _submissionRepository;
 
-            if(!cache.TryGetValue(CacheKey.MaxAccessLevel,out MAX_ACCESS_LEVEL))
+            if (!cache.TryGetValue(CacheKey.MaxAccessLevel, out MAX_ACCESS_LEVEL))
             {
                 MAX_ACCESS_LEVEL = puzzleRepository.GetMaxAccessLevel();
                 cache.Set(CacheKey.MaxAccessLevel, MAX_ACCESS_LEVEL, TimeSpan.FromDays(7));
@@ -152,7 +147,7 @@ namespace MSC.Server.Controllers
         {
             var (res, title) = await puzzleRepository.DeletePuzzle(id, token);
 
-            if(!res)
+            if (!res)
                 return BadRequest(new RequestResponse("题目删除失败"));
 
             for (int i = 0; i <= MAX_ACCESS_LEVEL; ++i)
@@ -233,7 +228,7 @@ namespace MSC.Server.Controllers
                 return BadRequest(new RequestResponse("答案错误"));
             }
 
-            if(!hasSolved)
+            if (!hasSolved)
             {
                 if (user.Rank is null)
                     user.Rank = new Rank() { UserId = user.Id };

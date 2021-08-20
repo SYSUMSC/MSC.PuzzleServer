@@ -1,11 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using MSC.Server.Models;
+﻿using MSC.Server.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Extensions
 {
@@ -20,6 +14,7 @@ namespace MSC.Server.Extensions
         private string GoogleSecretKey { get; set; }
         private string GoogleRecaptchaVerifyApi { get; set; }
         private decimal RecaptchaThreshold { get; set; }
+
         public RecaptchaExtension(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,6 +26,7 @@ namespace MSC.Server.Extensions
             if (hasThresholdValue)
                 RecaptchaThreshold = threshold;
         }
+
         public async Task<bool> VerifyAsync(string token, string ip)
         {
             if (RecaptchaThreshold == 0)

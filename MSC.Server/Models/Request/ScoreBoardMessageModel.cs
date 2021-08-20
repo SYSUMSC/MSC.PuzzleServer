@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MSC.Server.Models.Request
+﻿namespace MSC.Server.Models.Request
 {
     /// <summary>
     /// 积分榜信息
@@ -14,15 +9,18 @@ namespace MSC.Server.Models.Request
         /// 更新时间
         /// </summary>
         public DateTime UpdateTime { get; set; }
+
         /// <summary>
         /// 排名
         /// </summary>
         public List<RankMessageModel> Rank { get; set; }
+
         /// <summary>
         /// 前十名的时间线
         /// </summary>
         public List<ScoreBoardTimeLine> TopDetail { get; set; }
     }
+
     /// <summary>
     /// 积分榜时间轴
     /// </summary>
@@ -32,6 +30,7 @@ namespace MSC.Server.Models.Request
         /// 用户名
         /// </summary>
         public string UserName { get; set; }
+
         /// <summary>
         /// 时间线
         /// </summary>

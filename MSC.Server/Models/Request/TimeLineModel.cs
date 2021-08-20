@@ -1,8 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Models.Request
 {
@@ -16,11 +12,13 @@ namespace MSC.Server.Models.Request
         /// 解出的题目Id
         /// </summary>
         public int PuzzleId { get; set; }
+
         /// <summary>
         /// 时间
         /// </summary>
         [JsonProperty("time")]
         public string Time { get; set; }
+
         /// <summary>
         /// 当前总分值
         /// </summary>

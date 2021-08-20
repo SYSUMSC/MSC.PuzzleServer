@@ -13,6 +13,7 @@ namespace MSC.Server.Models.Request
         [Required]
         [MinLength(6)]
         public string Old { get; set; }
+
         /// <summary>
         /// 新密码
         /// </summary>

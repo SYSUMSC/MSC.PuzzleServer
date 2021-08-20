@@ -1,5 +1,5 @@
-﻿using NLog;
-using MSC.Server.Models;
+﻿using MSC.Server.Models;
+using NLog;
 using LogLevel = NLog.LogLevel;
 
 namespace MSC.Server.Utils

@@ -11,7 +11,9 @@ namespace MSC.Server.Extensions
         public delegate void OnLog(LogEventInfo e);
 
         public event OnLog LogEventHandler;
+
         public static SignalRTarget Instance { get; private set; }
+
         protected override void Write(LogEventInfo logEvent)
             => LogEventHandler?.Invoke(logEvent);
     }

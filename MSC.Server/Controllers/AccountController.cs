@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MSC.Server.Extensions;
 using MSC.Server.Middlewares;
@@ -8,11 +7,7 @@ using MSC.Server.Models.Request;
 using MSC.Server.Services.Interface;
 using MSC.Server.Utils;
 using NLog;
-using System;
-using System.Linq;
 using System.Net.Mime;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
 {
@@ -189,7 +184,7 @@ namespace MSC.Server.Controllers
             LogHelper.Log(logger, "通过邮箱验证。", user, TaskStatus.Success);
             await signInManager.SignInAsync(user, true);
 
-            if(Codec.Base64.Decode(model.Email).EndsWith("@mail2.sysu.edu.cn"))
+            if (Codec.Base64.Decode(model.Email).EndsWith("@mail2.sysu.edu.cn"))
             {
                 user.IsSYSU = true;
                 result = await userManager.UpdateAsync(user);

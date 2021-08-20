@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using NLog;
+﻿using Microsoft.EntityFrameworkCore;
 using MSC.Server.Models;
-using System.Threading.Tasks;
+using NLog;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace MSC.Server.Utils
 {

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace MSC.Server.Services.Interface
+﻿namespace MSC.Server.Services.Interface
 {
     public interface IMailSender
     {

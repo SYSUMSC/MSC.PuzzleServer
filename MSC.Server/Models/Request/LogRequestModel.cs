@@ -13,12 +13,14 @@ namespace MSC.Server.Models.Request
         /// </summary>
         [DefaultValue(0)]
         public int Skip { get; set; } = 0;
+
         /// <summary>
         /// 获取数量
         /// </summary>
         [Range(1, 50)]
         [DefaultValue(50)]
         public int Count { get; set; } = 50;
+
         /// <summary>
         /// 日志等级
         /// </summary>

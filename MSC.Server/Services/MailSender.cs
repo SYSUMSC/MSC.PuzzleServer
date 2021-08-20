@@ -1,15 +1,11 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.Extensions.Configuration;
 using MimeKit;
 using MimeKit.Text;
 using MSC.Server.Services.Interface;
 using MSC.Server.Utils;
 using NLog;
-using System;
-using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Services
 {

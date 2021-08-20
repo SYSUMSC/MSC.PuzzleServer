@@ -13,6 +13,7 @@ namespace MSC.Server.Models.Request
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
         /// <summary>
         /// 谷歌验证码
         /// </summary>

@@ -1,5 +1,4 @@
 ﻿using MSC.Server.Models;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Hubs.Interface
 {

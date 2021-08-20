@@ -5,7 +5,9 @@ namespace MSC.Server.Models
 {
     public class AppDbContext : IdentityDbContext<UserInfo>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
 
         public DbSet<LogModel> Logs { get; set; }
         public DbSet<Submission> Submissions { get; set; }
@@ -38,7 +40,6 @@ namespace MSC.Server.Models
                     .HasForeignKey(e => e.PuzzleId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
-
         }
     }
 }

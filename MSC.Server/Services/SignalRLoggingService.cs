@@ -4,7 +4,6 @@ using MSC.Server.Hubs;
 using MSC.Server.Hubs.Interface;
 using MSC.Server.Models;
 using NLog;
-using System;
 
 namespace MSC.Server.Services
 {

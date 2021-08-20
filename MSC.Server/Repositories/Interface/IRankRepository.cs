@@ -1,10 +1,5 @@
 ﻿using MSC.Server.Models;
 using MSC.Server.Models.Request;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Repositories.Interface
 {
@@ -18,6 +13,7 @@ namespace MSC.Server.Repositories.Interface
         /// <param name="token">操作取消token</param>
         /// <returns></returns>
         public Task<List<RankMessageModel>> GetRank(CancellationToken token, int skip = 0, int count = 100);
+
         /// <summary>
         /// 更新排名对象
         /// </summary>

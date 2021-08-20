@@ -1,16 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Utils;
 using NLog;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Mime;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MSC.Server.Controllers
 {
