@@ -5,53 +5,52 @@ using MSC.Server.Hubs.Interface;
 using MSC.Server.Models;
 using NLog;
 
-namespace MSC.Server.Services
+namespace MSC.Server.Services;
+
+public class SignalRLoggingService : IDisposable
 {
-    public class SignalRLoggingService : IDisposable
+    private bool disposed = false;
+    private IHubContext<LoggingHub, ILoggingClient> Hub { get; set; }
+    public SignalRTarget? Target { get; set; }
+
+    public SignalRLoggingService(IHubContext<LoggingHub, ILoggingClient> _Hub)
     {
-        private bool disposed = false;
-        private IHubContext<LoggingHub, ILoggingClient> Hub { get; set; }
-        public SignalRTarget? Target { get; set; }
+        Hub = _Hub;
+        Target = SignalRTarget.Instance;
+        if (Target is not null)
+            Target.LogEventHandler += OnLog;
+    }
 
-        public SignalRLoggingService(IHubContext<LoggingHub, ILoggingClient> _Hub)
+    ~SignalRLoggingService()
+    {
+        Dispose();
+    }
+
+    public void Dispose()
+    {
+        if (!disposed)
         {
-            Hub = _Hub;
-            Target = SignalRTarget.Instance;
+            disposed = true;
             if (Target is not null)
-                Target.LogEventHandler += OnLog;
+                Target.LogEventHandler -= OnLog;
+            GC.SuppressFinalize(this);
         }
+    }
 
-        ~SignalRLoggingService()
+    public async void OnLog(LogEventInfo logInfo)
+    {
+        try
         {
-            Dispose();
+            await Hub.Clients.All.RecivedLog(
+                new LogMessageModel
+                {
+                    Time = logInfo.TimeStamp.ToLocalTime().ToString("M/d HH:mm:ss"),
+                    UserName = (string)logInfo.Properties["uname"],
+                    IP = (string)logInfo.Properties["ip"],
+                    Msg = logInfo.Message,
+                    Status = (string)logInfo.Properties["status"]
+                });
         }
-
-        public void Dispose()
-        {
-            if (!disposed)
-            {
-                disposed = true;
-                if (Target is not null)
-                    Target.LogEventHandler -= OnLog;
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        public async void OnLog(LogEventInfo logInfo)
-        {
-            try
-            {
-                await Hub.Clients.All.RecivedLog(
-                    new LogMessageModel
-                    {
-                        Time = logInfo.TimeStamp.ToLocalTime().ToString("M/d HH:mm:ss"),
-                        UserName = (string)logInfo.Properties["uname"],
-                        IP = (string)logInfo.Properties["ip"],
-                        Msg = logInfo.Message,
-                        Status = (string)logInfo.Properties["status"]
-                    });
-            }
-            catch (Exception) { }
-        }
+        catch (Exception) { }
     }
 }

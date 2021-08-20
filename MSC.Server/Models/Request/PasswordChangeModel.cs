@@ -1,24 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MSC.Server.Models.Request
+namespace MSC.Server.Models.Request;
+
+/// <summary>
+/// 密码更改
+/// </summary>
+public class PasswordChangeModel
 {
     /// <summary>
-    /// 密码更改
+    /// 旧密码
     /// </summary>
-    public class PasswordChangeModel
-    {
-        /// <summary>
-        /// 旧密码
-        /// </summary>
-        [Required]
-        [MinLength(6)]
-        public string? Old { get; set; }
+    [Required]
+    [MinLength(6)]
+    public string? Old { get; set; }
 
-        /// <summary>
-        /// 新密码
-        /// </summary>
-        [Required]
-        [MinLength(6)]
-        public string? New { get; set; }
-    }
+    /// <summary>
+    /// 新密码
+    /// </summary>
+    [Required]
+    [MinLength(6)]
+    public string? New { get; set; }
 }
