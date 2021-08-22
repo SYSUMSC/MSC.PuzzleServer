@@ -102,7 +102,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         if (puzzle is null || puzzle.AccessLevel > accessLevel)
             return new VerifyResult(AnswerResult.Unauthorized);
 
-        bool check = string.Equals(puzzle.Answer, answer.ToUpper());
+        bool check = string.Equals(puzzle.Answer, answer);
 
         if (check)
             return new VerifyResult(AnswerResult.Accepted, puzzle.CurrentScore);

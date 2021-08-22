@@ -39,7 +39,7 @@ public class Puzzle : PuzzleBase
         foreach (var item in typeof(PuzzleBase).GetProperties())
             item.SetValue(this, item.GetValue(puzzle));
 
-        Answer = Answer.ToUpper();
+        Answer = Answer.Trim();
     }
 
     public Puzzle() : base()
