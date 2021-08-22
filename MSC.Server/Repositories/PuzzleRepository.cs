@@ -37,17 +37,14 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         return (true, title);
     }
 
-    public async Task<List<int>> GetAccessiblePuzzles(int accessLevel, CancellationToken token)
-    {
-        var puzzles = await context.Puzzles.Where(p => p.AccessLevel <= accessLevel).ToListAsync(token);
-
-        List<int> puzzleList = new();
-
-        foreach (var p in puzzles)
-            puzzleList.Add(p.Id);
-
-        return puzzleList;
-    }
+    public Task<List<PuzzleItem>> GetAccessiblePuzzles(int accessLevel, CancellationToken token)
+        => (from p in context.Puzzles.Where(p => p.AccessLevel <= accessLevel)
+                select new PuzzleItem()
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    SolvedCount = p.SolvedCount
+                }).ToListAsync(token);
 
     public int GetMaxAccessLevel()
         => context.Puzzles.Max(p => p.AccessLevel);

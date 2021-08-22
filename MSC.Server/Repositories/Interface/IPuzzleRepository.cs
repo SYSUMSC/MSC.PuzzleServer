@@ -64,7 +64,7 @@ public interface IPuzzleRepository
     /// <param name="accessLevel">用户访问权限</param>
     /// <param name="token">操作取消token</param>
     /// <returns></returns>
-    public Task<List<int>> GetAccessiblePuzzles(int accessLevel, CancellationToken token);
+    public Task<List<PuzzleItem>> GetAccessiblePuzzles(int accessLevel, CancellationToken token);
 
     /// <summary>
     /// 获取最高访问权限

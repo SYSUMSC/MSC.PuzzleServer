@@ -26,6 +26,10 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
         await context.SaveChangesAsync(token);
     }
 
+    public async Task<HashSet<int>> GetSolvedPuzzles(string userId, CancellationToken token)
+        => (await (from sub in context.Submissions.Where(s => s.Solved && s.UserId == userId)
+            select sub.PuzzleId).ToListAsync(token)).ToHashSet();
+
     public Task<List<Submission>> GetSubmissions(CancellationToken token, int skip = 0, int count = 50, int puzzleId = 0, string userId = "All")
     {
         IQueryable<Submission> result = context.Submissions;

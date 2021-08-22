@@ -175,21 +175,26 @@ public class PuzzleController : ControllerBase
     /// <response code="401">无权访问</response>
     [HttpGet("List")]
     [RequireSignedIn]
-    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PuzzleListModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetPuzzleList(CancellationToken token)
     {
         var user = await userManager.GetUserAsync(User);
         int accessLevel = user.AccessLevel;
 
-        if (cache.TryGetValue(CacheKey.AccessiblePuzzles(accessLevel), out List<int> accessiblePuzzles))
-            return Ok(accessiblePuzzles);
+        if (!cache.TryGetValue(CacheKey.AccessiblePuzzles(accessLevel), out List<PuzzleItem> accessible))
+        {
+            accessible = await puzzleRepository.GetAccessiblePuzzles(accessLevel, token);
+            cache.Set(CacheKey.AccessiblePuzzles(accessLevel), accessible, TimeSpan.FromDays(6));
+        }
 
-        accessiblePuzzles = await puzzleRepository.GetAccessiblePuzzles(accessLevel, token);
+        PuzzleListModel puzzleList = new()
+        {
+            Accessible = accessible,
+            Solved = await submissionRepository.GetSolvedPuzzles(user.Id, token)
+        };
 
-        cache.Set(CacheKey.AccessiblePuzzles(accessLevel), accessiblePuzzles, TimeSpan.FromDays(6));
-
-        return Ok(accessiblePuzzles);
+        return Ok(puzzleList);
     }
 
     /// <summary>

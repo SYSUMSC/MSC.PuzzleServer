@@ -45,4 +45,12 @@ public interface ISubmissionRepository
     /// <param name="token">操作取消Token</param>
     /// <returns></returns>
     public Task<bool> HasSubmitted(int puzzleId, string userId, CancellationToken token);
+    
+    /// <summary>
+    /// 获取已解出的题目列表
+    /// </summary>
+    /// <param name="userId">用户Id</param>
+    /// <param name="token">操作取消Token</param>
+    /// <returns></returns>
+    public Task<HashSet<int>> GetSolvedPuzzles(string userId, CancellationToken token);
 }
