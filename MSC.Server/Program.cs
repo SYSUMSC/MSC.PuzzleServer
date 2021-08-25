@@ -10,8 +10,10 @@ using MSC.Server.Repositories.Interface;
 using MSC.Server.Services;
 using MSC.Server.Services.Interface;
 using MSC.Server.Utils;
+using NJsonSchema.Generation;
 using NLog;
 using NLog.Web;
+using NSwag;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +40,7 @@ builder.Services.AddOpenApiDocument(settings =>
     settings.Title = "MSC Puzzle API";
     settings.Description = "MSC Puzzle 接口文档";
     settings.UseControllerSummaryAsTagDescription = true;
+    settings.DefaultReferenceTypeNullHandling = ReferenceTypeNullHandling.NotNull;
 });
 
 #endregion OpenApiDocument
@@ -136,10 +139,22 @@ else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
-    app.UseHttpsRedirection();
 }
 
-app.UseOpenApi();
+app.UseOpenApi(options =>
+{
+    if (app.Environment.IsProduction())
+    {
+        options.PostProcess += (document, _) =>
+        {
+            document.Servers.Clear();
+            document.Servers.Add(new OpenApiServer
+            {
+                Url = "https://puzzle.sysums.club"
+            });
+        };
+    }
+});
 app.UseSwaggerUi3();
 
 app.UseMiddleware<ProxyMiddleware>();
