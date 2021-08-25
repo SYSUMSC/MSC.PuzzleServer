@@ -131,13 +131,14 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseOpenApi();
-    app.UseSwaggerUi3();
 }
 else
 {
     app.UseExceptionHandler("/Error");
 }
+
+app.UseOpenApi();
+app.UseSwaggerUi3();
 
 app.UseMiddleware<ProxyMiddleware>();
 app.UseIpRateLimiting();
