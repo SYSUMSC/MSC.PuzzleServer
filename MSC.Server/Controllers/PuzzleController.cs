@@ -223,7 +223,17 @@ public class PuzzleController : ControllerBase
 
         var hasSolved = await submissionRepository.HasSubmitted(id, user.Id, token);
 
-        await submissionRepository.AddSubmission(id, user.Id, model.Answer, result, hasSolved, token);
+        Submission sub = new()
+        {
+            UserId = user.Id,
+            PuzzleId = id,
+            Answer = model.Answer,
+            Solved = result.Result == AnswerResult.Accepted,
+            Score = hasSolved ? 0 : result.Score,
+            SubmitTimeUTC = DateTime.UtcNow
+        };
+
+        await submissionRepository.AddSubmission(sub, token);
 
         if (result.Result == AnswerResult.Unauthorized)
         {

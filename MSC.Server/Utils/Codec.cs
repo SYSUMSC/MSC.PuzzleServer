@@ -56,7 +56,7 @@ public class Codec
     public static List<int> ASCII(string str)
     {
         byte[] buff = Encoding.ASCII.GetBytes(str);
-        List<int> res = new List<int>();
+        List<int> res = new();
         foreach (var item in buff)
             res.Add(item);
         return res;
@@ -69,7 +69,7 @@ public class Codec
     /// <param name="tobase">进制支持2,8,10,16</param>
     /// <returns></returns>
     public static List<string> ToBase(List<int> source, int tobase)
-        => new List<string>(source.ConvertAll((int a) => Convert.ToString(a, tobase)));
+        => new(source.ConvertAll((int a) => Convert.ToString(a, tobase)));
 
     /// <summary>
     /// 反转字符串

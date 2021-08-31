@@ -47,7 +47,11 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
                 }).ToListAsync(token);
 
     public int GetMaxAccessLevel()
-        => context.Puzzles.Max(p => p.AccessLevel);
+        => context.Puzzles.Any() switch
+        {
+            true => context.Puzzles.Max(p => p.AccessLevel),
+            false => 0
+        };
 
     public async Task<UserPuzzleModel?> GetUserPuzzle(int id, int accessLevel, CancellationToken token)
     {

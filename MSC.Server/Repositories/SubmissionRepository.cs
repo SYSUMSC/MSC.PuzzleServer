@@ -12,16 +12,8 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
     {
     }
 
-    public async Task AddSubmission(int puzzleId, string userid, string answer, VerifyResult result, bool hasSolved, CancellationToken token)
+    public async Task AddSubmission(Submission sub, CancellationToken token)
     {
-        Submission sub = new()
-        {
-            UserId = userid,
-            PuzzleId = puzzleId,
-            Answer = answer,
-            Solved = result.Result == AnswerResult.Accepted,
-            Score = hasSolved ? 0 : result.Score
-        };
         await context.AddAsync(sub, token);
         await context.SaveChangesAsync(token);
     }

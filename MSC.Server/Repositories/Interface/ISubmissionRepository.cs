@@ -9,14 +9,10 @@ public interface ISubmissionRepository
     /// <summary>
     /// 添加提交记录
     /// </summary>
-    /// <param name="puzzleId">题目Id</param>
-    /// <param name="userid">用户Id</param>
-    /// <param name="answer">答案</param>
-    /// <param name="result">验证结果</param>
-    /// <param name="hasSolved">用户是否已经解出过此谜题</param>
+    /// <param name="sub">用户提交</param>
     /// <param name="token">操作取消token</param>
     /// <returns></returns>
-    public Task AddSubmission(int puzzleId, string userid, string answer, VerifyResult result, bool hasSolved, CancellationToken token);
+    public Task AddSubmission(Submission sub, CancellationToken token);
 
     /// <summary>
     /// 根据题目Id获取提交记录
