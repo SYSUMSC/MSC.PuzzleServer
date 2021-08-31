@@ -4,7 +4,7 @@ using NLog.Targets;
 namespace MSC.Server.Extensions;
 
 [Target("SignalR")]
-public class SignalRTarget : TargetWithLayout
+public class SignalRTarget : Target
 {
     public SignalRTarget() => Instance = this;
 

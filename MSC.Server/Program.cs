@@ -13,15 +13,23 @@ using MSC.Server.Utils;
 using NJsonSchema.Generation;
 using NLog;
 using NLog.Web;
+using NLog.Targets;
 using NSwag;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
 builder.Host.ConfigureAppConfiguration((host, config) =>
 {
     config.AddJsonFile("RateLimitConfig.json", optional: true, reloadOnChange: true);
-}).ConfigureLogging(logging =>
+});
+
+Target.Register<SignalRTarget>("SignalR");
+LogManager.Configuration.Variables["connectionString"] = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Host.ConfigureLogging(logging =>
 {
     logging.ClearProviders();
     logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
@@ -64,24 +72,16 @@ builder.Services.AddIdentityCore<UserInfo>(options =>
     options.User.RequireUniqueEmail = true;
     options.Password.RequireNonAlphanumeric = false;
     options.SignIn.RequireConfirmedEmail = true;
-})
-    .AddSignInManager<SignInManager<UserInfo>>()
-    .AddUserManager<UserManager<UserInfo>>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddErrorDescriber<TranslatedIdentityErrorDescriber>()
-    .AddDefaultTokenProviders();
+}).AddSignInManager<SignInManager<UserInfo>>()
+.AddUserManager<UserManager<UserInfo>>()
+.AddEntityFrameworkStores<AppDbContext>()
+.AddErrorDescriber<TranslatedIdentityErrorDescriber>()
+.AddDefaultTokenProviders();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(o =>
     o.TokenLifespan = TimeSpan.FromHours(3));
 
 #endregion Identity
-
-#region Nlog
-
-Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-LogManager.Configuration.Variables["connectionString"] = builder.Configuration.GetConnectionString("DefaultConnection");
-
-#endregion Nlog
 
 #region IP Rate Limit
 
@@ -123,12 +123,6 @@ builder.Services.AddSingleton<SignalRLoggingService>();
 
 builder.Services.AddControllersWithViews();
 
-LogManager.Setup().SetupExtensions(s =>
-{
-    s.RegisterTarget<SignalRTarget>("SignalR");
-});
-
-var logger = NLogBuilder.ConfigureNLog("nlog.config").GetLogger("Main");
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -173,6 +167,8 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<LoggingHub>("/hub/log");
 app.MapFallbackToFile("index.html");
+
+var logger = LogManager.GetLogger("Main");
 
 try
 {
