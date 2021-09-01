@@ -133,11 +133,7 @@ else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
-}
-
-app.UseOpenApi(options =>
-{
-    if (app.Environment.IsProduction())
+    app.UseOpenApi(options =>
     {
         options.PostProcess += (document, _) =>
         {
@@ -147,8 +143,9 @@ app.UseOpenApi(options =>
                 Url = "https://puzzle.sysums.club"
             });
         };
-    }
-});
+    });
+}
+
 app.UseSwaggerUi3();
 
 app.UseMiddleware<ProxyMiddleware>();
