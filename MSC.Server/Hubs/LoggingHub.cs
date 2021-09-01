@@ -18,7 +18,10 @@ public class LoggingHub : Hub<ILoggingClient>
     public override async Task OnConnectedAsync()
     {
         if (!await HubHelper.HasAdmin(Context.GetHttpContext()!))
+        {
             Context.Abort();
+            return;
+        }
 
         await base.OnConnectedAsync();
     }
