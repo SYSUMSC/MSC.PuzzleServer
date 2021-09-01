@@ -32,8 +32,10 @@ public class RequirePrivilegeAttribute : Attribute, IAsyncAuthorizationFilter
 
         if (currentUser is null)
         {
-            var result = new JsonResult(new RequestResponse("请先登录", 401));
-            result.StatusCode = 401;
+            var result = new JsonResult(new RequestResponse("请先登录", 401))
+            {
+                StatusCode = 401
+            };
             context.Result = result;
             return;
         }
@@ -44,8 +46,10 @@ public class RequirePrivilegeAttribute : Attribute, IAsyncAuthorizationFilter
 
         if (currentUser.Privilege < RequiredPrivilege)
         {
-            var result = new JsonResult(new RequestResponse("无权访问", 401));
-            result.StatusCode = 401;
+            var result = new JsonResult(new RequestResponse("无权访问", 401))
+            {
+                StatusCode = 401
+            };
             context.Result = result;
         }
     }

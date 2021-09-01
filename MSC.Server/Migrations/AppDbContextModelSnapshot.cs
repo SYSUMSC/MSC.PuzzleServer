@@ -60,7 +60,7 @@ namespace MSC.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", (string)null);
                 });
 
             modelBuilder.Entity("MSC.Server.Models.Puzzle", b =>
@@ -108,7 +108,7 @@ namespace MSC.Server.Migrations
 
                     b.HasIndex("AccessLevel");
 
-                    b.ToTable("Puzzles");
+                    b.ToTable("Puzzles", (string)null);
                 });
 
             modelBuilder.Entity("MSC.Server.Models.Rank", b =>
@@ -133,7 +133,7 @@ namespace MSC.Server.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Ranks");
+                    b.ToTable("Ranks", (string)null);
                 });
 
             modelBuilder.Entity("MSC.Server.Models.Submission", b =>
@@ -169,7 +169,7 @@ namespace MSC.Server.Migrations
 
                     b.HasIndex("UserId", "PuzzleId");
 
-                    b.ToTable("Submissions");
+                    b.ToTable("Submissions", (string)null);
                 });
 
             modelBuilder.Entity("MSC.Server.Models.UserInfo", b =>
