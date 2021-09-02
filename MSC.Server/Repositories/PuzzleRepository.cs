@@ -106,7 +106,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         bool check = string.Equals(puzzle.Answer, answer);
 
         if (check)
-            return new VerifyResult(AnswerResult.Accepted, puzzle.CurrentScore);
+            return new VerifyResult(AnswerResult.Accepted, puzzle.CurrentScore, puzzle.UpgradeAccessLevel);
 
         return new VerifyResult(AnswerResult.WrongAnswer);
     }

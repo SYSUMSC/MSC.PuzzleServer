@@ -249,8 +249,13 @@ public class PuzzleController : ControllerBase
 
         if (!hasSolved)
         {
+            // These changes will be saved when following functions are called.
+
             if (user.Rank is null)
                 user.Rank = new Rank() { UserId = user.Id };
+
+            if(user.AccessLevel < result.UpgradeAccessLevel)
+                user.AccessLevel = result.UpgradeAccessLevel;
 
             await rankRepository.UpdateRank(user.Rank, result.Score, token);
             await puzzleRepository.UpdateSolvedCount(id, token);

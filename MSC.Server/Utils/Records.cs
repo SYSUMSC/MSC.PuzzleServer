@@ -3,7 +3,7 @@
 /// <summary>
 /// 验证结果
 /// </summary>
-public record VerifyResult(AnswerResult Result = AnswerResult.WrongAnswer, int Score = 0);
+public record VerifyResult(AnswerResult Result = AnswerResult.WrongAnswer, int Score = 0, int UpgradeAccessLevel = 0);
 
 #region 请求响应
 
