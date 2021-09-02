@@ -15,8 +15,8 @@ namespace MSC.Server.Controllers;
 /// 用户账户相关接口
 /// </summary>
 [ApiController]
-[Produces(MediaTypeNames.Application.Json)]
 [Route("api/[controller]/[action]")]
+[Produces(MediaTypeNames.Application.Json)]
 public class AccountController : ControllerBase
 {
     private static readonly Logger logger = LogManager.GetLogger("AccountController");

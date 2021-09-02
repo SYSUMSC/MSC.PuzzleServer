@@ -14,9 +14,9 @@ namespace MSC.Server.Controllers;
 /// 提交数据交互接口
 /// </summary>
 [ApiController]
+[Route("api/[controller]/[action]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
-[Route("api/[controller]/[action]")]
 public class SubmissionController : ControllerBase
 {
     private static readonly Logger logger = LogManager.GetLogger("SubmissionController");

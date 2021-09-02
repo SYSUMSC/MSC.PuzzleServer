@@ -15,9 +15,9 @@ namespace MSC.Server.Controllers;
 /// </summary>
 [RequireAdmin]
 [ApiController]
+[Route("api/[controller]/[action]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
-[Route("api/[controller]/[action]")]
 public class AdminController : ControllerBase
 {
     private static readonly Logger logger = LogManager.GetLogger("AdminController");

@@ -17,8 +17,8 @@ namespace MSC.Server.Controllers;
 /// 题目数据交互接口
 /// </summary>
 [ApiController]
-[Produces(MediaTypeNames.Application.Json)]
 [Route("api/[controller]")]
+[Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
 public class PuzzleController : ControllerBase
 {

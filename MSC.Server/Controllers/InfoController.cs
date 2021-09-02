@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using MSC.Server.Middlewares;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
+using MSC.Server.Utils;
 using System.Net.Mime;
 
 namespace MSC.Server.Controllers;
@@ -11,8 +12,10 @@ namespace MSC.Server.Controllers;
 /// 数据相关接口
 /// </summary>
 [ApiController]
-[Produces(MediaTypeNames.Application.Json)]
+[RequireSignedIn]
 [Route("api/[controller]/[action]")]
+[Produces(MediaTypeNames.Application.Json)]
+[ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
 public class InfoController : ControllerBase
 {
     private readonly IRankRepository rankRepository;
@@ -37,8 +40,8 @@ public class InfoController : ControllerBase
     /// </remarks>
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功获取积分榜</response>
+    /// <response code="401">无权访问</response>
     [HttpGet]
-    [RequireSignedIn]
     [ProducesResponseType(typeof(ScoreBoardMessageModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> ScoreBoard(CancellationToken token)
     {
