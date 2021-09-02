@@ -22,4 +22,11 @@ public interface IRankRepository
     /// <param name="token">操作取消token</param>
     /// <returns></returns>
     public Task UpdateRank(Rank rank, int score, CancellationToken token);
+
+    /// <summary>
+    /// 检查用户提交记录，并进行分数校对
+    /// </summary>
+    /// <param name="token">操作取消token</param>
+    /// <returns></returns>
+    public Task CheckRankScore(CancellationToken token);
 }

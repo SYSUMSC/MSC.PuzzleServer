@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
@@ -21,10 +22,16 @@ public class AdminController : ControllerBase
 {
     private static readonly Logger logger = LogManager.GetLogger("AdminController");
     private readonly ILogRepository logRepository;
+    private readonly IRankRepository rankRepository;
+    private readonly IMemoryCache cache;
 
-    public AdminController(ILogRepository _logRepository)
+    public AdminController(ILogRepository _logRepository,
+        IMemoryCache memoryCache,
+        IRankRepository _rankRepository)
     {
+        cache = memoryCache;
         logRepository = _logRepository;
+        rankRepository = _rankRepository;
     }
 
     /// <summary>
@@ -44,5 +51,19 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<List<LogMessageModel>>> Logs([FromQuery] LogRequestModel model, CancellationToken token)
     {
         return await logRepository.GetLogs(model.Skip, model.Count, model.Level, token);
+    }
+
+    /// <summary>
+    /// 检查用户提交并核对排名分数
+    /// </summary>
+    /// <param name="token">操作取消token</param>
+    /// <response code="200">成功完成操作</response>
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> CheckRankScore(CancellationToken token)
+    {
+        await rankRepository.CheckRankScore(token);
+        cache.Remove(CacheKey.ScoreBoard);
+        return Ok();
     }
 }

@@ -52,8 +52,7 @@ public class InfoController : ControllerBase
         if (result.Rank is null)
             return Ok(result);
 
-        var top10 = result.Rank.Take(10);
-        foreach (var r in top10)
+        foreach (var r in result.Rank.Take(10))
         {
             result.TopDetail.Add(new ScoreBoardTimeLine()
             {
