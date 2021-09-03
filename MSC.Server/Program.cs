@@ -23,7 +23,7 @@ Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 builder.Host.ConfigureAppConfiguration((host, config) =>
 {
-    config.AddJsonFile("RateLimitConfig.json", optional: true, reloadOnChange: true);
+    config.AddJsonFile("ratelimit.json", optional: true, reloadOnChange: true);
 });
 
 Target.Register<SignalRTarget>("SignalR");
