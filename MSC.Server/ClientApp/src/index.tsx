@@ -24,6 +24,17 @@ const theme = extendTheme(
         700: '#414141',
         800: '#252525',
         900: '#202020'
+      },
+      brand: {
+        900: '#331405',
+        800: '#4c1e07',
+        700: '#66280a',
+        600: '#80320c',
+        500: '#993b0e',
+        400: '#b34511',
+        300: '#cc4f13',
+        200: '#e65916',
+        100: '#ff6318'
       }
     },
     styles: {
@@ -34,7 +45,7 @@ const theme = extendTheme(
       }
     }
   },
-  withDefaultColorScheme({ colorScheme: 'gray' })
+  withDefaultColorScheme({ colorScheme: 'brand' })
 );
 
 ReactDOM.render(

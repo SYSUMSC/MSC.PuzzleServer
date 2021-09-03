@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Center,
@@ -11,11 +13,14 @@ import {
   useBoolean,
   VStack
 } from '@chakra-ui/react';
-import { or } from '../../utils';
+import { or } from '../../common/utils';
 import React, { FC, FormEvent } from 'react';
+import { LogoIcon } from '../../common/components/LogoIcon';
+import { useQueryParams } from '../../common/hooks/use-query-params';
 
 export const LoginPage: FC = () => {
   const [isToLogin, { toggle: toggleIsToLogin }] = useBoolean(true);
+  const { redirect } = useQueryParams();
 
   const onLogin = React.useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,10 +33,18 @@ export const LoginPage: FC = () => {
   return (
     <Center minHeight="100vh">
       <Box boxShadow="2xl" bg="gray.700" rounded="lg" px="48px" py="24px">
-        <VStack mx="24px">
+        <VStack>
           <Center mb="24px">
-            <Heading>Nice LOGO</Heading>
+            <Heading w="120px" h="120px">
+              <LogoIcon />
+            </Heading>
           </Center>
+          {redirect && (
+            <Alert status="info" maxW="100%" my="24px">
+              <AlertIcon />
+              请登陆后再访问此网页
+            </Alert>
+          )}
           <Center>
             <Heading
               size="lg"
@@ -71,7 +84,7 @@ export const LoginPage: FC = () => {
               </FormControl>
               <Flex mt="24px">
                 <Spacer />
-                <Button type="submit" variant="outline">
+                <Button type="submit" variant="solid">
                   注册
                 </Button>
               </Flex>
@@ -90,7 +103,7 @@ export const LoginPage: FC = () => {
               <Flex mt="24px">
                 <Button variant="link">忘记密码</Button>
                 <Spacer />
-                <Button type="submit" variant="outline">
+                <Button type="submit" variant="solid">
                   登陆
                 </Button>
               </Flex>

@@ -1,22 +1,50 @@
-import { Container } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import { Route } from 'react-router';
-import { IntroPage } from './pages/intro/IntroPage';
+import { Redirect, Route, Switch } from 'react-router';
+import { AuthRoute } from './common/routes/AuthRoute';
 import { LoginPage } from './pages/login/LoginPage';
 import { NotFoundPage } from './pages/not-found/NotFoundPage';
+import { WithNavBar } from './common/components/WithNavBar';
+import { PortalPage } from './pages/portal/PortalPage';
+import { PuzzlePage } from './pages/puzzle/PuzzlePage';
+import { LeaderBoardPage } from './pages/leaderboard/LeaderBoardPage';
+import { PuzzleDetailPage } from './pages/puzzle-detail/PuzzleDetailPage';
 
 export const App: FC = () => {
   return (
-    <Container minHeight="100vh" width="100vw">
-      <Route exact path="/">
-        <IntroPage />
-      </Route>
-      <Route path="/login">
-        <LoginPage />
-      </Route>
-      <Route path="*">
-        <NotFoundPage />
-      </Route>
-    </Container>
+    <Box minHeight="100vh" width="100vw">
+      <Switch>
+        <AuthRoute exact path="/">
+          <WithNavBar>
+            <PortalPage />
+          </WithNavBar>
+        </AuthRoute>
+        <Route path="/login">
+          <LoginPage />
+        </Route>
+        <AuthRoute
+          path="/puzzle/:id"
+          render={({ match }) => (
+            <WithNavBar>
+              <PuzzleDetailPage id={match.params.id} />
+            </WithNavBar>
+          )}
+        />
+        <AuthRoute path="/puzzle">
+          <WithNavBar>
+            <PuzzlePage />
+          </WithNavBar>
+        </AuthRoute>
+        <AuthRoute path="/leaderboard">
+          <WithNavBar>
+            <LeaderBoardPage />
+          </WithNavBar>
+        </AuthRoute>
+        <Route path="/404">
+          <NotFoundPage />
+        </Route>
+        <Redirect to="/404" />
+      </Switch>
+    </Box>
   );
 };
