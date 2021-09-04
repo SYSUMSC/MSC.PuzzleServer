@@ -6,6 +6,7 @@ import {
   Center,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Input,
@@ -13,22 +14,62 @@ import {
   useBoolean,
   VStack
 } from '@chakra-ui/react';
-import { or } from '../../common/utils';
-import React, { FC, FormEvent } from 'react';
+import { or, resolveMessage } from '../../common/utils';
+import React, { FC, FormEvent, useEffect, useMemo, useState } from 'react';
 import { LogoIcon } from '../../common/components/LogoIcon';
 import { useQueryParams } from '../../common/hooks/use-query-params';
+import { UserLoginDto, UserRegisterDto, USER_API } from 'src/redux/user.api';
+import { Redirect } from 'react-router';
 
 export const LoginPage: FC = () => {
   const [isToLogin, { toggle: toggleIsToLogin }] = useBoolean(true);
   const { redirect } = useQueryParams();
 
-  const onLogin = React.useCallback((event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  }, []);
+  const [login, { isLoading: isLoggingIn, isSuccess: isLogInSuccess, error: loginError }] =
+    USER_API.useLoginMutation();
+  const [loginDto, setLoginDto] = useState<UserLoginDto>({
+    userName: '',
+    password: ''
+  });
+  const isLoginDisabled = useMemo(() => Object.values(loginDto).some((v) => !v), [loginDto]);
 
-  const onRegister = React.useCallback((event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  }, []);
+  const [
+    register,
+    { isLoading: isRegistering, isSuccess: isRegisterSuccess, error: registerError }
+  ] = USER_API.useRegisterMutation();
+  const [registerDto, setRegisterDto] = useState<UserRegisterDto>({
+    userName: '',
+    password: '',
+    email: ''
+  });
+  const isRegisterDisabled = useMemo(
+    () => Object.values(registerDto).some((v) => !v),
+    [registerDto]
+  );
+
+  const onLogin = React.useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (!isLoginDisabled) {
+        login(loginDto);
+      }
+    },
+    [isLoginDisabled, loginDto, login]
+  );
+
+  const onRegister = React.useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (!isRegisterDisabled) {
+        register(registerDto);
+      }
+    },
+    [isRegisterDisabled, registerDto, register]
+  );
+
+  if (isLogInSuccess || isRegisterSuccess) {
+    return <Redirect to={redirect ?? '/'} />;
+  }
 
   return (
     <Center minHeight="100vh">
@@ -66,25 +107,49 @@ export const LoginPage: FC = () => {
           </Center>
           {!isToLogin && (
             <form onSubmit={onRegister}>
-              <FormControl id="username" my="12px" isRequired>
+              <FormControl id="username" my="12px" isRequired isInvalid={!!registerError}>
                 <FormLabel>用户名</FormLabel>
-                <Input type="text" />
+                <Input
+                  autoComplete="no"
+                  type="text"
+                  value={registerDto.userName}
+                  onChange={(event) =>
+                    setRegisterDto({ ...registerDto, userName: event.target.value })
+                  }
+                />
               </FormControl>
-              <FormControl id="email" my="12px" isRequired>
+              <FormControl id="email" my="12px" isRequired isInvalid={!!registerError}>
                 <FormLabel>邮箱</FormLabel>
-                <Input type="email" />
+                <Input
+                  type="email"
+                  value={registerDto.email}
+                  onChange={(event) =>
+                    setRegisterDto({ ...registerDto, email: event.target.value })
+                  }
+                />
               </FormControl>
-              <FormControl id="password" my="12px" isRequired>
+              <FormControl id="password" my="12px" isRequired isInvalid={!!registerError}>
                 <FormLabel>密码</FormLabel>
-                <Input type="password" />
-              </FormControl>
-              <FormControl id="confirm-password" my="12px" isRequired>
-                <FormLabel>确认密码</FormLabel>
-                <Input type="password" />
+                <Input
+                  autoComplete="no"
+                  type="password"
+                  value={registerDto.password}
+                  onChange={(event) =>
+                    setRegisterDto({ ...registerDto, password: event.target.value })
+                  }
+                />
+                {registerError && (
+                  <FormErrorMessage>{resolveMessage(registerError)}</FormErrorMessage>
+                )}
               </FormControl>
               <Flex mt="24px">
                 <Spacer />
-                <Button type="submit" variant="solid">
+                <Button
+                  type="submit"
+                  variant="solid"
+                  isLoading={isRegistering}
+                  disabled={isRegistering || isRegisterDisabled}
+                >
                   注册
                 </Button>
               </Flex>
@@ -92,18 +157,34 @@ export const LoginPage: FC = () => {
           )}
           {isToLogin && (
             <form onSubmit={onLogin}>
-              <FormControl id="username" my="12px">
+              <FormControl id="username" my="12px" isInvalid={!!loginError}>
                 <FormLabel>用户名</FormLabel>
-                <Input type="text" />
+                <Input
+                  autoComplete="username"
+                  type="text"
+                  value={loginDto.userName}
+                  onChange={(event) => setLoginDto({ ...loginDto, userName: event.target.value })}
+                />
               </FormControl>
-              <FormControl id="password" my="12px">
+              <FormControl id="password" my="12px" isInvalid={!!loginError}>
                 <FormLabel>密码</FormLabel>
-                <Input type="password" />
+                <Input
+                  autoComplete="current-password"
+                  type="password"
+                  value={loginDto.password}
+                  onChange={(event) => setLoginDto({ ...loginDto, password: event.target.value })}
+                />
+                {loginError && <FormErrorMessage>{resolveMessage(loginError)}</FormErrorMessage>}
               </FormControl>
               <Flex mt="24px">
                 <Button variant="link">忘记密码</Button>
                 <Spacer />
-                <Button type="submit" variant="solid">
+                <Button
+                  type="submit"
+                  variant="solid"
+                  disabled={isLoggingIn || isLoginDisabled}
+                  isLoading={isLoggingIn}
+                >
                   登陆
                 </Button>
               </Flex>

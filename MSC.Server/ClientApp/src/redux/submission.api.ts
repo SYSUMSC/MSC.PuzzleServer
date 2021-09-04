@@ -10,13 +10,13 @@ export interface Submission {
 
 export const SUBMISSION_API = createApi({
   reducerPath: 'submissionApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'Submission' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'api/submission' }),
   endpoints: (builder) => ({
     getLatestSubmissions: builder.query<Submission[], number>({
       query: (id) => `${id}`
     }),
     getLatestSubmissionsOfAllUsers: builder.query<Submission[], number>({
-      query: (id) => `History/${id}`
+      query: (id) => `history/${id}`
     })
   })
 });

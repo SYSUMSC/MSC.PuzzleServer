@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export interface User {
-  userName: string;
-  description: string;
-  studentId: string;
+  name: string;
+  descr: string;
+  stuId: string;
   realName: string;
   isSYSU: boolean;
-  phoneNumber: string;
+  phone: string;
   email: string;
 }
 
@@ -60,76 +60,76 @@ export interface UserConfirmChangingEmailDto {
 
 export const USER_API = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'Account' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'api/account' }),
   endpoints: (builder) => ({
     status: builder.query<User, void>({
-      query: () => 'Me'
+      query: () => 'me'
     }),
-    register: builder.query<void, UserRegisterDto>({
+    register: builder.mutation<void, UserRegisterDto>({
       query: (dto) => ({
-        url: 'Register',
+        url: 'register',
         method: 'POST',
         body: dto
       })
     }),
-    login: builder.query<void, UserLoginDto>({
+    login: builder.mutation<void, UserLoginDto>({
       query: (dto) => ({
-        url: 'LogIn',
+        url: 'login',
         method: 'POST',
         body: dto
       })
     }),
     recovery: builder.query<void, UserRecoveryDto>({
       query: (dto) => ({
-        url: 'Recovery',
+        url: 'recovery',
         method: 'POST',
         body: dto
       })
     }),
     resetPassword: builder.query<void, UserResetPasswordDto>({
       query: (dto) => ({
-        url: 'PasswordReset',
+        url: 'passwordreset',
         method: 'POST',
         body: dto
       })
     }),
     verifyEmail: builder.query<void, UserVerifyEmailDto>({
       query: (dto) => ({
-        url: 'Verify',
+        url: 'verify',
         method: 'POST',
         body: dto
       })
     }),
-    logout: builder.query<void, void>({
+    logout: builder.mutation<void, void>({
       query: () => ({
-        url: 'LogOut',
+        url: 'logout',
         method: 'POST'
       })
     }),
     updateInfo: builder.query<void, UserUpdateInfoDto>({
       query: (dto) => ({
-        url: 'Update',
+        url: 'update',
         method: 'PUT',
         body: dto
       })
     }),
     changePassword: builder.query<void, UserChangePasswordDto>({
       query: (dto) => ({
-        url: 'Update',
+        url: 'changepassword',
         method: 'PUT',
         body: dto
       })
     }),
     changeEmail: builder.query<void, UserChangeEmailDto>({
       query: (dto) => ({
-        url: 'ChangeEmail',
+        url: 'changeemail',
         method: 'PUT',
         body: dto
       })
     }),
     confirmChangingEmail: builder.query<void, UserConfirmChangingEmailDto>({
       query: (dto) => ({
-        url: 'MailChangeConfirm',
+        url: 'mailchangeconfirm',
         method: 'POST',
         body: dto
       })

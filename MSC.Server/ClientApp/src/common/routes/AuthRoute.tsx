@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
-import { Redirect, Route, RouteProps, useLocation } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps, RouteProps, useLocation } from 'react-router-dom';
 import { USER_API } from '../../redux/user.api';
 import { LoadingMask } from '../components/LoadingMask';
 
 export const AuthRoute: FC<RouteProps<string>> = ({ children, ...rest }) => {
-  const { isLoading, error, data: user } = USER_API.useStatusQuery();
+  const { isLoading, error } = USER_API.useStatusQuery();
   const location = useLocation();
 
-  const render = () => {
+  const render = (props: RouteComponentProps) => {
     if (isLoading) {
       return <LoadingMask />;
     }
@@ -24,7 +24,11 @@ export const AuthRoute: FC<RouteProps<string>> = ({ children, ...rest }) => {
       );
     }
 
-    return children;
+    if (rest.render) {
+      return rest.render(props);
+    } else {
+      return children;
+    }
   };
 
   return <Route {...rest} render={render} />;

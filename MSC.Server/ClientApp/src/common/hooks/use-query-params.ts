@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 export function useQueryParams(): Record<string, string | null> {
   const location = useLocation();
   const proxy = useMemo(() => {
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(decodeURIComponent(location.search.substring(1)));
     return new Proxy(
       {},
       {

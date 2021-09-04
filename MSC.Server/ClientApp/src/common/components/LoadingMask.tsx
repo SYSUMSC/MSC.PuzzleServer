@@ -5,7 +5,7 @@ export const LoadingMask: FC = () => {
   return (
     <Center w="100vw" h="100vh">
       <VStack spacing={4}>
-        <Spinner thickness="4px" speed="0.65s" size="xl" />
+        <Spinner thickness="4px" size="xl" color="brand.100" />
       </VStack>
     </Center>
   );

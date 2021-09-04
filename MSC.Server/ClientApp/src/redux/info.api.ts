@@ -21,10 +21,10 @@ export interface PuzzleScoreBoard {
 
 export const INFO_API = createApi({
   reducerPath: 'infoApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'Info' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'api/info' }),
   endpoints: (builder) => ({
     getScoreBoard: builder.query<PuzzleScoreBoard, void>({
-      query: () => 'ScoreBoard'
+      query: () => 'scoreboard'
     })
   })
 });

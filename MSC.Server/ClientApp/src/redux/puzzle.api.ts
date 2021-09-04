@@ -28,11 +28,11 @@ export interface AnswerPuzzleDto {
 
 export const PUZZLE_API = createApi({
   reducerPath: 'puzzleApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'Puzzle' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'api/puzzle' }),
   endpoints: (builder) => ({
     createPuzzle: builder.query<void, PuzzleDto>({
       query: () => ({
-        url: 'New',
+        url: 'new',
         method: 'POST'
       })
     }),
@@ -53,11 +53,11 @@ export const PUZZLE_API = createApi({
       })
     }),
     getPuzzleList: builder.query<PuzzleList, void>({
-      query: () => 'List'
+      query: () => 'list'
     }),
-    answerPuzzle: builder.query<void, [AnswerPuzzleDto, number]>({
+    answerPuzzle: builder.mutation<void, [AnswerPuzzleDto, number]>({
       query: ([dto, id]) => ({
-        url: `Submit/${id}`,
+        url: `submit/${id}`,
         method: 'POST',
         body: dto
       })
