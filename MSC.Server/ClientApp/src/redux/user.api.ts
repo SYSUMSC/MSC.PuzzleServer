@@ -14,25 +14,21 @@ export interface UserRegisterDto {
   userName: string;
   password: string;
   email: string;
-  gToken: string;
 }
 
 export interface UserLoginDto {
   userName: string;
   password: string;
-  gToken: string;
 }
 
 export interface UserRecoveryDto {
   email: string;
-  gToken: string;
 }
 
 export interface UserResetPasswordDto {
   password: string;
   email: string;
   rToken: string;
-  gToken: string;
 }
 
 export interface UserVerifyEmailDto {

@@ -22,19 +22,16 @@ public class AccountController : ControllerBase
     private static readonly Logger logger = LogManager.GetLogger("AccountController");
     private readonly AppDbContext context;
     private readonly IMailSender mailSender;
-    private readonly IRecaptchaExtension recaptcha;
     private readonly UserManager<UserInfo> userManager;
     private readonly SignInManager<UserInfo> signInManager;
 
     public AccountController(
         AppDbContext _context,
         IMailSender _mailSender,
-        IRecaptchaExtension _recaptcha,
         UserManager<UserInfo> _userManager,
         SignInManager<UserInfo> _signInManager)
     {
         context = _context;
-        recaptcha = _recaptcha;
         mailSender = _mailSender;
         userManager = _userManager;
         signInManager = _signInManager;
@@ -54,9 +51,6 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
-        if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString()))
-            return BadRequest(new RequestResponse("Recaptcha校验未通过!"));
-
         await signInManager.SignOutAsync();
         var user = new UserInfo
         {
@@ -113,9 +107,6 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Recovery([FromBody] RecoveryModel model)
     {
-        if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString()))
-            return BadRequest(new RequestResponse("Recaptcha校验未通过!"));
-
         var user = await userManager.FindByEmailAsync(model.Email);
         if (user is null)
             return NotFound();
@@ -145,9 +136,6 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel model)
     {
-        if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString()))
-            return BadRequest(new RequestResponse("Recaptcha校验未通过!"));
-
         var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
         var result = await userManager.ResetPasswordAsync(user, Codec.Base64.Decode(model.RToken), model.Password);
 
@@ -213,9 +201,6 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> LogIn([FromBody] LoginModel model)
     {
-        if (!await recaptcha.VerifyAsync(model.GToken, HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString() ?? string.Empty))
-            return BadRequest();
-
         await signInManager.SignOutAsync();
 
         var user = await userManager.FindByEmailAsync(model.UserName);

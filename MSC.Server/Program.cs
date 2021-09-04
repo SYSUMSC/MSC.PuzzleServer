@@ -97,12 +97,6 @@ builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>()
 
 #endregion IP Rate Limit
 
-#region Google reCaptcha v3
-
-builder.Services.AddSingleton<IRecaptchaExtension, RecaptchaExtension>();
-
-#endregion Google reCaptcha v3
-
 #region Services and Repositories
 
 builder.Services.AddTransient<IMailSender, MailSender>();
