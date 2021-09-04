@@ -10,7 +10,7 @@ export interface PuzzleLog {
 
 export const ADMIN_API = createApi({
   reducerPath: 'adminApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'Admin' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'api/admin' }),
   endpoints: (builder) => ({
     getLogs: builder.query<PuzzleLog[], void>({
       query: () => 'Logs'

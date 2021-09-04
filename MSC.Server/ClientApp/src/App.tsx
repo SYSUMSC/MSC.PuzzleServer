@@ -26,7 +26,7 @@ export const App: FC = () => {
           path="/puzzle/:id"
           render={({ match }) => (
             <WithNavBar>
-              <PuzzleDetailPage id={match.params.id} />
+              <PuzzleDetailPage id={Number(match.params.id)} />
             </WithNavBar>
           )}
         />
