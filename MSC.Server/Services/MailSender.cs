@@ -20,14 +20,14 @@ public class MailSender : IMailSender
     {
         var username = configuration["EmailConfig:UserName"];
         var password = configuration["EmailConfig:Password"];
-        var domain = configuration["EmailConfig:Domain"];
+        var sendMailAddress = configuration["EmailConfig:SendMailAddress"];
         var smtpHost = configuration["EmailConfig:Smtp:Host"];
         var smtpPort = int.Parse(configuration["EmailConfig:Smtp:Port"]);
         bool isSuccess = false;
 
         var msg = new MailMessage
         {
-            From = new MailAddress($"{username}@{domain}"),
+            From = new MailAddress(sendMailAddress),
             Subject = subject,
             SubjectEncoding = Encoding.UTF8,
             Body = content,
@@ -45,7 +45,7 @@ public class MailSender : IMailSender
                 Port = smtpPort,
                 EnableSsl = true,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential($"{username}@{domain}", password)
+                Credentials = new NetworkCredential(username, password)
             };
 
             await smtp.SendMailAsync(msg);
