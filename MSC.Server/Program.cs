@@ -1,3 +1,4 @@
+global using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
