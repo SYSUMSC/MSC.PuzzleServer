@@ -21,13 +21,18 @@ RUN dotnet build "MSC.Server.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "MSC.Server.csproj" -c Release -o /app/publish
 
-WORKDIR "/src/MSC.Server/ClientApp"
-RUN npx browserslist@latest --update-db
+
+RUN apt remove --purge npm &&\
+    apt remove --purge nodejs &&\
+    apt remove --purge nodejs-legacy   
+
+RUN rm -r /usr/local/bin/npm &&\
+    rm -r /usr/local/lib/node-moudels &&\
+    rm -r /tmp/npm*
 
 RUN apt remove -y --auto-remove wget gnupg2 &&\
     apt clean &&\
-    rm  -rf /var/lib/apt/lists/* &&\
-    npm update caniuse-lite
+    rm  -rf /var/lib/apt/lists/*
 
 FROM base AS final
 WORKDIR /app
