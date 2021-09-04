@@ -22,11 +22,8 @@ FROM build AS publish
 RUN dotnet publish "MSC.Server.csproj" -c Release -o /app/publish
 
 
-RUN apt remove --purge npm &&\
-    apt remove --purge nodejs &&\
-    apt remove --purge nodejs-legacy   
-
-RUN rm -r /usr/local/bin/npm &&\
+RUN apt remove --purge nodejs &&\
+    rm -r /usr/local/bin/npm &&\
     rm -r /usr/local/lib/node-moudels &&\
     rm -r /tmp/npm*
 
