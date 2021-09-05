@@ -389,4 +389,36 @@ public class AccountController : ControllerBase
                 StudentId = user.StudentId,
         });
     }
+
+    /// <summary>
+    /// 删除一个用户
+    /// </summary>
+    /// <remarks>
+    /// 使用此接口删除用户，需要Admin权限，不可删除自己
+    /// </remarks>
+    /// <param name="Id">用户Id</param>
+    /// <response code="200">用户成功被删除</response>
+    /// <response code="400">删除失败</response>
+    [HttpDelete("{Id}")]
+    [RequireAdmin]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Remove(string Id)
+    {
+        var user = await userManager.GetUserAsync(User);
+
+        if(Id == user.Id)
+            return BadRequest(new RequestResponse("正尝试删除自己的账号。"));
+
+        user = await userManager.FindByIdAsync(Id);
+
+        if(user is null)
+            return BadRequest(new RequestResponse("未找到对应用户。"));
+
+        var result = await userManager.DeleteAsync(user);
+        if(!result.Succeeded)
+            return BadRequest(new RequestResponse("删除失败。"));
+
+        return Ok();
+    }
 }

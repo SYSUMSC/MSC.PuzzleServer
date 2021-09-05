@@ -25,7 +25,8 @@ public class AppDbContext : IdentityDbContext<UserInfo>
 
             entity.HasOne(e => e.Rank)
                 .WithOne(e => e.User)
-                .HasForeignKey<Rank>(e => e.UserId);
+                .HasForeignKey<Rank>(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(e => e.Submissions)
                 .WithOne(e => e.User)
