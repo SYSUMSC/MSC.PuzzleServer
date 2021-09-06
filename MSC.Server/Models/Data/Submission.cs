@@ -35,14 +35,8 @@ public class Submission
     /// 答案提交的时间
     /// </summary>
     [JsonIgnore]
-    public DateTime SubmitTimeUTC { get; set; } = DateTime.Parse("1970-01-01T00:00:00");
-
-    [NotMapped]
     [JsonPropertyName("time")]
-    public string SubmitTime
-    {
-        get => SubmitTimeUTC.ToLocalTime().ToString("M/d HH:mm:ss");
-    }
+    public DateTime SubmitTimeUTC { get; set; } = DateTime.Parse("1970-01-01T00:00:00");
 
     #region 数据库关系
 
