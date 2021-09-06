@@ -43,7 +43,8 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
                 {
                     Id = p.Id,
                     Title = p.Title,
-                    SolvedCount = p.AcceptedCount
+                    AcceptedCount = p.AcceptedCount,
+                    SubmissionCount = p.SubmissionCount
                 }).ToListAsync(token);
 
     public int GetMaxAccessLevel()

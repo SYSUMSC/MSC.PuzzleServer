@@ -33,5 +33,10 @@ public class PuzzleItem
     /// <summary>
     /// 解出的人数
     /// </summary>
-    public int SolvedCount { get; set; }
+    public int AcceptedCount { get; set; } = 0;
+
+    /// <summary>
+    /// 提交的人数
+    /// </summary>
+    public int SubmissionCount { get; set; } = 0;
 }

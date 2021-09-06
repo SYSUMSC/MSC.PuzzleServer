@@ -241,6 +241,9 @@ public class PuzzleController : ControllerBase
             return Unauthorized(new RequestResponse("无权访问或题目无效", 401));
         }
 
+        for (int i = 0; i <= MAX_ACCESS_LEVEL; ++i)
+            cache.Remove(CacheKey.AccessiblePuzzles(i));
+
         if (result.Result == AnswerResult.WrongAnswer)
         {
             LogHelper.Log(logger, "答案错误：" + model.Answer, user, TaskStatus.Fail);
