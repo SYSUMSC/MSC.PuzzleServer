@@ -11,7 +11,7 @@ public class LogMessageModel
     /// 日志时间
     /// </summary>
     [JsonPropertyName("time")]
-    public string? Time { get; set; }
+    public DateTime Time { get; set; }
 
     /// <summary>
     /// 用户名

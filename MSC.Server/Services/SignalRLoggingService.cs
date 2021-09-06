@@ -44,7 +44,7 @@ public class SignalRLoggingService : IDisposable
             await Hub.Clients.All.RecivedLog(
                 new LogMessageModel
                 {
-                    Time = logInfo.TimeStamp.ToLocalTime().ToString("M/d HH:mm:ss"),
+                    Time = logInfo.TimeStamp,
                     UserName = (string)logInfo.Properties["uname"],
                     IP = (string)logInfo.Properties["ip"],
                     Msg = logInfo.Message,

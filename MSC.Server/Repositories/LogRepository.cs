@@ -20,7 +20,7 @@ public class LogRepository : RepositoryBase, ILogRepository
         return (from log in data
                 select new LogMessageModel
                 {
-                    Time = log.TimeUTC.ToLocalTime().ToString("M/d HH:mm:ss"),
+                    Time = log.TimeUTC,
                     IP = log.RemoteIP,
                     Msg = log.Message,
                     Status = log.Status,
