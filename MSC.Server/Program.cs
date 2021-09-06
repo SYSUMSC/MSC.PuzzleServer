@@ -116,7 +116,10 @@ builder.Services.AddSingleton<SignalRLoggingService>();
 
 #endregion SignalR
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new ISODateTimeConvertor());
+});
 
 var app = builder.Build();
 
