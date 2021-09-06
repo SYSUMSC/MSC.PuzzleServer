@@ -43,7 +43,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
                 {
                     Id = p.Id,
                     Title = p.Title,
-                    SolvedCount = p.SolvedCount
+                    SolvedCount = p.AcceptedCount
                 }).ToListAsync(token);
 
     public int GetMaxAccessLevel()
@@ -64,7 +64,8 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         {
             Title = puzzle.Title,
             Content = puzzle.Content,
-            SolvedCount = puzzle.SolvedCount
+            AcceptedCount = puzzle.AcceptedCount,
+            SubmissionCount = puzzle.SubmissionCount
         };
     }
 
@@ -81,18 +82,6 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         return puzzle;
     }
 
-    public async Task UpdateSolvedCount(int id, CancellationToken token)
-    {
-        Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
-
-        if (puzzle is null)
-            return;
-
-        ++puzzle.SolvedCount;
-
-        await context.SaveChangesAsync(token);
-    }
-
     public async Task<VerifyResult> VerifyAnswer(int id, string? answer, int accessLevel, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(answer))
@@ -103,11 +92,17 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         if (puzzle is null || puzzle.AccessLevel > accessLevel)
             return new VerifyResult(AnswerResult.Unauthorized);
 
+        ++puzzle.SubmissionCount;
+
         bool check = string.Equals(puzzle.Answer, answer);
 
-        if (check)
-            return new VerifyResult(AnswerResult.Accepted, puzzle.CurrentScore, puzzle.UpgradeAccessLevel);
+        var result = check ? new VerifyResult(AnswerResult.Accepted, puzzle.CurrentScore, puzzle.UpgradeAccessLevel)
+                : new VerifyResult(AnswerResult.WrongAnswer);
 
-        return new VerifyResult(AnswerResult.WrongAnswer);
+        if (check)
+            ++puzzle.AcceptedCount;
+
+        await context.SaveChangesAsync(token);
+        return result;
     }
 }

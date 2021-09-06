@@ -39,7 +39,14 @@ public class PuzzleBase
     /// </summary>
     [Required]
     [DefaultValue(0)]
-    public int SolvedCount { get; set; } = 0;
+    public int AcceptedCount { get; set; } = 0;
+
+    /// <summary>
+    /// 提交答案的人数
+    /// </summary>
+    [Required]
+    [DefaultValue(0)]
+    public int SubmissionCount { get; set; } = 0;
 
     /// <summary>
     /// 初始分数

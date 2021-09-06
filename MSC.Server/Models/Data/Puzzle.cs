@@ -18,13 +18,13 @@ public class Puzzle : PuzzleBase
     {
         get
         {
-            if (SolvedCount <= AwardCount)
-                return OriginalScore - SolvedCount;
-            if (SolvedCount > ExpectMaxCount)
+            if (AcceptedCount <= AwardCount)
+                return OriginalScore - AcceptedCount;
+            if (AcceptedCount > ExpectMaxCount)
                 return MinScore;
             var range = OriginalScore - AwardCount - MinScore;
             return (int)(OriginalScore - AwardCount
-                - Math.Floor(range * (SolvedCount - AwardCount) / (float)(ExpectMaxCount - AwardCount)));
+                - Math.Floor(range * (AcceptedCount - AwardCount) / (float)(ExpectMaxCount - AwardCount)));
         }
     }
 

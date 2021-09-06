@@ -51,14 +51,6 @@ public interface IPuzzleRepository
     public Task<VerifyResult> VerifyAnswer(int id, string? answer, int accessLevel, CancellationToken token);
 
     /// <summary>
-    /// 更新成功解题人数
-    /// </summary>
-    /// <param name="id">题目Id</param>
-    /// <param name="token">操作取消token</param>
-    /// <returns></returns>
-    public Task UpdateSolvedCount(int id, CancellationToken token);
-
-    /// <summary>
     /// 获取可访问题目列表
     /// </summary>
     /// <param name="accessLevel">用户访问权限</param>

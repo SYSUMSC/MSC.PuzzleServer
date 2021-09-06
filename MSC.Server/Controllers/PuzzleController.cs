@@ -258,7 +258,6 @@ public class PuzzleController : ControllerBase
                 user.AccessLevel = result.UpgradeAccessLevel;
 
             await rankRepository.UpdateRank(user.Rank, result.Score, token);
-            await puzzleRepository.UpdateSolvedCount(id, token);
 
             cache.Remove(CacheKey.ScoreBoard);
         }

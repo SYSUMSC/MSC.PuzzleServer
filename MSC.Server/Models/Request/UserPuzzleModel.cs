@@ -18,5 +18,10 @@ public class UserPuzzleModel
     /// <summary>
     /// 已解出人数
     /// </summary>
-    public int SolvedCount { get; set; }
+    public int AcceptedCount { get; set; }
+
+    /// <summary>
+    /// 提交人数
+    /// </summary>
+    public int SubmissionCount { get; set; }
 }
