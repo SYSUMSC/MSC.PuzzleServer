@@ -1,4 +1,3 @@
-global using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +16,7 @@ using NLog.Web;
 using NLog.Targets;
 using NSwag;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +49,10 @@ builder.Services.AddOpenApiDocument(settings =>
     settings.Title = "MSC Puzzle API";
     settings.Description = "MSC Puzzle 接口文档";
     settings.UseControllerSummaryAsTagDescription = true;
+    settings.SerializerSettings = SystemTextJsonUtilities.ConvertJsonOptionsToNewtonsoftSettings(new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    });
     settings.DefaultReferenceTypeNullHandling = ReferenceTypeNullHandling.NotNull;
 });
 
@@ -116,10 +120,7 @@ builder.Services.AddSingleton<SignalRLoggingService>();
 
 #endregion SignalR
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new ISODateTimeConvertor());
-});
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
