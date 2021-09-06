@@ -52,7 +52,7 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
                 result.Add(new TimeLineModel()
                 {
                     PuzzleId = sub.PuzzleId,
-                    Time = sub.SubmitTime,
+                    Time = sub.SubmitTimeUTC,
                     TotalScore = currentScore
                 });
                 puzzleIds.Add(sub.PuzzleId);

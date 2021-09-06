@@ -17,7 +17,7 @@ public class TimeLineModel
     /// 时间
     /// </summary>
     [JsonPropertyName("time")]
-    public string? Time { get; set; }
+    public DateTime Time { get; set; }
 
     /// <summary>
     /// 当前总分值

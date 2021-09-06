@@ -17,7 +17,7 @@ public class RankMessageModel
     /// 更新时间
     /// </summary>
     [JsonPropertyName("time")]
-    public string? UpdateTime { get; set; }
+    public DateTime UpdateTime { get; set; }
 
     /// <summary>
     /// 用户名

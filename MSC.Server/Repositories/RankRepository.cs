@@ -41,7 +41,7 @@ public class RankRepository : RepositoryBase, IRankRepository
             select new RankMessageModel
             {
                 Score = rank.Score,
-                UpdateTime = rank.UpdateTimeUTC.ToLocalTime().ToString("M/d HH:mm:ss"),
+                UpdateTime = rank.UpdateTimeUTC,
                 UserName = rank.User!.UserName,
                 Descr = rank.User.Description,
                 UserId = rank.UserId
