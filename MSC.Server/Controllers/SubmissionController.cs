@@ -43,17 +43,17 @@ public class SubmissionController : ControllerBase
     /// <remarks>
     /// 使用此接口获取当前用户最新提交，限制为10个，需要SignedIn权限
     /// </remarks>
-    /// <param name="id">题目Id</param>
+    /// <param name="Id">题目Id</param>
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功获取提交</response>
     /// <response code="401">无权访问</response>
-    [HttpGet("/api/[controller]/{id}")]
+    [HttpGet("/api/[controller]/{Id}")]
     [RequireSignedIn]
     [ProducesResponseType(typeof(List<Submission>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> SelfHistory(int id, CancellationToken token)
+    public async Task<IActionResult> SelfHistory(int Id, CancellationToken token)
     {
-        var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var submissions = await submissionRepository.GetSubmissions(token, 0, 10, id, userid);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var submissions = await submissionRepository.GetSubmissions(token, 0, 10, Id, userId);
 
         return Ok(submissions);
     }
@@ -62,15 +62,15 @@ public class SubmissionController : ControllerBase
     /// 获取全部用户最新提交接口
     /// </summary>
     /// <remarks>
-    /// 使用此接口获取当前用户最新提交，限制为50个，需要Monitor权限
+    /// 使用此接口获取当前用户最新提交，限制为50个，Id为空可获取全部，需要Monitor权限
     /// </remarks>
-    /// <param name="id">题目Id</param>
+    /// <param name="Id">题目Id</param>
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功获取提交</response>
     /// <response code="401">无权访问</response>
-    [HttpGet("{id}")]
+    [HttpGet("{Id?}")]
     [RequireMonitor]
     [ProducesResponseType(typeof(List<Submission>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> History(int id, CancellationToken token)
-        => Ok(await submissionRepository.GetSubmissions(token, 0, 10, id));
+    public async Task<IActionResult> History(int? Id, CancellationToken token)
+        => Ok(await submissionRepository.GetSubmissions(token, 0, 10, Id ?? 0));
 }

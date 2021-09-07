@@ -60,7 +60,6 @@ public class Submission
     /// <summary>
     /// 谜题数据库Id
     /// </summary>
-    [JsonIgnore]
     public int PuzzleId { get; set; }
 
     /// <summary>
