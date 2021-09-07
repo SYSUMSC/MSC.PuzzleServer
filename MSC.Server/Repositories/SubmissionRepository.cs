@@ -32,7 +32,7 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
         if (userId != "All")
             result = result.Where(s => s.UserId == userId);
 
-        return result.Include(s => s.User).OrderByDescending(s => s.SubmitTimeUTC).Skip(skip).Take(count).ToListAsync(token);
+        return result.OrderByDescending(s => s.SubmitTimeUTC).Skip(skip).Take(count).ToListAsync(token);
     }
 
     public async Task<List<TimeLineModel>> GetTimeLine(string userId, CancellationToken token)
