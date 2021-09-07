@@ -15,12 +15,28 @@ public static class LogHelper
     /// <param name="status">操作执行结果</param>
     /// <param name="level">Log 级别</param>
     public static void Log(Logger _logger, string msg, UserInfo user, TaskStatus status, LogLevel? level = null)
+        => Log(_logger, msg, user.UserName, user.IP, status, level);
+
+
+    /// <summary>
+    /// 登记一条 Log 记录
+    /// </summary>
+    /// <param name="_logger">传入的 Nlog.Logger</param>
+    /// <param name="msg">Log 消息</param>
+    /// <param name="username">用户名</param>
+    /// <param name="context">Http上下文</param>
+    /// <param name="status">操作执行结果</param>
+    /// <param name="level">Log 级别</param>
+    public static void Log(Logger _logger, string msg, string username, HttpContext context, TaskStatus status, LogLevel? level = null)
     {
-        LogEventInfo logEventInfo = new(level ?? LogLevel.Info, _logger.Name, msg);
-        logEventInfo.Properties["uname"] = user.UserName;
-        logEventInfo.Properties["ip"] = user.IP;
-        logEventInfo.Properties["status"] = status.ToString();
-        _logger.Log(logEventInfo);
+        var remoteAddress = context.Connection.RemoteIpAddress;
+
+        if (remoteAddress is null)
+            return;
+
+        string ip = remoteAddress.IsIPv4MappedToIPv6 ? remoteAddress.MapToIPv4().ToString() : remoteAddress.MapToIPv6().ToString().Replace("::ffff:", "");
+
+        Log(_logger, msg, username, ip, status, level);
     }
 
     /// <summary>
@@ -32,13 +48,7 @@ public static class LogHelper
     /// <param name="status">操作执行结果</param>
     /// <param name="level">Log 级别</param>
     public static void Log(Logger _logger, string msg, string ip, TaskStatus status, LogLevel? level = null)
-    {
-        LogEventInfo logEventInfo = new(level ?? LogLevel.Info, _logger.Name, msg);
-        logEventInfo.Properties["uname"] = "Anonymous";
-        logEventInfo.Properties["ip"] = ip;
-        logEventInfo.Properties["status"] = status.ToString();
-        _logger.Log(logEventInfo);
-    }
+        => Log(_logger, msg, "Anonymous", ip, status, level);
 
     /// <summary>
     /// 登记一条 Log 记录
