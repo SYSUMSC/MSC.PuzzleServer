@@ -25,7 +25,7 @@ export const NavBar: FC = () => {
       <Box h="48px" w="48px" flex="none">
         <LogoIcon />
       </Box>
-      <VStack my="24px" spacing="12px">
+      <VStack my="24px" spacing="24px">
         <RouterButton
           route="/"
           matchExactly={true}

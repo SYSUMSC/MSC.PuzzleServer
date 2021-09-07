@@ -7,12 +7,13 @@ import {
   Flex,
   Heading,
   Input,
-  Spinner,
   useToast
 } from '@chakra-ui/react';
 import React, { FC, FormEvent, useCallback, useState } from 'react';
+import { LoadingMask } from 'src/common/components/LoadingMask';
 import { resolveMessage } from 'src/common/utils';
 import { PUZZLE_API } from 'src/redux/puzzle.api';
+import marked from 'marked';
 
 export interface PuzzleDetailPageProps {
   id: number;
@@ -52,32 +53,23 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
     );
   }
 
-  if (error) {
-    return (
-      <Center h="100%">
-        <Text>{resolveMessage(error)}</Text>
-      </Center>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <Center h="100%">
-        <Spinner size="xl" color="brand.100" />
-      </Center>
-    );
+  if (error || isLoading) {
+    return <LoadingMask error={error} />;
   }
 
   return (
     <Container display="flex" flexDirection="column" height="100vh">
       <Flex flex="none" alignItems="center" mt="10vh">
-        <Heading color="gray.300" size="4xl" textShadow="xl">
-          # {data?.title}
+        <Heading color="gray.300" size="2xl" textShadow="xl">
+          # {data!.title}
         </Heading>
       </Flex>
-      <Box flex="1" my="24px" overflow="auto">
-        {data?.content}
-      </Box>
+      <Box
+        flex="1"
+        my="24px"
+        overflow="auto"
+        dangerouslySetInnerHTML={{ __html: marked(data!.content) }}
+      />
       <Box flex="none" p="12px" roundedTopLeft="xl" roundedTopRight="xl" bg="gray.700">
         <Flex as="form" onSubmit={onSubmit}>
           <Input

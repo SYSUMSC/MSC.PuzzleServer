@@ -18,7 +18,8 @@ export interface PuzzleList {
   accessible: {
     id: number;
     title: string;
-    solvedCount: number;
+    acceptedCount: number;
+    submissionCount: number;
   }[];
 }
 
