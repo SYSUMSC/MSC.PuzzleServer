@@ -230,7 +230,8 @@ public class PuzzleController : ControllerBase
             Answer = model.Answer,
             Solved = result.Result == AnswerResult.Accepted,
             Score = hasSolved ? 0 : result.Score,
-            SubmitTimeUTC = DateTime.UtcNow
+            SubmitTimeUTC = DateTime.UtcNow,
+            UserName = user.UserName
         };
 
         await submissionRepository.AddSubmission(sub, token);

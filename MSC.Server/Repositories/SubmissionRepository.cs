@@ -20,7 +20,7 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
 
     public async Task<HashSet<int>> GetSolvedPuzzles(string userId, CancellationToken token)
         => (await (from sub in context.Submissions.Where(s => s.Solved && s.UserId == userId)
-            select sub.PuzzleId).ToListAsync(token)).ToHashSet();
+                    select sub.PuzzleId).ToListAsync(token)).ToHashSet();
 
     public Task<List<Submission>> GetSubmissions(CancellationToken token, int skip = 0, int count = 50, int puzzleId = 0, string userId = "All")
     {
@@ -32,7 +32,7 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
         if (userId != "All")
             result = result.Where(s => s.UserId == userId);
 
-        return result.Skip(skip).Take(count).ToListAsync(token);
+        return result.Include(s => s.User).OrderByDescending(s => s.SubmitTimeUTC).Skip(skip).Take(count).ToListAsync(token);
     }
 
     public async Task<List<TimeLineModel>> GetTimeLine(string userId, CancellationToken token)

@@ -34,9 +34,14 @@ public class Submission
     /// <summary>
     /// 答案提交的时间
     /// </summary>
-    [JsonIgnore]
     [JsonPropertyName("time")]
     public DateTime SubmitTimeUTC { get; set; } = DateTime.Parse("1970-01-01T00:00:00");
+
+    /// <summary>
+    /// 用户名
+    /// </summary>
+    [JsonPropertyName("userName")]
+    public string UserName { get; set; } = "Anonymous";
 
     #region 数据库关系
 
