@@ -65,6 +65,8 @@ public class AccountController : ControllerBase
             }
         };
 
+        user.UpdateByHttpContext(HttpContext);
+
         var result = await userManager.CreateAsync(user, model.Password);
 
         if (!result.Succeeded)
@@ -110,7 +112,7 @@ public class AccountController : ControllerBase
         if (user is null)
             return NotFound();
 
-        LogHelper.Log(logger, "发送用户密码重置邮件。", user, TaskStatus.Pending);
+        LogHelper.Log(logger, "发送用户密码重置邮件。", user.UserName, HttpContext, TaskStatus.Pending);
 
         mailSender.SendResetPasswordUrl(user.UserName, user.Email,
             HttpContext.Request.Scheme + "://"
@@ -136,6 +138,8 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel model)
     {
         var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
+        user.UpdateByHttpContext(HttpContext);
+        
         var result = await userManager.ResetPasswordAsync(user, Codec.Base64.Decode(model.RToken), model.Password);
 
         if (!result.Succeeded)
@@ -210,7 +214,7 @@ public class AccountController : ControllerBase
             return NotFound();
 
         user.LastSignedInUTC = DateTime.UtcNow;
-        await context.SaveChangesAsync();
+        user.UpdateByHttpContext(HttpContext);
 
         var result = await signInManager.PasswordSignInAsync(user, model.Password, true, false);
 
@@ -260,10 +264,10 @@ public class AccountController : ControllerBase
         var oname = user.UserName;
 
         user.UserName = model.UserName;
-        user.Description = model.Descr ?? string.Empty;
-        user.PhoneNumber = model.PhoneNumber ?? string.Empty;
-        user.StudentId = model.StudentId ?? string.Empty;
-        user.RealName = model.RealName ?? string.Empty;
+        user.Description = model.Descr ?? user.Description;
+        user.PhoneNumber = model.PhoneNumber ?? user.PhoneNumber;
+        user.StudentId = model.StudentId ?? user.StudentId;
+        user.RealName = model.RealName ?? user.RealName;
 
         var result = await userManager.UpdateAsync(user);
 

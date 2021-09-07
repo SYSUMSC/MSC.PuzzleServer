@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using MSC.Server.Models;
@@ -19,18 +20,17 @@ public class RequirePrivilegeAttribute : Attribute, IAsyncAuthorizationFilter
     /// </summary>
     private readonly Privilege RequiredPrivilege;
 
-    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+    private static readonly Logger logger = LogManager.GetLogger("Authorization");
 
     public RequirePrivilegeAttribute(Privilege privilege)
         => RequiredPrivilege = privilege;
 
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
-        AppDbContext dbContext = context.HttpContext.RequestServices.GetRequiredService<AppDbContext>();
-        var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        UserInfo? currentUser = await dbContext.Users.FirstOrDefaultAsync(i => i.Id == userId);
+        var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<UserInfo>>();
+        var user = await userManager.GetUserAsync(context.HttpContext.User);
 
-        if (currentUser is null)
+        if (user is null)
         {
             var result = new JsonResult(new RequestResponse("请先登录", 401))
             {
@@ -40,12 +40,12 @@ public class RequirePrivilegeAttribute : Attribute, IAsyncAuthorizationFilter
             return;
         }
 
-        //this method will be only called here
-        currentUser.UpdateByHttpContext(context.HttpContext);
-        await dbContext.SaveChangesAsync();
+        user.UpdateByHttpContext(context.HttpContext);
+        await userManager.UpdateAsync(user);
 
-        if (currentUser.Privilege < RequiredPrivilege)
+        if (user.Privilege < RequiredPrivilege)
         {
+            LogHelper.Log(logger, $"尝试访问未经授权的接口 {context.HttpContext.Request.Path}", user, TaskStatus.Denied);
             var result = new JsonResult(new RequestResponse("无权访问", 401))
             {
                 StatusCode = 401
