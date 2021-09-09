@@ -83,7 +83,7 @@ export const LoginPage: FC = () => {
           {redirect && (
             <Alert status="info" maxW="100%" my="24px">
               <AlertIcon />
-              请登陆后再访问此网页
+              请登录后再访问此网页
             </Alert>
           )}
           <Center>
@@ -93,7 +93,7 @@ export const LoginPage: FC = () => {
               color={or(!isToLogin, 'gray.500')}
               onClick={toggleIsToLogin}
             >
-              登陆
+              登录
             </Heading>
             <Heading
               size="lg"
@@ -185,7 +185,7 @@ export const LoginPage: FC = () => {
                   disabled={isLoggingIn || isLoginDisabled}
                   isLoading={isLoggingIn}
                 >
-                  登陆
+                  登录
                 </Button>
               </Flex>
             </form>
