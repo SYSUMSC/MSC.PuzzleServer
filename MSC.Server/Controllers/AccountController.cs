@@ -169,7 +169,6 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> Verify([FromBody] AccountVerifyModel model)
     {
         var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
-
         if (user is null)
             return BadRequest(new RequestResponse("无效的邮件地址"));
 

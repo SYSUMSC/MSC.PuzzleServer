@@ -20,7 +20,7 @@ public class RankRepository : RepositoryBase, IRankRepository
             int currentScore = 0;
             HashSet<int> puzzleIds = new();
 
-            foreach (var sub in user.Submissions)
+            foreach (var sub in user.Submissions.OrderByDescending(s => s.Score))
             {
                 if (!puzzleIds.Contains(sub.PuzzleId))
                 {
