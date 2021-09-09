@@ -104,13 +104,13 @@ public class AccountController : ControllerBase
     /// <response code="404">用户不存在</response>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Recovery([FromBody] RecoveryModel model)
     {
         var user = await userManager.FindByEmailAsync(model.Email);
         if (user is null)
-            return NotFound();
+            return NotFound(new RequestResponse("用户不存在",404));
 
         LogHelper.Log(logger, "发送用户密码重置邮件。", user.UserName, HttpContext, TaskStatus.Pending);
 
@@ -120,7 +120,7 @@ public class AccountController : ControllerBase
             + "/Account/PasswordReset?token=" + Codec.Base64.Encode(await userManager.GeneratePasswordResetTokenAsync(user))
             + "&email=" + Codec.Base64.Encode(model.Email));
 
-        return Ok();
+        return Ok(new RequestResponse("邮件发送成功", 200));
     }
 
     /// <summary>
@@ -162,15 +162,15 @@ public class AccountController : ControllerBase
     /// <response code="401">邮箱验证失败</response>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Verify([FromBody] AccountVerifyModel model)
     {
         var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
         var result = await userManager.ConfirmEmailAsync(user, Codec.Base64.Decode(model.Token));
 
         if (!result.Succeeded)
-            return Unauthorized();
+            return Unauthorized(new RequestResponse("邮箱验证失败", 401));
 
         LogHelper.Log(logger, "通过邮箱验证。", user, TaskStatus.Success);
         await signInManager.SignInAsync(user, true);
@@ -195,13 +195,11 @@ public class AccountController : ControllerBase
     /// <param name="model"></param>
     /// <response code="200">用户成功登陆</response>
     /// <response code="400">校验失败</response>
-    /// <response code="401">密码错误</response>
-    /// <response code="404">用户不存在</response>
+    /// <response code="401">用户名或密码错误</response>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> LogIn([FromBody] LoginModel model)
     {
         await signInManager.SignOutAsync();
@@ -211,7 +209,7 @@ public class AccountController : ControllerBase
             user = await userManager.FindByNameAsync(model.UserName);
 
         if (user is null)
-            return NotFound();
+            return Unauthorized(new RequestResponse("用户名或密码错误", 401));
 
         user.LastSignedInUTC = DateTime.UtcNow;
         user.UpdateByHttpContext(HttpContext);
@@ -219,7 +217,7 @@ public class AccountController : ControllerBase
         var result = await signInManager.PasswordSignInAsync(user, model.Password, true, false);
 
         if (!result.Succeeded)
-            return Unauthorized();
+            return Unauthorized(new RequestResponse("用户名或密码错误", 401));
 
         LogHelper.Log(logger, "用户成功登录。", user, TaskStatus.Success);
 
