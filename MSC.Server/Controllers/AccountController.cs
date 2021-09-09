@@ -40,7 +40,7 @@ public class AccountController : ControllerBase
     /// 用户注册接口
     /// </summary>
     /// <remarks>
-    /// 使用此接口注册新用户
+    /// 使用此接口注册新用户，邮件URL：/verify
     /// </remarks>
     /// <param name="model"></param>
     /// <response code="200">注册成功</response>
@@ -86,7 +86,7 @@ public class AccountController : ControllerBase
 
         mailSender.SendConfirmEmailUrl(user.UserName, user.Email,
             "https://" + HttpContext.Request.Host.ToString()
-            + "/Account/Verify?token=" + Codec.Base64.Encode(await userManager.GenerateEmailConfirmationTokenAsync(user))
+            + "/verify?token=" + Codec.Base64.Encode(await userManager.GenerateEmailConfirmationTokenAsync(user))
             + "&email=" + Codec.Base64.Encode(model.Email));
 
         return Ok();
@@ -96,7 +96,7 @@ public class AccountController : ControllerBase
     /// 用户找回密码请求接口
     /// </summary>
     /// <remarks>
-    /// 使用此接口请求找回密码，向用户邮箱发送邮件
+    /// 使用此接口请求找回密码，向用户邮箱发送邮件，邮件URL：/reset
     /// </remarks>
     /// <param name="model"></param>
     /// <response code="200">用户密码重置邮件发送成功</response>
@@ -117,7 +117,7 @@ public class AccountController : ControllerBase
         mailSender.SendResetPasswordUrl(user.UserName, user.Email,
             HttpContext.Request.Scheme + "://"
             + HttpContext.Request.Host.ToString()
-            + "/Account/PasswordReset?token=" + Codec.Base64.Encode(await userManager.GeneratePasswordResetTokenAsync(user))
+            + "/reset?token=" + Codec.Base64.Encode(await userManager.GeneratePasswordResetTokenAsync(user))
             + "&email=" + Codec.Base64.Encode(model.Email));
 
         return Ok(new RequestResponse("邮件发送成功", 200));
@@ -138,6 +138,9 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel model)
     {
         var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
+        if (user is null)
+            return BadRequest(new RequestResponse("无效的邮件地址"));
+
         user.UpdateByHttpContext(HttpContext);
         
         var result = await userManager.ResetPasswordAsync(user, Codec.Base64.Decode(model.RToken), model.Password);
@@ -167,6 +170,10 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> Verify([FromBody] AccountVerifyModel model)
     {
         var user = await userManager.FindByEmailAsync(Codec.Base64.Decode(model.Email));
+
+        if (user is null)
+            return BadRequest(new RequestResponse("无效的邮件地址"));
+
         var result = await userManager.ConfirmEmailAsync(user, Codec.Base64.Decode(model.Token));
 
         if (!result.Succeeded)
@@ -309,7 +316,7 @@ public class AccountController : ControllerBase
     /// 用户邮箱更改接口
     /// </summary>
     /// <remarks>
-    /// 使用此接口更改用户邮箱，需要SignedIn权限
+    /// 使用此接口更改用户邮箱，需要SignedIn权限，邮件URL：/confirm
     /// </remarks>
     /// <param name="model"></param>
     /// <response code="200">成功发送用户邮箱更改邮件</response>
@@ -331,7 +338,7 @@ public class AccountController : ControllerBase
         mailSender.SendChangeEmailUrl(user.UserName, model.NewMail,
             HttpContext.Request.Scheme + "://"
             + HttpContext.Request.Host.ToString()
-            + "/Account/ChangeEmail?token=" + Codec.Base64.Encode(await userManager.GenerateChangeEmailTokenAsync(user, model.NewMail))
+            + "/confirm?token=" + Codec.Base64.Encode(await userManager.GenerateChangeEmailTokenAsync(user, model.NewMail))
             + "&email=" + Codec.Base64.Encode(model.NewMail));
 
         return Ok();
