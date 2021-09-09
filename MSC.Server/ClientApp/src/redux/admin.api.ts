@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export interface PuzzleLog {
   time: string;
-  userName: string;
+  name: string;
   ip: string;
   msg: string;
   status: string;
@@ -13,7 +13,7 @@ export const ADMIN_API = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'api/admin' }),
   endpoints: (builder) => ({
     getLogs: builder.query<PuzzleLog[], void>({
-      query: () => 'Logs'
+      query: () => 'logs'
     })
   })
 });

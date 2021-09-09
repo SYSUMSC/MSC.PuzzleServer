@@ -193,7 +193,7 @@ public class AccountController : ControllerBase
     /// 使用此接口登录账户
     /// </remarks>
     /// <param name="model"></param>
-    /// <response code="200">用户成功登陆</response>
+    /// <response code="200">用户成功登录</response>
     /// <response code="400">校验失败</response>
     /// <response code="401">用户名或密码错误</response>
     [HttpPost]

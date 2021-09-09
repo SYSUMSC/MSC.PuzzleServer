@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export interface Submission {
-  id: number;
+  puzzleId: number;
   answer: string;
   solved: boolean;
   score: number;
-  submitTimeUTC: string;
+  time: string;
+  userName: string;
 }
 
 export const SUBMISSION_API = createApi({

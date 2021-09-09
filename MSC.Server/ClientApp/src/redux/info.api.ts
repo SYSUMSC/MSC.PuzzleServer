@@ -4,17 +4,15 @@ export interface PuzzleScoreBoard {
   updateTime: string;
   rank: {
     score: number;
-    updateTime: string;
-    userName: string;
+    time: string;
+    name: string;
     descr: string;
-    userId: string;
   }[];
   topDetail: {
     userName: string;
     timeLine: {
-      puzzleId: string;
       time: string;
-      totalScore: number;
+      score: number;
     }[];
   }[];
 }
