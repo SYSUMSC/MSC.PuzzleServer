@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using NLog;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MSC.Server.Utils;
@@ -10,14 +11,37 @@ public class Codec
     /// </summary>
     public static class Base64
     {
+        private static readonly Logger logger = LogManager.GetLogger("Base64Convertor");
+
         public static string Decode(string? str, string type = "utf-8")
-            => str is null ? string.Empty : Encoding.GetEncoding(type).GetString(Convert.FromBase64String(str));
+        {
+            if (str is null)
+                return string.Empty;
+
+            try
+            {
+                return Encoding.GetEncoding(type).GetString(Convert.FromBase64String(str));
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
 
         public static string Encode(string? str, string type = "utf-8")
-            => str is null ? string.Empty : Convert.ToBase64String(Encoding.GetEncoding(type).GetBytes(str));
+        {
+            if (str is null)
+                return string.Empty;
 
-        public static byte[]? DecodeToBytes(string? str)
-            => str is null ? null : Convert.FromBase64String(str);
+            try
+            {
+                return Convert.ToBase64String(Encoding.GetEncoding(type).GetBytes(str));
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
     }
 
     /// <summary>
