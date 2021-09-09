@@ -115,8 +115,7 @@ public class AccountController : ControllerBase
         LogHelper.Log(logger, "发送用户密码重置邮件。", user.UserName, HttpContext, TaskStatus.Pending);
 
         mailSender.SendResetPasswordUrl(user.UserName, user.Email,
-            HttpContext.Request.Scheme + "://"
-            + HttpContext.Request.Host.ToString()
+            "https://" + HttpContext.Request.Host.ToString()
             + "/reset?token=" + Codec.Base64.Encode(await userManager.GeneratePasswordResetTokenAsync(user))
             + "&email=" + Codec.Base64.Encode(model.Email));
 
@@ -336,8 +335,7 @@ public class AccountController : ControllerBase
         LogHelper.Log(logger, "发送用户邮箱更改邮件。", user, TaskStatus.Pending);
 
         mailSender.SendChangeEmailUrl(user.UserName, model.NewMail,
-            HttpContext.Request.Scheme + "://"
-            + HttpContext.Request.Host.ToString()
+            "https://" + HttpContext.Request.Host.ToString()
             + "/confirm?token=" + Codec.Base64.Encode(await userManager.GenerateChangeEmailTokenAsync(user, model.NewMail))
             + "&email=" + Codec.Base64.Encode(model.NewMail));
 
