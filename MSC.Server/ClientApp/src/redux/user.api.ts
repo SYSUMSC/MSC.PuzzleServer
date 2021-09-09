@@ -79,14 +79,14 @@ export const USER_API = createApi({
         body: dto
       })
     }),
-    recovery: builder.query<void, UserRecoveryDto>({
+    recovery: builder.mutation<void, UserRecoveryDto>({
       query: (dto) => ({
         url: 'recovery',
         method: 'POST',
         body: dto
       })
     }),
-    resetPassword: builder.query<void, UserResetPasswordDto>({
+    resetPassword: builder.mutation<void, UserResetPasswordDto>({
       query: (dto) => ({
         url: 'passwordreset',
         method: 'POST',

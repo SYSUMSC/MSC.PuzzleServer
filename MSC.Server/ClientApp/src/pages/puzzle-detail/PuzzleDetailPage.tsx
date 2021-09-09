@@ -9,7 +9,7 @@ import {
   Input,
   useToast
 } from '@chakra-ui/react';
-import React, { FC, FormEvent, useCallback, useState } from 'react';
+import React, { FC, FormEvent, useCallback, useEffect, useState } from 'react';
 import { LoadingMask } from 'src/common/components/LoadingMask';
 import { resolveMessage } from 'src/common/utils';
 import { PUZZLE_API } from 'src/redux/puzzle.api';
@@ -36,14 +36,16 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
     [answer, submit, id]
   );
 
-  if (isAnswerSuccess) {
-    toast({
-      title: '回答正确',
-      description: '恭喜你找到了这道谜题的答案！',
-      status: 'success',
-      duration: 5000
-    });
-  }
+  useEffect(() => {
+    if (isAnswerSuccess) {
+      toast({
+        title: '回答正确',
+        description: '恭喜你找到了这道谜题的答案！',
+        status: 'success',
+        duration: 5000
+      });
+    }
+  }, [isAnswerSuccess, toast]);
 
   if (Object.is(NaN, id)) {
     return (

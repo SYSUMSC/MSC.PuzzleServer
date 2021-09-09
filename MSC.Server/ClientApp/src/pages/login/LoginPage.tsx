@@ -10,20 +10,27 @@ import {
   FormLabel,
   Heading,
   Input,
+  ModalFooter,
   Spacer,
+  toast,
   useBoolean,
+  useDisclosure,
+  useToast,
   VStack
 } from '@chakra-ui/react';
 import { or, resolveMessage } from '../../common/utils';
-import React, { FC, FormEvent, useEffect, useMemo, useState } from 'react';
+import React, { FC, FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { LogoIcon } from '../../common/components/LogoIcon';
 import { useQueryParams } from '../../common/hooks/use-query-params';
 import { UserLoginDto, UserRegisterDto, USER_API } from 'src/redux/user.api';
 import { Redirect } from 'react-router';
+import { ForgetPasswordModal } from '../../common/components/ForgetPasswordModal';
 
 export const LoginPage: FC = () => {
   const [isToLogin, { toggle: toggleIsToLogin }] = useBoolean(true);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { redirect } = useQueryParams();
+  const toast = useToast();
 
   const [login, { isLoading: isLoggingIn, isSuccess: isLogInSuccess, error: loginError }] =
     USER_API.useLoginMutation();
@@ -66,6 +73,16 @@ export const LoginPage: FC = () => {
     },
     [isRegisterDisabled, registerDto, register]
   );
+
+  const onEmailSent = useCallback(() => {
+    onClose();
+    toast({
+      title: '验证邮件已发送',
+      description: '请跟随邮件内容指示重置密码',
+      status: 'success',
+      duration: 5000
+    });
+  }, [onClose, toast]);
 
   if (isLogInSuccess || isRegisterSuccess) {
     return <Redirect to={redirect ?? '/'} />;
@@ -177,7 +194,9 @@ export const LoginPage: FC = () => {
                 {loginError && <FormErrorMessage>{resolveMessage(loginError)}</FormErrorMessage>}
               </FormControl>
               <Flex mt="24px">
-                <Button variant="link">忘记密码</Button>
+                <Button variant="link" onClick={onOpen}>
+                  忘记密码
+                </Button>
                 <Spacer />
                 <Button
                   type="submit"
@@ -192,6 +211,7 @@ export const LoginPage: FC = () => {
           )}
         </VStack>
       </Box>
+      <ForgetPasswordModal isOpen={isOpen} onClose={onClose} onEmailSent={onEmailSent} />
     </Center>
   );
 };

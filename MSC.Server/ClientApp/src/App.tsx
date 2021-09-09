@@ -9,6 +9,7 @@ import { PortalPage } from './pages/portal/PortalPage';
 import { PuzzlePage } from './pages/puzzle/PuzzlePage';
 import { LeaderBoardPage } from './pages/leaderboard/LeaderBoardPage';
 import { PuzzleDetailPage } from './pages/puzzle-detail/PuzzleDetailPage';
+import { ResetPasswordPage } from './pages/reset/ResetPasswordPage';
 
 export const App: FC = () => {
   return (
@@ -19,6 +20,9 @@ export const App: FC = () => {
             <PortalPage />
           </WithNavBar>
         </AuthRoute>
+        <Route path="/reset">
+          <ResetPasswordPage />
+        </Route>
         <Route path="/login">
           <LoginPage />
         </Route>
