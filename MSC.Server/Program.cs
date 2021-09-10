@@ -122,7 +122,11 @@ builder.Services.AddSingleton<SignalRLoggingService>();
 
 #endregion SignalR
 
-builder.Services.AddResponseCompression();
+builder.Services.AddResponseCompression(options => {
+    options.MimeTypes =
+                ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/json" });
+});
 
 builder.Services.AddControllersWithViews();
 
@@ -157,12 +161,12 @@ app.UseIpRateLimiting();
 
 app.UseStaticFiles();
 
+app.UseResponseCompression();
+
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseResponseCompression();
 
 app.MapControllers();
 app.MapHub<LoggingHub>("/hub/log");
