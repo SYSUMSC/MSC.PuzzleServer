@@ -3,11 +3,13 @@ using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Utils;
+using NLog;
 
 namespace MSC.Server.Repositories;
 
 public class SubmissionRepository : RepositoryBase, ISubmissionRepository
 {
+    private static readonly Logger logger = LogManager.GetLogger("SubmissionRepository");
     public SubmissionRepository(AppDbContext context) : base(context)
     {
     }

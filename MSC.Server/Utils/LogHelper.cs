@@ -7,6 +7,16 @@ namespace MSC.Server.Utils;
 public static class LogHelper
 {
     /// <summary>
+    /// 记录一条系统日志（无用户信息，默认Debug）
+    /// </summary>
+    /// <param name="_logger">传入的 Nlog.Logger</param>
+    /// <param name="msg">Log 消息</param>
+    /// <param name="status">操作执行结果</param>
+    /// <param name="level">Log 级别</param>
+    public static void SystemLog(Logger _logger, string msg, TaskStatus status = TaskStatus.Success, LogLevel? level = null)
+        => Log(_logger, msg, "System", "-", status, level ?? LogLevel.Debug);
+
+    /// <summary>
     /// 登记一条 Log 记录
     /// </summary>
     /// <param name="_logger">传入的 Nlog.Logger</param>

@@ -46,6 +46,7 @@ public class PuzzleController : ControllerBase
         if (!cache.TryGetValue(CacheKey.MaxAccessLevel, out MAX_ACCESS_LEVEL))
         {
             MAX_ACCESS_LEVEL = puzzleRepository.GetMaxAccessLevel();
+            LogHelper.SystemLog(logger, $"题目最高访问等级：{MAX_ACCESS_LEVEL}");
             cache.Set(CacheKey.MaxAccessLevel, MAX_ACCESS_LEVEL, TimeSpan.FromDays(7));
         }
     }
@@ -74,6 +75,8 @@ public class PuzzleController : ControllerBase
         for (int i = model.AccessLevel; i <= MAX_ACCESS_LEVEL; ++i)
             cache.Remove(CacheKey.AccessiblePuzzles(i));
 
+        cache.Remove(CacheKey.MaxAccessLevel);
+
         return Ok(new PuzzleResponse(puzzle.Id));
     }
 
@@ -101,6 +104,8 @@ public class PuzzleController : ControllerBase
 
         for (int i = model.AccessLevel; i <= MAX_ACCESS_LEVEL; ++i)
             cache.Remove(CacheKey.AccessiblePuzzles(i));
+
+        cache.Remove(CacheKey.MaxAccessLevel);
 
         return Ok(new PuzzleResponse(puzzle.Id));
     }
@@ -157,6 +162,8 @@ public class PuzzleController : ControllerBase
         for (int i = 0; i <= MAX_ACCESS_LEVEL; ++i)
             cache.Remove(CacheKey.AccessiblePuzzles(i));
 
+        cache.Remove(CacheKey.MaxAccessLevel);
+
         var user = await userManager.GetUserAsync(User);
 
         LogHelper.Log(logger, $"删除题目#{id} {title}", user, TaskStatus.Success);
@@ -185,7 +192,8 @@ public class PuzzleController : ControllerBase
         if (!cache.TryGetValue(CacheKey.AccessiblePuzzles(accessLevel), out List<PuzzleItem> accessible))
         {
             accessible = await puzzleRepository.GetAccessiblePuzzles(accessLevel, token);
-            cache.Set(CacheKey.AccessiblePuzzles(accessLevel), accessible, TimeSpan.FromMinutes(5));
+            LogHelper.SystemLog(logger, $"重构缓存：AccessiblePuzzles#{accessLevel}");
+            cache.Set(CacheKey.AccessiblePuzzles(accessLevel), accessible, TimeSpan.FromMinutes(10));
         }
 
         PuzzleListModel puzzleList = new()

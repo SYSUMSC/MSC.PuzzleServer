@@ -3,11 +3,14 @@ using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Utils;
+using NLog;
 
 namespace MSC.Server.Repositories;
 
 public class PuzzleRepository : RepositoryBase, IPuzzleRepository
 {
+    private static readonly Logger logger = LogManager.GetLogger("PuzzleRepository");
+
     public PuzzleRepository(AppDbContext context) : base(context)
     {
     }
@@ -19,6 +22,8 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         await context.AddAsync(puzzle, token);
         await context.SaveChangesAsync(token);
 
+        LogHelper.SystemLog(logger, $"添加题目#{puzzle.Id} {puzzle.Title} 成功");
+
         return puzzle;
     }
 
@@ -27,7 +32,10 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
 
         if (puzzle is null)
+        {
+            LogHelper.SystemLog(logger, $"未找到试图删除的题目", TaskStatus.Fail);
             return (false, string.Empty);
+        }
 
         string title = puzzle.Title!;
 
@@ -59,7 +67,10 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
 
         if (puzzle is null || puzzle.AccessLevel > accessLevel)
+        {
+            LogHelper.SystemLog(logger, $"未找到满足要求的题目", TaskStatus.Fail);
             return null;
+        }
 
         return new UserPuzzleModel
         {
@@ -75,10 +86,15 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
 
         if (puzzle is null)
+        {
+            LogHelper.SystemLog(logger, $"未找到满足要求的题目", TaskStatus.Fail);
             return null;
+        }
 
         puzzle.Update(newPuzzle);
         await context.SaveChangesAsync(token);
+
+        LogHelper.SystemLog(logger, $"成功更新题目#{puzzle.Id}");
 
         return puzzle;
     }
@@ -86,12 +102,24 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
     public async Task<VerifyResult> VerifyAnswer(int id, string? answer, int accessLevel, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(answer))
+        {
+            LogHelper.SystemLog(logger, "答案验证遇到空输入", TaskStatus.Fail);
             return new VerifyResult();
+        }
 
         Puzzle? puzzle = await context.Puzzles.FirstOrDefaultAsync(x => x.Id == id, token);
 
-        if (puzzle is null || puzzle.AccessLevel > accessLevel)
+        if (puzzle is null)
+        {
+            LogHelper.SystemLog(logger, $"题目未找到#{id}", TaskStatus.Fail);
             return new VerifyResult(AnswerResult.Unauthorized);
+        }
+
+        if(puzzle.AccessLevel > accessLevel)
+        {
+            LogHelper.SystemLog(logger, $"未授权的题目访问#{id}", TaskStatus.Denied);
+            return new VerifyResult(AnswerResult.Unauthorized);
+        }
 
         ++puzzle.SubmissionCount;
 

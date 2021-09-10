@@ -2,17 +2,23 @@
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
+using MSC.Server.Utils;
+using NLog;
 
 namespace MSC.Server.Repositories;
 
 public class RankRepository : RepositoryBase, IRankRepository
 {
+    private static readonly Logger logger = LogManager.GetLogger("RankRepository");
+
     public RankRepository(AppDbContext context) : base(context)
     {
     }
 
-    public Task CheckRankScore(CancellationToken token)
+    public async Task CheckRankScore(CancellationToken token)
     {
+        LogHelper.SystemLog(logger, "开始检查排名分数", TaskStatus.Pending);
+
         var users = context.Users.Include(u => u.Submissions).Include(u => u.Rank);
 
         foreach (UserInfo user in users)
@@ -30,9 +36,12 @@ public class RankRepository : RepositoryBase, IRankRepository
             }
 
             user.Rank!.Score = currentScore;
+
+            LogHelper.SystemLog(logger, $"{user.UserName} 的分数为：{currentScore}", TaskStatus.Pending);
         }
 
-        return context.SaveChangesAsync(token);
+        await context.SaveChangesAsync(token);
+        LogHelper.SystemLog(logger, "检查排名分数完成");
     }
 
     public Task<List<RankMessageModel>> GetRank(CancellationToken token, int skip = 0, int count = 100)
@@ -52,5 +61,6 @@ public class RankRepository : RepositoryBase, IRankRepository
         rank.UpdateTimeUTC = DateTime.UtcNow;
         rank.Score += score;
         await context.SaveChangesAsync(token);
+        LogHelper.SystemLog(logger, $"更新分数：{rank.User!.UserName} => {score}");
     }
 }

@@ -41,15 +41,30 @@ public class SignalRLoggingService : IDisposable
     {
         try
         {
-            await Hub.Clients.All.RecivedLog(
-                new LogMessageModel
-                {
-                    Time = logInfo.TimeStamp,
-                    UserName = (string)logInfo.Properties["uname"],
-                    IP = (string)logInfo.Properties["ip"],
-                    Msg = logInfo.Message,
-                    Status = (string)logInfo.Properties["status"]
-                });
+            if(logInfo.Level >= NLog.LogLevel.Error)
+            {
+                await Hub.Clients.All.RecivedLog(
+                    new LogMessageModel
+                    {
+                        Time = logInfo.TimeStamp,
+                        UserName = "System",
+                        IP = "-",
+                        Msg = logInfo.Message,
+                        Status = "Fail"
+                    });
+            }
+            else if(logInfo.Level >= NLog.LogLevel.Info)
+            {
+                await Hub.Clients.All.RecivedLog(
+                    new LogMessageModel
+                    {
+                        Time = logInfo.TimeStamp,
+                        UserName = (string)logInfo.Properties["uname"],
+                        IP = (string)logInfo.Properties["ip"],
+                        Msg = logInfo.Message,
+                        Status = (string)logInfo.Properties["status"]
+                    });
+            }
         }
         catch (Exception) { }
     }

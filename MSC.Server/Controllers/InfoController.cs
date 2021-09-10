@@ -4,6 +4,7 @@ using MSC.Server.Middlewares;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Utils;
+using NLog;
 using System.Net.Mime;
 
 namespace MSC.Server.Controllers;
@@ -18,6 +19,7 @@ namespace MSC.Server.Controllers;
 [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
 public class InfoController : ControllerBase
 {
+    private static readonly Logger logger = LogManager.GetLogger("InfoController");
     private readonly IRankRepository rankRepository;
     private readonly ISubmissionRepository submissionRepository;
     private readonly IMemoryCache cache;
@@ -66,7 +68,9 @@ public class InfoController : ControllerBase
 
         result.UpdateTime = DateTime.Now;
 
-        cache.Set(CacheKey.ScoreBoard, result, TimeSpan.FromHours(6));
+        LogHelper.SystemLog(logger, $"重构缓存：ScoreBoard");
+
+        cache.Set(CacheKey.ScoreBoard, result, TimeSpan.FromHours(10));
 
         return Ok(result);
     }
