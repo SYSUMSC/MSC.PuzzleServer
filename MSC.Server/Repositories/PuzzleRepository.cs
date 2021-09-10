@@ -38,7 +38,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
     }
 
     public Task<List<PuzzleItem>> GetAccessiblePuzzles(int accessLevel, CancellationToken token)
-        => (from p in context.Puzzles.Where(p => p.AccessLevel <= accessLevel)
+        => (from p in context.Puzzles.Where(p => p.AccessLevel <= accessLevel).OrderBy(p => p.AccessLevel)
                 select new PuzzleItem()
                 {
                     Id = p.Id,

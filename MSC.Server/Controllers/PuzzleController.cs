@@ -185,7 +185,7 @@ public class PuzzleController : ControllerBase
         if (!cache.TryGetValue(CacheKey.AccessiblePuzzles(accessLevel), out List<PuzzleItem> accessible))
         {
             accessible = await puzzleRepository.GetAccessiblePuzzles(accessLevel, token);
-            cache.Set(CacheKey.AccessiblePuzzles(accessLevel), accessible, TimeSpan.FromDays(6));
+            cache.Set(CacheKey.AccessiblePuzzles(accessLevel), accessible, TimeSpan.FromMinutes(5));
         }
 
         PuzzleListModel puzzleList = new()
