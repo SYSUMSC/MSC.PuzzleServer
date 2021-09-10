@@ -35,7 +35,7 @@ export const NavBar: FC = () => {
         <RouterButton route="/leaderboard" icon={<LeaderBoardIcon width="24px" height="24px" />} />
       </VStack>
       <Spacer />
-      <Popover closeOnBlur={false} placement="right">
+      <Popover placement="right">
         <PopoverTrigger>
           <IconButton
             aria-label=""

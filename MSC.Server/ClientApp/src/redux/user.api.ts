@@ -93,7 +93,7 @@ export const USER_API = createApi({
         body: dto
       })
     }),
-    verifyEmail: builder.query<void, UserVerifyEmailDto>({
+    verifyEmail: builder.mutation<void, UserVerifyEmailDto>({
       query: (dto) => ({
         url: 'verify',
         method: 'POST',
@@ -120,7 +120,7 @@ export const USER_API = createApi({
         body: dto
       })
     }),
-    changeEmail: builder.query<void, UserChangeEmailDto>({
+    changeEmail: builder.mutation<void, UserChangeEmailDto>({
       query: (dto) => ({
         url: 'changeemail',
         method: 'PUT',

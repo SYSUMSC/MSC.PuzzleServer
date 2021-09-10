@@ -10,6 +10,8 @@ import { PuzzlePage } from './pages/puzzle/PuzzlePage';
 import { LeaderBoardPage } from './pages/leaderboard/LeaderBoardPage';
 import { PuzzleDetailPage } from './pages/puzzle-detail/PuzzleDetailPage';
 import { ResetPasswordPage } from './pages/reset/ResetPasswordPage';
+import { VerifyEmailPage } from './pages/verify/VerifyEmailPage';
+import { UpdateEmailPage } from './pages/update-email/UpdateEmailPage';
 
 export const App: FC = () => {
   return (
@@ -23,6 +25,14 @@ export const App: FC = () => {
         <Route path="/reset">
           <ResetPasswordPage />
         </Route>
+        <Route path="/verify">
+          <VerifyEmailPage />
+        </Route>
+        <AuthRoute path="/change-email">
+          <WithNavBar>
+            <UpdateEmailPage />
+          </WithNavBar>
+        </AuthRoute>
         <Route path="/login">
           <LoginPage />
         </Route>

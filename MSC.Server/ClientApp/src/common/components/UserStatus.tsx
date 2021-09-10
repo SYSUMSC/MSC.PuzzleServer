@@ -1,13 +1,15 @@
 import { Text, Box, Button, Center, Heading, HStack, Spinner, VStack } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router';
 import { USER_API } from 'src/redux/user.api';
 
 export const UserStatus: FC = () => {
   const { data: user } = USER_API.useStatusQuery();
-  const [logout, { isLoading, isSuccess }] = USER_API.useLogoutMutation();
+  const [logout, { isLoading: isLoggingOut, isSuccess: isLogOutSuccess }] =
+    USER_API.useLogoutMutation();
 
-  if (isSuccess) {
+  if (isLogOutSuccess) {
     return <Redirect to="/login" />;
   }
 
@@ -23,11 +25,16 @@ export const UserStatus: FC = () => {
           <Heading size="md">{user.name}</Heading>
           <Text>{user.email}</Text>
           <HStack>
+            <Link to="/change-email">
+              <Button size="sm" variant="ghost">
+                修改邮箱
+              </Button>
+            </Link>
             <Button
               size="sm"
-              variant="outline"
-              disabled={isLoading}
-              isLoading={isLoading}
+              variant="ghost"
+              disabled={isLoggingOut}
+              isLoading={isLoggingOut}
               onClick={() => logout()}
             >
               注销

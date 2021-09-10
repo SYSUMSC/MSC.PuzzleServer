@@ -84,7 +84,18 @@ export const LoginPage: FC = () => {
     });
   }, [onClose, toast]);
 
-  if (isLogInSuccess || isRegisterSuccess) {
+  useEffect(() => {
+    if (isRegisterSuccess) {
+      toast({
+        title: '注册成功',
+        description: '你的邮箱将会收到一封验证邮件，请跟随邮件内容指示操作',
+        status: 'success',
+        duration: 10000
+      });
+    }
+  }, [toast, isRegisterSuccess]);
+
+  if (isLogInSuccess) {
     return <Redirect to={redirect ?? '/'} />;
   }
 
@@ -165,7 +176,7 @@ export const LoginPage: FC = () => {
                   type="submit"
                   variant="solid"
                   isLoading={isRegistering}
-                  disabled={isRegistering || isRegisterDisabled}
+                  disabled={isRegistering || isRegisterDisabled || isRegisterSuccess}
                 >
                   注册
                 </Button>

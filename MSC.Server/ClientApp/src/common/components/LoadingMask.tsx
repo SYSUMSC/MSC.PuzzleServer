@@ -6,13 +6,15 @@ import { SerializedError } from '@reduxjs/toolkit';
 
 export interface LoadingMaskProps {
   error?: FetchBaseQueryError | SerializedError;
+  message?: string;
 }
 
-export const LoadingMask: FC<LoadingMaskProps> = ({ error }) => {
+export const LoadingMask: FC<LoadingMaskProps> = ({ error, message }) => {
   return (
     <Center w="100%" h="100%">
       <VStack spacing={4}>
         <Spinner thickness="4px" size="xl" color="brand.100" />
+        {!error && message && <Text>{message}</Text>}
         {error && <Text>{resolveMessage(error)}</Text>}
       </VStack>
     </Center>
