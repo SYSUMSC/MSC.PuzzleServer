@@ -17,6 +17,8 @@ using NLog.Targets;
 using NSwag;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -120,6 +122,8 @@ builder.Services.AddSingleton<SignalRLoggingService>();
 
 #endregion SignalR
 
+builder.Services.AddResponseCompression();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -157,6 +161,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseResponseCompression();
 
 app.MapControllers();
 app.MapHub<LoggingHub>("/hub/log");
