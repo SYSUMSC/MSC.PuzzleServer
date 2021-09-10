@@ -12,6 +12,9 @@ export interface Submission {
 export const SUBMISSION_API = createApi({
   reducerPath: 'submissionApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'api/submission' }),
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
+  refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
     getLatestSubmissions: builder.query<Submission[], number>({
       query: (id) => `${id}`

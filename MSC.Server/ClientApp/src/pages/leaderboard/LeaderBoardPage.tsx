@@ -109,13 +109,12 @@ export const LeaderBoardPage: FC = () => {
         }}
       />
       <Center mb="24px">
-        <Heading size="md">用户最新分数</Heading>
+        <Heading size="md">排行榜</Heading>
       </Center>
       <Table w="100%" bg="gray.800" mx="auto">
         <Thead>
           <Tr>
             <Th>
-              <Text textAlign="left">用户名</Text>
             </Th>
             <Th>
               <Text textAlign="left">介绍</Text>

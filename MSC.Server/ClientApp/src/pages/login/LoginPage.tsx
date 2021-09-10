@@ -10,9 +10,7 @@ import {
   FormLabel,
   Heading,
   Input,
-  ModalFooter,
   Spacer,
-  toast,
   useBoolean,
   useDisclosure,
   useToast,
@@ -95,9 +93,11 @@ export const LoginPage: FC = () => {
     }
   }, [toast, isRegisterSuccess]);
 
-  if (isLogInSuccess) {
-    return <Redirect to={redirect ?? '/'} />;
-  }
+  useEffect(() => {
+    if (isLogInSuccess) {
+      window.location.href = '/';
+    }
+  });
 
   return (
     <Center minHeight="100vh">

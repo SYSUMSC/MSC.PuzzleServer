@@ -30,6 +30,9 @@ export interface AnswerPuzzleDto {
 export const PUZZLE_API = createApi({
   reducerPath: 'puzzleApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'api/puzzle' }),
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
+  refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
     createPuzzle: builder.query<void, PuzzleDto>({
       query: () => ({
