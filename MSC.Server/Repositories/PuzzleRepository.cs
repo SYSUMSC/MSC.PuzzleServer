@@ -51,7 +51,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
                 {
                     Id = p.Id,
                     Title = p.Title,
-                    AcceptedCount = p.AcceptedUserCount,
+                    AcceptedCount = p.AcceptedCount,
                     SubmissionCount = p.SubmissionCount
                 }).ToListAsync(token);
 
