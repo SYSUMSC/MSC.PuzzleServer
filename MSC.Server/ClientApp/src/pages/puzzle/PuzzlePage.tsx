@@ -47,7 +47,7 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
           {title}
         </Text>
         <Flex justifyContent="space-between" alignItems="flex-end">
-          <HStack spacing="5px">
+          <HStack spacing="12px">
             <VStack spacing="0" align="sketch">
               <Text color="gray.400" fontSize="xs" textAlign="right">
                 正确率
