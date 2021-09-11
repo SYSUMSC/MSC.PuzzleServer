@@ -43,19 +43,19 @@ public class SignalRLoggingService : IDisposable
         {
             if(logInfo.Level >= NLog.LogLevel.Error)
             {
-                await Hub.Clients.All.RecivedLog(
+                await Hub.Clients.All.ReceivedLog(
                     new LogMessageModel
                     {
                         Time = logInfo.TimeStamp,
                         UserName = "System",
                         IP = "-",
                         Msg = logInfo.Message,
-                        Status = "Fail"
+                        Status = (string)logInfo.Properties["status"]
                     });
             }
             else if(logInfo.Level >= NLog.LogLevel.Info)
             {
-                await Hub.Clients.All.RecivedLog(
+                await Hub.Clients.All.ReceivedLog(
                     new LogMessageModel
                     {
                         Time = logInfo.TimeStamp,

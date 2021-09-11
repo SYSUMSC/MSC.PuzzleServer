@@ -7,5 +7,5 @@ public interface ILoggingClient
     /// <summary>
     /// 接收到广播日志信息
     /// </summary>
-    public Task RecivedLog(LogMessageModel log);
+    public Task ReceivedLog(LogMessageModel log);
 }
