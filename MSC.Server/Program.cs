@@ -19,6 +19,8 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -117,7 +119,6 @@ builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 #region SignalR
 
 builder.Services.AddSignalR().AddJsonProtocol();
-
 builder.Services.AddSingleton<SignalRLoggingService>();
 
 #endregion SignalR
@@ -128,7 +129,13 @@ builder.Services.AddResponseCompression(options => {
                     new[] { "application/json" });
 });
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().ConfigureApiBehaviorOptions(options => {
+    options.InvalidModelStateResponseFactory = context =>
+        new JsonResult(new RequestResponse("校验失败"))
+        {
+            StatusCode = 400
+        };
+});
 
 var app = builder.Build();
 
