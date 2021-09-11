@@ -123,13 +123,15 @@ builder.Services.AddSingleton<SignalRLoggingService>();
 
 #endregion SignalR
 
-builder.Services.AddResponseCompression(options => {
+builder.Services.AddResponseCompression(options =>
+{
     options.MimeTypes =
                 ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/json" });
 });
 
-builder.Services.AddControllersWithViews().ConfigureApiBehaviorOptions(options => {
+builder.Services.AddControllersWithViews().ConfigureApiBehaviorOptions(options =>
+{
     options.InvalidModelStateResponseFactory = context =>
         new JsonResult(new RequestResponse("校验失败"))
         {
