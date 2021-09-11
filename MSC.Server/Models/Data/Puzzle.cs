@@ -18,13 +18,13 @@ public class Puzzle : PuzzleBase
     {
         get
         {
-            if (AcceptedCount <= AwardCount)
-                return OriginalScore - AcceptedCount;
-            if (AcceptedCount > ExpectMaxCount)
+            if (AcceptedUserCount <= AwardCount)
+                return OriginalScore - AcceptedUserCount;
+            if (AcceptedUserCount > ExpectMaxCount)
                 return MinScore;
             var range = OriginalScore - AwardCount - MinScore;
             return (int)(OriginalScore - AwardCount
-                - Math.Floor(range * (AcceptedCount - AwardCount) / (float)(ExpectMaxCount - AwardCount)));
+                - Math.Floor(range * (AcceptedUserCount - AwardCount) / (float)(ExpectMaxCount - AwardCount)));
         }
     }
 
@@ -38,8 +38,6 @@ public class Puzzle : PuzzleBase
     {
         foreach (var item in typeof(PuzzleBase).GetProperties())
             item.SetValue(this, item.GetValue(puzzle));
-
-        Answer = Answer.Trim();
     }
 
     public Puzzle() : base()

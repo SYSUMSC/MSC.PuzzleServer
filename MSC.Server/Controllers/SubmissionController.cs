@@ -20,20 +20,11 @@ namespace MSC.Server.Controllers;
 public class SubmissionController : ControllerBase
 {
     private static readonly Logger logger = LogManager.GetLogger("SubmissionController");
-    private readonly UserManager<UserInfo> userManager;
-    private readonly IRankRepository rankRepository;
     private readonly ISubmissionRepository submissionRepository;
-    private readonly IPuzzleRepository puzzleRepository;
 
     public SubmissionController(
-        UserManager<UserInfo> _userManager,
-        IPuzzleRepository _puzzleRepository,
-        ISubmissionRepository _submissionRepository,
-        IRankRepository _rankRepository)
+        ISubmissionRepository _submissionRepository)
     {
-        userManager = _userManager;
-        rankRepository = _rankRepository;
-        puzzleRepository = _puzzleRepository;
         submissionRepository = _submissionRepository;
     }
 

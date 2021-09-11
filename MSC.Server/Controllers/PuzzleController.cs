@@ -227,9 +227,9 @@ public class PuzzleController : ControllerBase
         var user = await userManager.Users.Include(u => u.Rank)
             .SingleAsync(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier), cancellationToken: token);
 
-        var result = await puzzleRepository.VerifyAnswer(id, model.Answer, user.AccessLevel, token);
-
         var hasSolved = await submissionRepository.HasSubmitted(id, user.Id, token);
+
+        var result = await puzzleRepository.VerifyAnswer(id, model.Answer, user.AccessLevel, hasSolved, token);
 
         Submission sub = new()
         {

@@ -38,10 +38,17 @@ public class PuzzleBase
     /// </summary>
     [Required]
     [JsonIgnore]
+    public int AcceptedUserCount { get; set; } = 0;
+
+    /// <summary>
+    /// 正确答案的数量
+    /// </summary>
+    [Required]
+    [JsonIgnore]
     public int AcceptedCount { get; set; } = 0;
 
     /// <summary>
-    /// 提交答案的人数
+    /// 提交答案的数量
     /// </summary>
     [Required]
     [JsonIgnore]

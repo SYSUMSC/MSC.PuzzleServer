@@ -51,7 +51,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
                 {
                     Id = p.Id,
                     Title = p.Title,
-                    AcceptedCount = p.AcceptedCount,
+                    AcceptedCount = p.AcceptedUserCount,
                     SubmissionCount = p.SubmissionCount
                 }).ToListAsync(token);
 
@@ -76,7 +76,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         {
             Title = puzzle.Title,
             Content = puzzle.Content,
-            AcceptedCount = puzzle.AcceptedCount,
+            AcceptedCount = puzzle.AcceptedUserCount,
             SubmissionCount = puzzle.SubmissionCount
         };
     }
@@ -99,7 +99,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         return puzzle;
     }
 
-    public async Task<VerifyResult> VerifyAnswer(int id, string? answer, int accessLevel, CancellationToken token)
+    public async Task<VerifyResult> VerifyAnswer(int id, string? answer, int accessLevel, bool hasSolved, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(answer))
         {
@@ -129,9 +129,15 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
                 : new VerifyResult(AnswerResult.WrongAnswer);
 
         if (check)
+        {
             ++puzzle.AcceptedCount;
 
+            if (!hasSolved)
+                ++puzzle.AcceptedUserCount;
+        }
+
         await context.SaveChangesAsync(token);
+
         return result;
     }
 }

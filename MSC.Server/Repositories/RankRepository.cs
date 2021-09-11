@@ -61,6 +61,6 @@ public class RankRepository : RepositoryBase, IRankRepository
         rank.UpdateTimeUTC = DateTime.UtcNow;
         rank.Score += score;
         await context.SaveChangesAsync(token);
-        LogHelper.SystemLog(logger, $"更新分数：{rank.User!.UserName} => {score}");
+        LogHelper.SystemLog(logger, $"增加分数：{rank.User!.UserName} => {score}");
     }
 }

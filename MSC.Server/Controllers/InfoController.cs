@@ -68,7 +68,7 @@ public class InfoController : ControllerBase
 
         result.UpdateTime = DateTime.Now;
 
-        LogHelper.SystemLog(logger, $"重构缓存：ScoreBoard");
+        LogHelper.SystemLog(logger, "重构缓存：ScoreBoard");
 
         cache.Set(CacheKey.ScoreBoard, result, TimeSpan.FromHours(10));
 
