@@ -41,6 +41,9 @@ public class SignalRLoggingService : IDisposable
     {
         if(logInfo.Level >= NLog.LogLevel.Error)
         {
+            string status = logInfo.Properties.ContainsKey("status") ? 
+                (string)logInfo.Properties["status"] : "Fail";
+
             await Hub.Clients.All.ReceivedLog(
                 new LogMessageModel
                 {
@@ -48,7 +51,7 @@ public class SignalRLoggingService : IDisposable
                     UserName = "System",
                     IP = "-",
                     Msg = logInfo.Message,
-                    Status = (string)logInfo.Properties["status"]
+                    Status = status
                 });
         }
         else if(logInfo.Level >= NLog.LogLevel.Info)
