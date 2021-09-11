@@ -8,7 +8,8 @@ import {
   Heading,
   Flex,
   Center,
-  HStack
+  HStack,
+  keyframes
 } from '@chakra-ui/react';
 import React, { FC, useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -35,7 +36,7 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
       rounded="lg"
       bg="gray.700"
       overflow="hidden"
-      w="220px"
+      w="185px"
       shadow="xl"
       _hover={{ background: 'gray.600' }}
       transition="background 0.2s ease"
@@ -46,21 +47,21 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
           {title}
         </Text>
         <Flex justifyContent="space-between" alignItems="flex-end">
-          <HStack spacing="12px">
+          <HStack spacing="5px">
             <VStack spacing="0" align="sketch">
               <Text color="gray.400" fontSize="xs" textAlign="right">
-                提交次数
+                正确率
               </Text>
               <Text fontFamily="mono" textAlign="right">
-                {submissionCount}
+                {((acceptedCount / submissionCount) * 100).toFixed(1) || 0}%
               </Text>
             </VStack>
             <VStack spacing="0" align="sketch">
               <Text color="gray.400" fontSize="xs" textAlign="right">
-                回答正确率
+                &emsp;提交
               </Text>
               <Text fontFamily="mono" textAlign="right">
-                {((acceptedCount / submissionCount) * 100).toFixed(2) || 0}%
+                {submissionCount}
               </Text>
             </VStack>
           </HStack>
@@ -75,6 +76,10 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
 
 export const PuzzlePage: FC = () => {
   const { isLoading, data, error } = PUZZLE_API.useGetPuzzleListQuery();
+  const fadeAnimation = `${keyframes`
+  0% {opacity:0;}
+  100% {opacity:1;}
+  `} 0.5s linear`;
 
   const props = useMemo<PuzzleCardProps[]>(() => {
     if (!data) {
@@ -98,9 +103,9 @@ export const PuzzlePage: FC = () => {
       <Center mb="24px">
         <Heading size="md">你的谜题</Heading>
       </Center>
-      <Wrap spacing="48px">
-        {props.map((p, index) => (
-          <WrapItem key={p.id}>
+      <Wrap spacing="45px" justify="center">
+        {props.map((p) => (
+          <WrapItem key={p.id} animation={fadeAnimation}>
             <PuzzleCard {...p} />
           </WrapItem>
         ))}
