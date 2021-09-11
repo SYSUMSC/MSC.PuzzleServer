@@ -21,8 +21,6 @@ RUN dotnet build "MSC.Server.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "MSC.Server.csproj" -c Release -o /app/publish
 
-WORKDIR "/src/MSC.Server/ClientApp"
-RUN npx browserslist@latest --update-db
 
 RUN apt remove -y --auto-remove wget gnupg2 &&\
     apt clean &&\
