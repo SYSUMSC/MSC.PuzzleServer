@@ -58,7 +58,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
     public int GetMaxAccessLevel()
         => context.Puzzles.Any() switch
         {
-            true => context.Puzzles.Max(p => p.AccessLevel),
+            true => context.Puzzles.Max(p => p.UpgradeAccessLevel),
             false => 0
         };
 
