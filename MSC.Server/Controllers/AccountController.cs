@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
 using MSC.Server.Models.Request;
@@ -23,14 +24,17 @@ public class AccountController : ControllerBase
     private readonly IMailSender mailSender;
     private readonly UserManager<UserInfo> userManager;
     private readonly SignInManager<UserInfo> signInManager;
+    private readonly IMemoryCache cache;
 
     public AccountController(
         AppDbContext _context,
         IMailSender _mailSender,
+        IMemoryCache memoryCache,
         UserManager<UserInfo> _userManager,
         SignInManager<UserInfo> _signInManager)
     {
         context = _context;
+        cache = memoryCache;
         mailSender = _mailSender;
         userManager = _userManager;
         signInManager = _signInManager;
@@ -273,6 +277,9 @@ public class AccountController : ControllerBase
         user.RealName = model.RealName ?? user.RealName;
 
         var result = await userManager.UpdateAsync(user);
+
+        if(model.Descr is not null)
+            cache.Remove(CacheKey.ScoreBoard);
 
         if (!result.Succeeded)
             return BadRequest(new RequestResponse(result.Errors.FirstOrDefault()?.Description ?? "Unknown"));
