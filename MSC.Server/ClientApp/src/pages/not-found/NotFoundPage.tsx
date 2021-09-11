@@ -1,11 +1,13 @@
-import { Center, Heading } from '@chakra-ui/react';
+import { Center, Heading, VStack } from '@chakra-ui/react';
 import React, { FC } from 'react';
 
 export const NotFoundPage: FC = () => {
   return (
     <Center minHeight="100vh">
-      <Heading size="3xl">Oh，看起来你迷路了</Heading>
-      <Center>这里可不是你该来的地方</Center>
+      <VStack>
+        <Heading size="2xl">Oh，看起来你迷路了</Heading>
+        <Heading size="lg" pt="1em">但是这里可不是你该来的地方</Heading>
+      </VStack>
     </Center>
   );
 };
