@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { ADMIN_API, PuzzleLog } from '../../redux/admin.api';
 import { LoadingMask } from '../../common/components/LoadingMask';
 import {
@@ -21,7 +21,8 @@ import {
   Th,
   Thead,
   Tr,
-  useToast
+  useToast,
+  keyframes
 } from '@chakra-ui/react';
 import * as signalR from '@microsoft/signalr';
 import { BackIcon } from '../../common/components/BackIcon';
@@ -51,10 +52,14 @@ export const LogsPage: FC = () => {
     count: ITEM_COUNT_PER_PAGE,
     skip: (page - 1) * ITEM_COUNT_PER_PAGE
   });
-  const [_, update] = useState(null);
+  const [, update] = useState(new Date());
   const newLogs = useRef<PuzzleLog[]>([]);
   const pageInputRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
+  const fadeAnimation = `${keyframes`
+  0% {opacity:0;}
+  100% {opacity:1;}
+  `} 0.5s linear`;
 
   useEffect(() => {
     let connection = new signalR.HubConnectionBuilder()
@@ -68,7 +73,7 @@ export const LogsPage: FC = () => {
     connection.on('ReceivedLog', (message: PuzzleLog) => {
       console.log(message);
       newLogs.current = [message, ...newLogs.current];
-      update(null);
+      update(new Date(message.time));
     });
 
     connection.start().catch((error) => {
@@ -83,7 +88,7 @@ export const LogsPage: FC = () => {
     return () => {
       connection.stop().catch(() => {});
     };
-  }, [toast]);
+  });
 
   if (isLoading) {
     return <LoadingMask />;
@@ -152,15 +157,25 @@ export const LogsPage: FC = () => {
             </Tr>
           </Thead>
           <Tbody fontSize="xs">
-            {[...(page === 1 ? newLogs.current : []), ...data!].map((item) => (
-              <Tr key={item.time + item.name + item.msg}>
-                <Td fontFamily="mono">{formatDate(item.time)}</Td>
-                <Td fontFamily="mono">{item.name}</Td>
-                <Td fontFamily="mono">{item.ip}</Td>
-                <Td>{item.msg}</Td>
-                <Td fontFamily="mono">{item.status}</Td>
-              </Tr>
-            ))}
+            {[...(page === 1 ? newLogs.current : []), ...data!].map((item, index) =>
+              (index === 0 && page === 1 && newLogs.current.length > 0) ? (
+                  <Tr key={item.time + item.name + item.msg} animation={fadeAnimation}>
+                      <Td fontFamily="mono">{formatDate(item.time)}</Td>
+                      <Td fontFamily="mono">{item.name}</Td>
+                      <Td fontFamily="mono">{item.ip}</Td>
+                      <Td>{item.msg}</Td>
+                      <Td fontFamily="mono">{item.status}</Td>
+                  </Tr>
+              ) : (
+                <Tr key={item.time + item.name + item.msg}>
+                  <Td fontFamily="mono">{formatDate(item.time)}</Td>
+                  <Td fontFamily="mono">{item.name}</Td>
+                  <Td fontFamily="mono">{item.ip}</Td>
+                  <Td>{item.msg}</Td>
+                  <Td fontFamily="mono">{item.status}</Td>
+                </Tr>
+              )
+            )}
           </Tbody>
         </Table>
       </Flex>
