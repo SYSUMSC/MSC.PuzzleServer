@@ -71,7 +71,7 @@ export const LeaderBoardPage: FC = () => {
   return (
     <Container minH="100vh" p="24px" maxWidth="80ch">
       <Center mb="6px">
-        <Heading size="md">前十名用户分数变化图</Heading>
+        <Heading size="md">前十名分数变化图</Heading>
       </Center>
       <ReactEChartsCore
         echarts={echarts}
@@ -115,6 +115,7 @@ export const LeaderBoardPage: FC = () => {
         <Thead>
           <Tr>
             <Th>
+              <Text textAlign="left">名称</Text>
             </Th>
             <Th>
               <Text textAlign="left">介绍</Text>

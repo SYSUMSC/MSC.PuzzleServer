@@ -46,7 +46,7 @@ export const NavBar: FC = () => {
             rounded="xl"
           />
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent m="12px" ml="0">
           <PopoverArrow />
           <PopoverCloseButton />
           <UserStatus />

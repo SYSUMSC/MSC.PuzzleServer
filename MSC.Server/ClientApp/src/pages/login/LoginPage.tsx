@@ -21,7 +21,6 @@ import React, { FC, FormEvent, useCallback, useEffect, useMemo, useState } from 
 import { LogoIcon } from '../../common/components/LogoIcon';
 import { useQueryParams } from '../../common/hooks/use-query-params';
 import { UserLoginDto, UserRegisterDto, USER_API } from 'src/redux/user.api';
-import { Redirect } from 'react-router';
 import { ForgetPasswordModal } from '../../common/components/ForgetPasswordModal';
 
 export const LoginPage: FC = () => {

@@ -8,9 +8,9 @@ import {
   Heading,
   Flex,
   Center,
-  ScaleFade
+  HStack
 } from '@chakra-ui/react';
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { LoadingMask } from 'src/common/components/LoadingMask';
 import { PUZZLE_API } from 'src/redux/puzzle.api';
@@ -35,10 +35,10 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
       rounded="lg"
       bg="gray.700"
       overflow="hidden"
-      w="180px"
+      w="220px"
       shadow="xl"
       _hover={{ background: 'gray.600' }}
-      transition="background 0.4s ease"
+      transition="background 0.2s ease"
     >
       <Box w="100%" h="4px" bg={isSolved ? 'green.400' : 'gray.400'} />
       <VStack px="18px" py="12px" align="sketch" spacing="0">
@@ -46,12 +46,24 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
           {title}
         </Text>
         <Flex justifyContent="space-between" alignItems="flex-end">
-          <VStack spacing="0" align="sketch">
-            <Text color="gray.400" fontSize="xs">
-              回答正确率
-            </Text>
-            <Text fontFamily="mono">{((acceptedCount / submissionCount) * 100).toFixed(2)}%</Text>
-          </VStack>
+          <HStack spacing="12px">
+            <VStack spacing="0" align="sketch">
+              <Text color="gray.400" fontSize="xs" textAlign="right">
+                提交次数
+              </Text>
+              <Text fontFamily="mono" textAlign="right">
+                {submissionCount}
+              </Text>
+            </VStack>
+            <VStack spacing="0" align="sketch">
+              <Text color="gray.400" fontSize="xs" textAlign="right">
+                回答正确率
+              </Text>
+              <Text fontFamily="mono" textAlign="right">
+                {((acceptedCount / submissionCount) * 100).toFixed(2) || 0}%
+              </Text>
+            </VStack>
+          </HStack>
           <Text color="gray.400" fontStyle="italic">
             #{id}
           </Text>
@@ -63,7 +75,6 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
 
 export const PuzzlePage: FC = () => {
   const { isLoading, data, error } = PUZZLE_API.useGetPuzzleListQuery();
-  const [shownCards, setShownCards] = useState<{ [index: number]: boolean }>({});
 
   const props = useMemo<PuzzleCardProps[]>(() => {
     if (!data) {
@@ -78,22 +89,6 @@ export const PuzzlePage: FC = () => {
     }));
   }, [data]);
 
-  useEffect(() => {
-    if (data) {
-      data.accessible.forEach((_, index) => {
-        if (shownCards[index]) {
-          return;
-        }
-        setTimeout(() => {
-          setShownCards({
-            ...shownCards,
-            [index]: true
-          });
-        }, 200 * index);
-      });
-    }
-  }, [data, shownCards]);
-
   if (error || isLoading) {
     return <LoadingMask error={error} />;
   }
@@ -106,9 +101,7 @@ export const PuzzlePage: FC = () => {
       <Wrap spacing="48px">
         {props.map((p, index) => (
           <WrapItem key={p.id}>
-            <ScaleFade initialScale={0.9} in={shownCards[index]}>
-              <PuzzleCard {...p} />
-            </ScaleFade>
+            <PuzzleCard {...p} />
           </WrapItem>
         ))}
       </Wrap>

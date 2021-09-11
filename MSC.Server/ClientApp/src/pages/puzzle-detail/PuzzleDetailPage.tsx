@@ -30,7 +30,7 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
     (event: FormEvent) => {
       event.preventDefault();
       if (answer) {
-        submit([{ answer }, id]);
+        submit([{ answer: answer.trim() }, id]);
       }
     },
     [answer, submit, id]
@@ -47,6 +47,14 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
     }
   }, [isAnswerSuccess, toast]);
 
+  useEffect(() => {
+    if (error?.['title'].includes('无权')) {
+      setTimeout(() => {
+        window.location.href = '/puzzle';
+      }, 2000);
+    }
+  }, [error]);
+
   if (Object.is(NaN, id)) {
     return (
       <Center h="100%">
@@ -55,7 +63,11 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
     );
   }
 
-  if (error || isLoading) {
+  if (isLoading) {
+    return <LoadingMask />;
+  }
+
+  if (error) {
     return <LoadingMask error={error} />;
   }
 
@@ -77,7 +89,7 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
           <Input
             flex="1"
             mr="8px"
-            placeholder="输入你的答案……"
+            placeholder="输入你的答案"
             value={answer}
             onChange={(event) => setAnswer(event.target.value)}
           />

@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { FC, FormEvent, useEffect, useState } from 'react';
 import { useQueryParams } from '../../common/hooks/use-query-params';
 import { Redirect } from 'react-router';
 import { USER_API } from '../../redux/user.api';

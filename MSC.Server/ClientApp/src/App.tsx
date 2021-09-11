@@ -12,6 +12,8 @@ import { PuzzleDetailPage } from './pages/puzzle-detail/PuzzleDetailPage';
 import { ResetPasswordPage } from './pages/reset/ResetPasswordPage';
 import { VerifyEmailPage } from './pages/verify/VerifyEmailPage';
 import { UpdateEmailPage } from './pages/update-email/UpdateEmailPage';
+import { ChangeInfoPage } from './pages/change-info/ChangeInfoPage';
+import { LogsPage } from './pages/logs/LogsPage';
 
 export const App: FC = () => {
   return (
@@ -31,6 +33,16 @@ export const App: FC = () => {
         <AuthRoute path="/change-email">
           <WithNavBar>
             <UpdateEmailPage />
+          </WithNavBar>
+        </AuthRoute>
+        <AuthRoute path="/change-info">
+          <WithNavBar>
+            <ChangeInfoPage />
+          </WithNavBar>
+        </AuthRoute>
+        <AuthRoute path="/logs">
+          <WithNavBar>
+            <LogsPage />
           </WithNavBar>
         </AuthRoute>
         <Route path="/login">

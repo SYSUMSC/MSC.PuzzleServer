@@ -38,10 +38,10 @@ export interface UserVerifyEmailDto {
 
 export interface UserUpdateInfoDto {
   userName: string;
-  descr: string;
-  studentId: string;
-  phoneNumber: string;
-  realName: string;
+  descr?: string;
+  studentId?: string;
+  phoneNumber?: string;
+  realName?: string;
 }
 
 export interface UserChangePasswordDto {
@@ -106,7 +106,7 @@ export const USER_API = createApi({
         method: 'POST'
       })
     }),
-    updateInfo: builder.query<void, UserUpdateInfoDto>({
+    updateInfo: builder.mutation<void, UserUpdateInfoDto>({
       query: (dto) => ({
         url: 'update',
         method: 'PUT',
