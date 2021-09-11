@@ -26,23 +26,41 @@ var builder = WebApplication.CreateBuilder(args);
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
+#region Configuration
+
 builder.Host.ConfigureAppConfiguration((host, config) =>
 {
     config.AddJsonFile("ratelimit.json", optional: true, reloadOnChange: true);
 });
 
-Target.Register<SignalRTarget>("SignalR");
-LogManager.Configuration.Variables["connectionString"] = builder.Configuration.GetConnectionString("DefaultConnection");
+#endregion
+
+#region SignalR
+
+builder.Services.AddSignalR().AddJsonProtocol();
+builder.Services.AddSingleton<SignalRLoggingService>();
+
+#endregion SignalR
+
+#region Logging
 
 builder.Host.ConfigureLogging(logging =>
 {
     logging.ClearProviders();
     logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
 }).UseNLog();
+Target.Register<SignalRTarget>("SignalR");
+LogManager.Configuration.Variables["connectionString"] = builder.Configuration.GetConnectionString("DefaultConnection");
+
+#endregion
+
+#region AppDbContext
 
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
     provideropt => provideropt.EnableRetryOnFailure(3, TimeSpan.FromSeconds(10), null)));
+
+#endregion
 
 #region OpenApiDocument
 
@@ -116,13 +134,6 @@ builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
 #endregion Services and Repositories
 
-#region SignalR
-
-builder.Services.AddSignalR().AddJsonProtocol();
-builder.Services.AddSingleton<SignalRLoggingService>();
-
-#endregion SignalR
-
 builder.Services.AddResponseCompression(options =>
 {
     options.MimeTypes =
@@ -177,9 +188,12 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-app.MapHub<LoggingHub>("/hub/log");
-app.MapFallbackToFile("index.html");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<LoggingHub>("/hub/log");
+    endpoints.MapFallbackToFile("index.html");
+});
 
 var logger = LogManager.GetLogger("Main");
 

@@ -39,33 +39,29 @@ public class SignalRLoggingService : IDisposable
 
     public async void OnLog(LogEventInfo logInfo)
     {
-        try
+        if(logInfo.Level >= NLog.LogLevel.Error)
         {
-            if(logInfo.Level >= NLog.LogLevel.Error)
-            {
-                await Hub.Clients.All.ReceivedLog(
-                    new LogMessageModel
-                    {
-                        Time = logInfo.TimeStamp,
-                        UserName = "System",
-                        IP = "-",
-                        Msg = logInfo.Message,
-                        Status = (string)logInfo.Properties["status"]
-                    });
-            }
-            else if(logInfo.Level >= NLog.LogLevel.Info)
-            {
-                await Hub.Clients.All.ReceivedLog(
-                    new LogMessageModel
-                    {
-                        Time = logInfo.TimeStamp,
-                        UserName = (string)logInfo.Properties["uname"],
-                        IP = (string)logInfo.Properties["ip"],
-                        Msg = logInfo.Message,
-                        Status = (string)logInfo.Properties["status"]
-                    });
-            }
+            await Hub.Clients.All.ReceivedLog(
+                new LogMessageModel
+                {
+                    Time = logInfo.TimeStamp,
+                    UserName = "System",
+                    IP = "-",
+                    Msg = logInfo.Message,
+                    Status = (string)logInfo.Properties["status"]
+                });
         }
-        catch (Exception) { }
+        else if(logInfo.Level >= NLog.LogLevel.Info)
+        {
+            await Hub.Clients.All.ReceivedLog(
+                new LogMessageModel
+                {
+                    Time = logInfo.TimeStamp,
+                    UserName = (string)logInfo.Properties["uname"],
+                    IP = (string)logInfo.Properties["ip"],
+                    Msg = logInfo.Message,
+                    Status = (string)logInfo.Properties["status"]
+                });
+        }
     }
 }

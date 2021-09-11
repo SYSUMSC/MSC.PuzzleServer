@@ -13,7 +13,6 @@ import {
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
-  PopoverHeader,
   PopoverTrigger,
   Table,
   Tbody,
@@ -24,7 +23,7 @@ import {
   Tr,
   useToast
 } from '@chakra-ui/react';
-import { HubConnectionBuilder } from '@microsoft/signalr';
+import * as signalR from '@microsoft/signalr';
 import { BackIcon } from '../../common/components/BackIcon';
 import { ForwardIcon } from '../../common/components/ForwardIcon';
 import { AimIcon } from '../../common/components/AimIcon';
@@ -58,19 +57,23 @@ export const LogsPage: FC = () => {
   const toast = useToast();
 
   useEffect(() => {
-    const connection = new HubConnectionBuilder()
+    let connection = new signalR.HubConnectionBuilder()
       .withUrl('/hub/log')
+      .withHubProtocol(new signalR.JsonHubProtocol())
       .withAutomaticReconnect()
       .build();
 
+    connection.serverTimeoutInMilliseconds = 60 * 1000 * 60 * 24;
+
     connection.on('ReceivedLog', (message: PuzzleLog) => {
-      newLogs.current = [...newLogs.current, message];
+      console.log(message);
+      newLogs.current = [message, ...newLogs.current];
       update(null);
     });
 
     connection.start().catch((error) => {
       toast({
-        title: 'signalR 出错',
+        title: 'signalR 连接失败',
         description: error.message,
         status: 'error',
         duration: 5000
@@ -80,7 +83,7 @@ export const LogsPage: FC = () => {
     return () => {
       connection.stop().catch(() => {});
     };
-  }, []);
+  }, [toast]);
 
   if (isLoading) {
     return <LoadingMask />;
@@ -150,7 +153,7 @@ export const LogsPage: FC = () => {
           </Thead>
           <Tbody fontSize="xs">
             {[...(page === 1 ? newLogs.current : []), ...data!].map((item) => (
-              <Tr key={item.time + item.name}>
+              <Tr key={item.time + item.name + item.msg}>
                 <Td fontFamily="mono">{formatDate(item.time)}</Td>
                 <Td fontFamily="mono">{item.name}</Td>
                 <Td fontFamily="mono">{item.ip}</Td>
