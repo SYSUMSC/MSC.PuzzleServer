@@ -19,7 +19,7 @@ public class ClientUserInfoModel
     /// <summary>
     /// 学号
     /// </summary>
-    [JsonPropertyName("stdId")]
+    [JsonPropertyName("studentId")]
     public string? StudentId { get; set; }
 
     /// <summary>

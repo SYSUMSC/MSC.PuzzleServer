@@ -18,10 +18,10 @@ import { USER_API } from '../../redux/user.api';
 export const ChangeInfoPage: FC = () => {
   const { data } = USER_API.useStatusQuery();
   const [update, { isLoading, error, isSuccess }] = USER_API.useUpdateInfoMutation();
-  const [studentId, setStudentId] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [realName, setRealName] = useState('');
-  const [description, setDescription] = useState('');
+  const [studentId, setStudentId] = useState(data!.studentId);
+  const [phoneNumber, setPhoneNumber] = useState(data!.phone);
+  const [realName, setRealName] = useState(data!.realName);
+  const [description, setDescription] = useState(data!.descr);
 
   const onSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -77,8 +77,8 @@ export const ChangeInfoPage: FC = () => {
           {error && <FormErrorMessage>{resolveMessage(error)}</FormErrorMessage>}
         </FormControl>
         <Flex mt="32px" direction="row-reverse">
-          <Button type="submit" isLoading={isLoading} disabled={isLoading || isSuccess}>
-            {!isSuccess ? '更新' : '更新成功'}
+          <Button type="submit" isLoading={isLoading} disabled={isLoading}>
+            {isSuccess ? "更新成功" : "更新"}
           </Button>
         </Flex>
       </form>

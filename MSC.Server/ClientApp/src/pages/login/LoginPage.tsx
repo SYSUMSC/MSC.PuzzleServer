@@ -35,7 +35,7 @@ export const LoginPage: FC = () => {
     userName: '',
     password: ''
   });
-  const isLoginDisabled = useMemo(() => Object.values(loginDto).some((v) => !v), [loginDto]);
+  const isLoginDisabled = useMemo(() => Object.values(loginDto).some(v => !v), [loginDto]);
 
   const [
     register,
@@ -94,7 +94,7 @@ export const LoginPage: FC = () => {
 
   useEffect(() => {
     if (isLogInSuccess) {
-      window.location.href = '/';
+      window.location.href = redirect ?? "/";
     }
   });
 

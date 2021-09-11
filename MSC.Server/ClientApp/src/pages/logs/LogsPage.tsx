@@ -88,7 +88,7 @@ export const LogsPage: FC = () => {
     return () => {
       connection.stop().catch(() => {});
     };
-  });
+  },[toast]);
 
   if (isLoading) {
     return <LoadingMask />;

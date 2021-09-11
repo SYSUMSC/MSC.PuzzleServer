@@ -77,8 +77,8 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
 export const PuzzlePage: FC = () => {
   const { isLoading, data, error } = PUZZLE_API.useGetPuzzleListQuery();
   const fadeAnimation = `${keyframes`
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {opacity:0;scale:0.9;}
+  100% {opacity:1;scale:1;}
   `} 0.5s linear`;
 
   const props = useMemo<PuzzleCardProps[]>(() => {

@@ -23,7 +23,7 @@ export const AuthRoute: FC<RouteProps<string>> = ({ children, ...rest }) => {
           to={{
             pathname: '/login',
             state: { from: location },
-            search: encodeURIComponent(`redirect=${location.pathname}`)
+            search: 'redirect=' + encodeURIComponent(`${location.pathname}`)
           }}
         />
       );

@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export interface User {
   name: string;
   descr: string;
-  stuId: string;
+  studentId: string;
   realName: string;
   isSYSU: boolean;
   phone: string;
