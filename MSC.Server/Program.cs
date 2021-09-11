@@ -185,12 +185,12 @@ var logger = LogManager.GetLogger("Main");
 
 try
 {
-    logger.Debug("Server start, Init main.");
+    LogHelper.SystemLog(logger, "服务器初始化。");
     await app.RunAsync();
 }
 catch (Exception exception)
 {
-    logger.Error(exception, "Stopped program because of exception.");
+    logger.Error(exception, "因异常，应用程序意外停止。");
     throw;
 }
 finally
