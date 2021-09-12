@@ -66,7 +66,7 @@ public class InfoController : ControllerBase
             });
         }
 
-        result.UpdateTime = DateTime.Now;
+        result.UpdateTime = DateTimeOffset.Now;
 
         LogHelper.SystemLog(logger, "重构缓存：ScoreBoard");
 

@@ -81,7 +81,7 @@ public class MailSender : IMailSender
             .Replace("{email}", email)
             .Replace("{userName}", userName)
             .Replace("{url}", url)
-            .Replace("{nowtime}", DateTime.UtcNow.ToString("u"));
+            .Replace("{nowtime}", DateTimeOffset.UtcNow.ToString("u"));
         if (!await SendEmailAsync(title, emailContent, email))
             LogHelper.SystemLog(logger, "邮件发送失败！", TaskStatus.Fail);
     }

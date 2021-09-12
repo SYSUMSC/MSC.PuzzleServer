@@ -238,7 +238,7 @@ public class PuzzleController : ControllerBase
             Answer = model.Answer,
             Solved = result.Result == AnswerResult.Accepted,
             Score = hasSolved ? 0 : result.Score,
-            SubmitTimeUTC = DateTime.UtcNow,
+            SubmitTimeUTC = DateTimeOffset.UtcNow,
             UserName = user.UserName
         };
 

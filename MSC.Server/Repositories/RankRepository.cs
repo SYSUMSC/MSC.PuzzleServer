@@ -58,7 +58,7 @@ public class RankRepository : RepositoryBase, IRankRepository
 
     public async Task UpdateRank(Rank rank, int score, CancellationToken token)
     {
-        rank.UpdateTimeUTC = DateTime.UtcNow;
+        rank.UpdateTimeUTC = DateTimeOffset.UtcNow;
         rank.Score += score;
         await context.SaveChangesAsync(token);
         LogHelper.SystemLog(logger, $"增加分数：{rank.User!.UserName} => {score}");

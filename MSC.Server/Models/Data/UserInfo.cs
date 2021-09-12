@@ -17,17 +17,17 @@ public class UserInfo : IdentityUser
     /// <summary>
     /// 用户最近登录时间
     /// </summary>
-    public DateTime LastSignedInUTC { get; set; } = DateTime.Parse("1970-01-01T00:00:00");
+    public DateTimeOffset LastSignedInUTC { get; set; } = DateTimeOffset.Parse("1970-01-01T00:00:00Z");
 
     /// <summary>
     /// 用户最近访问时间
     /// </summary>
-    public DateTime LastVisitedUTC { get; set; } = DateTime.Parse("1970-01-01T00:00:00");
+    public DateTimeOffset LastVisitedUTC { get; set; } = DateTimeOffset.Parse("1970-01-01T00:00:00Z");
 
     /// <summary>
     /// 用户注册时间
     /// </summary>
-    public DateTime RegisterTimeUTC { get; set; } = DateTime.Parse("1970-01-01T00:00:00");
+    public DateTimeOffset RegisterTimeUTC { get; set; } = DateTimeOffset.Parse("1970-01-01T00:00:00Z");
 
     /// <summary>
     /// 个性签名
@@ -70,7 +70,7 @@ public class UserInfo : IdentityUser
     /// <param name="context"></param>
     public void UpdateByHttpContext(HttpContext context)
     {
-        LastVisitedUTC = DateTime.UtcNow;
+        LastVisitedUTC = DateTimeOffset.UtcNow;
 
         var remoteAddress = context.Connection.RemoteIpAddress;
 

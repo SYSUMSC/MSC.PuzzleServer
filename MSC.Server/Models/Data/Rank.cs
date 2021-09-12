@@ -17,7 +17,7 @@ public class Rank
     /// <summary>
     /// 更新时间
     /// </summary>
-    public DateTime UpdateTimeUTC { get; set; }
+    public DateTimeOffset UpdateTimeUTC { get; set; }
 
     #region 数据库关系
 

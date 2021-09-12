@@ -60,12 +60,12 @@ public class AccountController : ControllerBase
             UserName = model.UserName,
             Email = model.Email,
             Privilege = Privilege.User,
-            LastSignedInUTC = DateTime.UtcNow,
-            LastVisitedUTC = DateTime.UtcNow,
-            RegisterTimeUTC = DateTime.UtcNow,
+            LastSignedInUTC = DateTimeOffset.UtcNow,
+            LastVisitedUTC = DateTimeOffset.UtcNow,
+            RegisterTimeUTC = DateTimeOffset.UtcNow,
             Rank = new()
             {
-                UpdateTimeUTC = DateTime.UtcNow,
+                UpdateTimeUTC = DateTimeOffset.UtcNow,
             }
         };
 
@@ -219,7 +219,7 @@ public class AccountController : ControllerBase
         if (user is null)
             return Unauthorized(new RequestResponse("用户名或密码错误", 401));
 
-        user.LastSignedInUTC = DateTime.UtcNow;
+        user.LastSignedInUTC = DateTimeOffset.UtcNow;
         user.UpdateByHttpContext(HttpContext);
 
         var result = await signInManager.PasswordSignInAsync(user, model.Password, true, false);
