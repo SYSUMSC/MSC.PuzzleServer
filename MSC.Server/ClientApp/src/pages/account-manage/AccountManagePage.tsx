@@ -112,7 +112,12 @@ export const AccountManagePage: FC = () => {
             }
           />
         </FormControl>
-        <FormControl id="repeatnewpassword" my="12px" isRequired isInvalid={!!pwdError}>
+        <FormControl
+          id="repeatnewpassword"
+          my="12px"
+          isRequired
+          isInvalid={!!pwdError || !!repeatPwdError}
+        >
           <FormLabel>重复新密码</FormLabel>
           <Input
             autoComplete="no"
@@ -120,7 +125,9 @@ export const AccountManagePage: FC = () => {
             value={repeatPwd}
             onChange={(event) => {
               setRepeatPwd(event.target.value);
-              setRepeatPwdError(!changePasswordDto.new && changePasswordDto.new !== event.target.value);
+              setRepeatPwdError(
+                !changePasswordDto.new || changePasswordDto.new !== event.target.value
+              );
             }}
           />
           {pwdError && <FormErrorMessage>{resolveMessage(pwdError)}</FormErrorMessage>}
