@@ -28,22 +28,12 @@ function formatTime(time: string) {
 export const LeaderBoardPage: FC = () => {
   const { isLoading, error, data } = INFO_API.useGetScoreBoardQuery();
 
-  const chartData = useMemo(() => {
-    if (!data) {
-      return [];
-    }
-
-    const seriesData = data.topDetail.map((item) => {
-      return {
+  const chartData = useMemo(() => data?.topDetail.map((item) => ({
         type: 'line',
         step: 'end',
         name: item.userName,
         data: item.timeLine.map((item) => [item.time, item.score])
-      };
-    });
-
-    return seriesData;
-  }, [data]);
+      })), [data]);
 
   useEffect(() => {
     echarts.use([
