@@ -158,7 +158,7 @@ export const LogsPage: FC = () => {
         <Tbody fontSize="xs">
           {[...(page === 1 ? newLogs.current : []), ...data!].map((item, index) =>
             index === 0 && page === 1 && newLogs.current.length > 0 ? (
-              <Tr key={item.time + item.name + item.msg} animation={fadeAnimation}>
+              <Tr key={page + item.time + index} animation={fadeAnimation}>
                 <Td fontFamily="mono">{formatDate(item.time)}</Td>
                 <Td fontFamily="mono">{item.name}</Td>
                 <Td fontFamily="mono">{item.ip}</Td>
@@ -166,7 +166,7 @@ export const LogsPage: FC = () => {
                 <Td fontFamily="mono">{item.status}</Td>
               </Tr>
             ) : (
-              <Tr key={item.time + item.name + item.msg}>
+              <Tr key={page + item.time + index}>
                 <Td fontFamily="mono">{formatDate(item.time)}</Td>
                 <Td fontFamily="mono">{item.name}</Td>
                 <Td fontFamily="mono">{item.ip}</Td>
