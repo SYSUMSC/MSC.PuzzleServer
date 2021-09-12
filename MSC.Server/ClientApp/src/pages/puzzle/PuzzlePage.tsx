@@ -79,7 +79,7 @@ export const PuzzlePage: FC = () => {
   const fadeAnimation = `${keyframes`
   0% {opacity:0;scale:0.9;}
   100% {opacity:1;scale:1;}
-  `} 0.5s linear`;
+  `} 0.3s linear`;
 
   const props = useMemo<PuzzleCardProps[]>(() => {
     if (!data) {

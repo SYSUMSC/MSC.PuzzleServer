@@ -37,7 +37,7 @@ export interface UserVerifyEmailDto {
 }
 
 export interface UserUpdateInfoDto {
-  userName: string;
+  userName?: string;
   descr?: string;
   studentId?: string;
   phoneNumber?: string;

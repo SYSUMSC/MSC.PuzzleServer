@@ -45,6 +45,18 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
         int currentScore = 0;
         HashSet<int> puzzleIds = new();
         List<TimeLineModel> result = new();
+        
+        var user = await context.Users.SingleOrDefaultAsync(u => u.Id == userId, token);
+
+        if (user is null)
+            throw new ArgumentException("不存在的UserId");
+
+        result.Add(new TimeLineModel
+        {
+            Time = user.RegisterTimeUTC,
+            TotalScore = 0,
+            PuzzleId = -1,
+        });
 
         foreach (var sub in allSubmissions)
         {

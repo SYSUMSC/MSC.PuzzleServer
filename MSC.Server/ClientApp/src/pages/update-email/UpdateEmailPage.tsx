@@ -46,7 +46,7 @@ export const UpdateEmailPage: FC = () => {
       </Heading>
       <form onSubmit={onSubmit}>
         <FormControl id="email" my="12px" isRequired isInvalid={!!error}>
-          <FormLabel>邮箱</FormLabel>
+          <FormLabel>新邮箱</FormLabel>
           <Input type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
           {error && <FormErrorMessage>{resolveMessage(error)}</FormErrorMessage>}
         </FormControl>

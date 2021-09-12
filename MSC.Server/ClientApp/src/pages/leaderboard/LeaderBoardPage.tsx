@@ -16,6 +16,7 @@ import { INFO_API } from '../../redux/info.api';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { LineChart } from 'echarts/charts';
+import { LegendComponent } from 'echarts/components';
 import { GridComponent, TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 
@@ -29,35 +30,30 @@ export const LeaderBoardPage: FC = () => {
 
   const chartData = useMemo(() => {
     if (!data) {
-      return { xAxisData: [], seriesData: [] };
+      return [];
     }
-    const xAxisDataRaw = [
-      ...new Set(
-        data.topDetail
-          .map((item) => item.timeLine)
-          .flat()
-          .map((item) => item.time)
-      )
-    ].sort();
-    const xAxisData = xAxisDataRaw
-      .map((time) => new Date(time).getTime())
-      .map((time) => ((time - new Date(xAxisDataRaw[0]).getTime()) / 1000 / 60 / 60).toFixed(2)); // to hours
+
     const seriesData = data.topDetail.map((item) => {
       return {
         type: 'line',
-        connectNulls: true,
+        step: 'end',
         name: item.userName,
-        data: xAxisDataRaw.map((time) => item.timeLine.find((t) => t.time === time)?.score ?? null)
+        data: item.timeLine.map((item) => [item.time, item.score])
       };
     });
-    return {
-      xAxisData,
-      seriesData
-    };
+
+    return seriesData;
   }, [data]);
 
   useEffect(() => {
-    echarts.use([TitleComponent, TooltipComponent, GridComponent, LineChart, CanvasRenderer]);
+    echarts.use([
+      TitleComponent,
+      TooltipComponent,
+      GridComponent,
+      LineChart,
+      CanvasRenderer,
+      LegendComponent
+    ]);
   }, []);
 
   if (isLoading || error) {
@@ -80,21 +76,25 @@ export const LeaderBoardPage: FC = () => {
         }}
         option={{
           xAxis: {
-            type: 'category',
-            name: '距开始\n时间',
-            axisLabel: {
-              formatter: '{value} 小时'
-            },
-            data: chartData.xAxisData
+            type: 'time',
+            name: '时间',
+            splitLine: {
+              show: false
+            }
           },
           yAxis: {
             type: 'value',
             name: '分数',
+            boundaryGap: [0, '100%'],
             axisLabel: {
               formatter: '{value} 分'
             },
             splitLine: {
-              show: false
+              show: true,
+              lineStyle: {
+                color: ['#505050'],
+                type: 'dashed'
+              }
             }
           },
           tooltip: {
@@ -105,10 +105,18 @@ export const LeaderBoardPage: FC = () => {
             },
             backgroundColor: '#414141'
           },
-          series: chartData.seriesData
+          legend: {
+            orient: 'horizontal',
+            top: 'bottom',
+            textStyle: {
+              fontSize: 12,
+              color: '#ffffffeb'
+            }
+          },
+          series: chartData
         }}
       />
-      <Center mb="24px">
+      <Center m="24px">
         <Heading size="md">排行榜</Heading>
       </Center>
       <Table w="100%" bg="gray.800" mx="auto">

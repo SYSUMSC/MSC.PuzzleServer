@@ -184,13 +184,12 @@ public class AccountController : ControllerBase
         LogHelper.Log(logger, "通过邮箱验证。", user, TaskStatus.Success);
         await signInManager.SignInAsync(user, true);
 
-        if (Codec.Base64.Decode(model.Email).EndsWith("@mail2.sysu.edu.cn"))
-        {
-            user.IsSYSU = true;
-            result = await userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-                return BadRequest(new RequestResponse(result.Errors.FirstOrDefault()?.Description ?? "Unknown"));
-        }
+
+        user.IsSYSU = Codec.Base64.Decode(model.Email).EndsWith("@mail2.sysu.edu.cn");
+        result = await userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+            return BadRequest(new RequestResponse(result.Errors.FirstOrDefault()?.Description ?? "Unknown"));
 
         return Ok();
     }
@@ -270,7 +269,7 @@ public class AccountController : ControllerBase
         var user = await userManager.GetUserAsync(User);
         var oname = user.UserName;
 
-        user.UserName = model.UserName;
+        user.UserName = model.UserName ?? user.UserName;
         user.Description = model.Descr ?? user.Description;
         user.PhoneNumber = model.PhoneNumber ?? user.PhoneNumber;
         user.StudentId = model.StudentId ?? user.StudentId;
@@ -370,6 +369,12 @@ public class AccountController : ControllerBase
 
         if (!result.Succeeded)
             return BadRequest(new RequestResponse("无效邮箱。"));
+
+        user.IsSYSU = Codec.Base64.Decode(model.Email).EndsWith("@mail2.sysu.edu.cn");
+        result = await userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+            return BadRequest(new RequestResponse(result.Errors.FirstOrDefault()?.Description ?? "Unknown"));
 
         LogHelper.Log(logger, "更改邮箱成功。", user, TaskStatus.Success);
 

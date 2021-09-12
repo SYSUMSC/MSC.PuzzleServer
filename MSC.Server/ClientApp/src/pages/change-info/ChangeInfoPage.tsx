@@ -22,19 +22,20 @@ export const ChangeInfoPage: FC = () => {
   const [phoneNumber, setPhoneNumber] = useState(data!.phone);
   const [realName, setRealName] = useState(data!.realName);
   const [description, setDescription] = useState(data!.descr);
+  const [userName, setUserName] = useState(data!.name);
 
   const onSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       update({
-        userName: data!.name,
+        userName: userName || undefined,
         descr: description || undefined,
         studentId: studentId || undefined,
         phoneNumber: phoneNumber || undefined,
         realName: realName || undefined
       });
     },
-    [description, studentId, phoneNumber, realName, data, update]
+    [description, studentId, phoneNumber, realName, userName, update]
   );
 
   return (
@@ -44,11 +45,19 @@ export const ChangeInfoPage: FC = () => {
       </Heading>
       <form onSubmit={onSubmit}>
         {data!.isSYSU && (
-          <>
+            <>
             <Alert status="info" maxW="100%" my="24px" fontSize="sm">
               <AlertIcon />
               根据学校政策，中大的同学如果想要参加招新面试，请务必填写「学号」、「真实姓名」和「电话号码」三个栏目。
             </Alert>
+          </>
+        )}
+        <FormControl id="nick-name" my="12px" isInvalid={!!error}>
+          <FormLabel>昵称</FormLabel>
+          <Input value={userName} onChange={(event) => setUserName(event.target.value)} />
+        </FormControl>
+        {data!.isSYSU && (
+          <>
             <FormControl id="studentId" my="12px" isInvalid={!!error}>
               <FormLabel>学号</FormLabel>
               <Input
@@ -78,7 +87,7 @@ export const ChangeInfoPage: FC = () => {
         </FormControl>
         <Flex mt="32px" direction="row-reverse">
           <Button type="submit" isLoading={isLoading} disabled={isLoading}>
-            {isSuccess ? "更新成功" : "更新"}
+            {isSuccess ? '更新成功' : '更新'}
           </Button>
         </Flex>
       </form>
