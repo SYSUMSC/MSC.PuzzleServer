@@ -58,13 +58,13 @@ public class PuzzleBase
     /// 初始分数
     /// </summary>
     [Required]
-    public int OriginalScore { get; set; } = 10000;
+    public int OriginalScore { get; set; } = 500;
 
     /// <summary>
     /// 最低分数
     /// </summary>
     [Required]
-    public int MinScore { get; set; } = 3000;
+    public int MinScore { get; set; } = 300;
 
     /// <summary>
     /// 预期最大解出人数
