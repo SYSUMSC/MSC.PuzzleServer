@@ -5,10 +5,10 @@ import { NavBar } from './NavBar';
 export const WithNavBar: FC = ({ children }) => {
   return (
     <Flex minW="100vw">
-      <Box minH="100vh" flex="none" mx="24px" boxShadow="2xl">
+      <Box maxH="100vh" minH="100vh" flex="none" mx="24px" boxShadow="2xl">
         <NavBar />
       </Box>
-      <Box minH="100vh" flex="1">
+      <Box maxH="100vh" minH="100vh" flex="1" overflow="scroll">
         {children}
       </Box>
     </Flex>
