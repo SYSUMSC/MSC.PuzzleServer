@@ -8,17 +8,15 @@ namespace MSC.Server.Models.Request;
 public class LoginModel
 {
     /// <summary>
-    /// 用户名
+    /// 用户名或邮箱
     /// </summary>
     [Required]
-    [MinLength(6)]
-    [MaxLength(25)]
     public string? UserName { get; set; }
 
     /// <summary>
     /// 密码
     /// </summary>
     [Required]
-    [MinLength(6)]
+    [MinLength(6, ErrorMessage = "密码过短")]
     public string? Password { get; set; }
 }

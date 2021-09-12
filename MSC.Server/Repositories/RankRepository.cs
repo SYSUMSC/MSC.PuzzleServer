@@ -46,14 +46,15 @@ public class RankRepository : RepositoryBase, IRankRepository
 
     public Task<List<RankMessageModel>> GetRank(CancellationToken token, int skip = 0, int count = 100)
         => (from rank in context.Ranks.OrderByDescending(r => r.Score)
-                .Skip(skip).Take(count).Include(r => r.User)
+                .Skip(skip).Take(count).Include(r => r.User).ThenInclude(u => u!.Submissions)
             select new RankMessageModel
             {
                 Score = rank.Score,
                 UpdateTime = rank.UpdateTimeUTC,
                 UserName = rank.User!.UserName,
                 Descr = rank.User.Description,
-                UserId = rank.UserId
+                UserId = rank.UserId,
+                User = rank.User
             }).ToListAsync(token);
 
     public async Task UpdateRank(Rank rank, int score, CancellationToken token)

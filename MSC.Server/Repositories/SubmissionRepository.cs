@@ -37,19 +37,14 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
         return result.OrderByDescending(s => s.SubmitTimeUTC).Skip(skip).Take(count).ToListAsync(token);
     }
 
-    public async Task<List<TimeLineModel>> GetTimeLine(string userId, CancellationToken token)
+    public List<TimeLineModel> GetTimeLine(UserInfo user, CancellationToken token)
     {
-        var allSubmissions = await context.Submissions.Where(s => s.Solved && s.UserId == userId)
-            .OrderBy(s => s.SubmitTimeUTC).ToListAsync(token);
+        if (user is null || user.Submissions is null)
+            return new();
 
         int currentScore = 0;
         HashSet<int> puzzleIds = new();
         List<TimeLineModel> result = new();
-        
-        var user = await context.Users.SingleOrDefaultAsync(u => u.Id == userId, token);
-
-        if (user is null)
-            throw new ArgumentException("不存在的UserId");
 
         result.Add(new TimeLineModel
         {
@@ -58,7 +53,7 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
             PuzzleId = -1,
         });
 
-        foreach (var sub in allSubmissions)
+        foreach (var sub in user.Submissions)
         {
             if (!puzzleIds.Contains(sub.PuzzleId))
             {

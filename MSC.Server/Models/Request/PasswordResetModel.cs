@@ -8,21 +8,21 @@ namespace MSC.Server.Models.Request;
 public class PasswordResetModel
 {
     /// <summary>
-    /// 新密码
+    /// 密码
     /// </summary>
-    [Required]
-    [MinLength(6)]
+    [Required(ErrorMessage = "密码是必需的")]
+    [MinLength(6, ErrorMessage = "密码过短")]
     public string? Password { get; set; }
 
     /// <summary>
     /// 邮箱
     /// </summary>
-    [Required]
+    [Required(ErrorMessage = "邮箱是必需的")]
     public string? Email { get; set; }
 
     /// <summary>
     /// 邮箱接收到的Base64格式Token
     /// </summary>
-    [Required]
+    [Required(ErrorMessage = "Token是必需的")]
     public string? RToken { get; set; }
 }

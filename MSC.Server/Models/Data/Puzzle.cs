@@ -29,7 +29,6 @@ public class Puzzle : PuzzleBase
     }
 
     #region 数据库关系
-
     public List<Submission> Submissions { get; set; } = new();
 
     #endregion 数据库关系

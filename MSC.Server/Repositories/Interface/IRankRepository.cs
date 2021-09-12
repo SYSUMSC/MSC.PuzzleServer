@@ -6,7 +6,7 @@ namespace MSC.Server.Repositories.Interface;
 public interface IRankRepository
 {
     /// <summary>
-    /// 获取排名
+    /// 获取包括用户和提交信息的排名
     /// </summary>
     /// <param name="skip">跳过数量</param>
     /// <param name="count">获取数量</param>

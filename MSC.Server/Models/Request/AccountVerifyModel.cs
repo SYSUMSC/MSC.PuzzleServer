@@ -10,12 +10,12 @@ public class AccountVerifyModel
     /// <summary>
     /// 邮箱接收到的Base64格式Token
     /// </summary>
-    [Required]
+    [Required(ErrorMessage = "Token是必需的")]
     public string? Token { get; set; }
 
     /// <summary>
     /// 用户邮箱的Base64格式
     /// </summary>
-    [Required]
+    [Required(ErrorMessage = "邮箱是必需的")]
     public string? Email { get; set; }
 }

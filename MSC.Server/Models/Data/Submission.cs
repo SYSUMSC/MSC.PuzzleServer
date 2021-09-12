@@ -16,19 +16,16 @@ public class Submission
     /// 提交的答案字符串
     /// </summary>
     [MaxLength(50)]
-    [JsonPropertyName("answer")]
     public string Answer { get; set; } = string.Empty;
 
     /// <summary>
     /// 提交的答案是否正确
     /// </summary>
-    [JsonPropertyName("solved")]
     public bool Solved { get; set; } = false;
 
     /// <summary>
     /// 提交的得分
     /// </summary>
-    [JsonPropertyName("score")]
     public int Score { get; set; } = 0;
 
     /// <summary>
@@ -40,7 +37,6 @@ public class Submission
     /// <summary>
     /// 用户名
     /// </summary>
-    [JsonPropertyName("userName")]
     public string UserName { get; set; } = "Anonymous";
 
     #region 数据库关系

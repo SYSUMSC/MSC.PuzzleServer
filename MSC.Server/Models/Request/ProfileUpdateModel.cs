@@ -10,9 +10,8 @@ public class ProfileUpdateModel
     /// <summary>
     /// 用户名
     /// </summary>
-    [Required]
-    [MinLength(6)]
-    [MaxLength(25)]
+    [MinLength(6, ErrorMessage = "用户名过短")]
+    [MaxLength(25, ErrorMessage = "用户名过长")]
     public string? UserName { get; set; }
 
     /// <summary>
@@ -23,13 +22,13 @@ public class ProfileUpdateModel
     /// <summary>
     /// 学号
     /// </summary>
-    [RegularExpression("^[0-9]{8}$")]
+    [RegularExpression("^[0-9]{8}$", ErrorMessage = "学号格式错误")]
     public string? StudentId { get; set; } = string.Empty;
 
     /// <summary>
     /// 手机号
     /// </summary>
-    [Phone]
+    [Phone(ErrorMessage = "手机号格式错误")]
     public string? PhoneNumber { get; set; } = string.Empty;
 
     /// <summary>

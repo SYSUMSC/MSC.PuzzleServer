@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using MSC.Server.Middlewares;
+using MSC.Server.Models;
 using MSC.Server.Models.Request;
 using MSC.Server.Repositories.Interface;
 using MSC.Server.Utils;
@@ -59,11 +61,12 @@ public class InfoController : ControllerBase
 
         foreach (var r in result.Rank.Take(10))
         {
-            result.TopDetail.Add(new ScoreBoardTimeLine()
-            {
-                UserName = r.UserName,
-                TimeLine = await submissionRepository.GetTimeLine(r.UserId!, token)
-            });
+            if(r.User is not null && r.User.EmailConfirmed)
+                result.TopDetail.Add(new ScoreBoardTimeLine()
+                {
+                    UserName = r.UserName,
+                    TimeLine = submissionRepository.GetTimeLine(r.User, token)
+                });
         }
 
         result.UpdateTime = DateTimeOffset.Now;

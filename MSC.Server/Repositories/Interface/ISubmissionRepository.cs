@@ -28,10 +28,10 @@ public interface ISubmissionRepository
     /// <summary>
     /// 获取用户时间线
     /// </summary>
-    /// <param name="userId">用户Id</param>
+    /// <param name="user">包括了Submission的用户对象</param>
     /// <param name="token">操作取消Token</param>
     /// <returns></returns>
-    public Task<List<TimeLineModel>> GetTimeLine(string userId, CancellationToken token);
+    public List<TimeLineModel> GetTimeLine(UserInfo user, CancellationToken token);
 
     /// <summary>
     /// 是否已经提交

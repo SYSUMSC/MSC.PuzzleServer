@@ -185,7 +185,7 @@ export const LoginPage: FC = () => {
           {isToLogin && (
             <form onSubmit={onLogin}>
               <FormControl id="username" my="12px" isInvalid={!!loginError}>
-                <FormLabel>用户名</FormLabel>
+                <FormLabel>用户名或邮箱</FormLabel>
                 <Input
                   autoComplete="username"
                   type="text"

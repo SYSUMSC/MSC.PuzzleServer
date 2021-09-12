@@ -18,8 +18,6 @@ using NSwag;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.ResponseCompression;
-using System.IO.Compression;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +47,7 @@ builder.Host.ConfigureLogging(logging =>
     logging.ClearProviders();
     logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
 }).UseNLog();
+
 Target.Register<SignalRTarget>("SignalR");
 LogManager.Configuration.Variables["connectionString"] = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -144,10 +143,13 @@ builder.Services.AddResponseCompression(options =>
 builder.Services.AddControllersWithViews().ConfigureApiBehaviorOptions(options =>
 {
     options.InvalidModelStateResponseFactory = context =>
-        new JsonResult(new RequestResponse("校验失败"))
+    {
+        var errmsg = context.ModelState.Values.FirstOrDefault()?.Errors.FirstOrDefault()?.ErrorMessage;
+        return new JsonResult(new RequestResponse(errmsg ?? "验证失败"))
         {
             StatusCode = 400
         };
+    };
 });
 
 var app = builder.Build();

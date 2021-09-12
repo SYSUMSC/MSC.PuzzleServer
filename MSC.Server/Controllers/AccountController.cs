@@ -20,20 +20,17 @@ namespace MSC.Server.Controllers;
 public class AccountController : ControllerBase
 {
     private static readonly Logger logger = LogManager.GetLogger("AccountController");
-    private readonly AppDbContext context;
     private readonly IMailSender mailSender;
     private readonly UserManager<UserInfo> userManager;
     private readonly SignInManager<UserInfo> signInManager;
     private readonly IMemoryCache cache;
 
     public AccountController(
-        AppDbContext _context,
         IMailSender _mailSender,
         IMemoryCache memoryCache,
         UserManager<UserInfo> _userManager,
         SignInManager<UserInfo> _signInManager)
     {
-        context = _context;
         cache = memoryCache;
         mailSender = _mailSender;
         userManager = _userManager;
@@ -54,19 +51,11 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
-        await signInManager.SignOutAsync();
         var user = new UserInfo
         {
             UserName = model.UserName,
             Email = model.Email,
             Privilege = Privilege.User,
-            LastSignedInUTC = DateTimeOffset.UtcNow,
-            LastVisitedUTC = DateTimeOffset.UtcNow,
-            RegisterTimeUTC = DateTimeOffset.UtcNow,
-            Rank = new()
-            {
-                UpdateTimeUTC = DateTimeOffset.UtcNow,
-            }
         };
 
         user.UpdateByHttpContext(HttpContext);
@@ -184,8 +173,15 @@ public class AccountController : ControllerBase
         LogHelper.Log(logger, "通过邮箱验证。", user, TaskStatus.Success);
         await signInManager.SignInAsync(user, true);
 
-
+        user.LastSignedInUTC = DateTimeOffset.UtcNow;
+        user.LastVisitedUTC = DateTimeOffset.UtcNow;
+        user.RegisterTimeUTC = DateTimeOffset.UtcNow;
+        user.Rank = new()
+        {
+            UpdateTimeUTC = DateTimeOffset.UtcNow,
+        };
         user.IsSYSU = Codec.Base64.Decode(model.Email).EndsWith("@mail2.sysu.edu.cn");
+
         result = await userManager.UpdateAsync(user);
 
         if (!result.Succeeded)
@@ -210,17 +206,17 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> LogIn([FromBody] LoginModel model)
     {
-        await signInManager.SignOutAsync();
-
-        var user = await userManager.FindByEmailAsync(model.UserName);
+        var user = await userManager.FindByNameAsync(model.UserName);
         if (user is null)
-            user = await userManager.FindByNameAsync(model.UserName);
+            user = await userManager.FindByEmailAsync(model.UserName);
 
         if (user is null)
             return Unauthorized(new RequestResponse("用户名或密码错误", 401));
 
         user.LastSignedInUTC = DateTimeOffset.UtcNow;
         user.UpdateByHttpContext(HttpContext);
+
+        await signInManager.SignOutAsync();
 
         var result = await signInManager.PasswordSignInAsync(user, model.Password, true, false);
 

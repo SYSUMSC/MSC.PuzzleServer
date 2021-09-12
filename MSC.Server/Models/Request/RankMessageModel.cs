@@ -36,4 +36,10 @@ public class RankMessageModel
     /// </summary>
     [JsonIgnore]
     public string? UserId { get; set; }
+
+    /// <summary>
+    /// 用户对象
+    /// </summary>
+    [JsonIgnore]
+    public UserInfo? User { get; set; }
 }
