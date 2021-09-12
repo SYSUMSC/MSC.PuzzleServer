@@ -88,7 +88,7 @@ export const LogsPage: FC = () => {
     return () => {
       connection.stop().catch(() => {});
     };
-  },[toast]);
+  }, [toast]);
 
   if (isLoading) {
     return <LoadingMask />;
@@ -99,86 +99,84 @@ export const LogsPage: FC = () => {
   }
 
   return (
-    <Container maxWidth="100ch">
-      <Flex flexDirection="column" maxHeight="100vh" p="12px" overflowY="auto">
-        <Flex flex="none" p="24px" flexDirection="row-reverse" alignItems="center">
-          <HStack spacing="12px">
-            <IconButton
-              variant="outline"
-              aria-label="Previous page"
-              icon={<BackIcon />}
-              disabled={page <= 1}
-              onClick={() => setPage(page - 1)}
-            />
-            <IconButton
-              variant="outline"
-              aria-label="Previous page"
-              icon={<ForwardIcon />}
-              disabled={data!.length < ITEM_COUNT_PER_PAGE}
-              onClick={() => setPage(page + 1)}
-            />
-            <Popover>
-              <PopoverTrigger>
-                <IconButton variant="outline" aria-label="Jump to page" icon={<AimIcon />} />
-              </PopoverTrigger>
-              <PopoverContent maxWidth="12rem">
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverBody p="12px">
-                  <Text fontSize="sm" mb="4px">
-                    跳转到指定页
-                  </Text>
-                  <HStack
-                    as="form"
-                    onSubmit={(event) => {
-                      event.preventDefault();
-                      setPage(pageInputRef!.current!.valueAsNumber);
-                    }}
-                  >
-                    <Input type="number" ref={pageInputRef} size="sm" />
-                    <Button size="sm" type="submit">
-                      确认
-                    </Button>
-                  </HStack>
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
-          </HStack>
-          <Text mr="24px">第 {page} 页</Text>
-        </Flex>
-        <Table flex="1" size="sm" maxWidth="100%">
-          <Thead>
-            <Tr>
-              <Th>时间</Th>
-              <Th>名称</Th>
-              <Th>IP</Th>
-              <Th>信息</Th>
-              <Th>状态</Th>
-            </Tr>
-          </Thead>
-          <Tbody fontSize="xs">
-            {[...(page === 1 ? newLogs.current : []), ...data!].map((item, index) =>
-              (index === 0 && page === 1 && newLogs.current.length > 0) ? (
-                  <Tr key={item.time + item.name + item.msg} animation={fadeAnimation}>
-                      <Td fontFamily="mono">{formatDate(item.time)}</Td>
-                      <Td fontFamily="mono">{item.name}</Td>
-                      <Td fontFamily="mono">{item.ip}</Td>
-                      <Td>{item.msg}</Td>
-                      <Td fontFamily="mono">{item.status}</Td>
-                  </Tr>
-              ) : (
-                <Tr key={item.time + item.name + item.msg}>
-                  <Td fontFamily="mono">{formatDate(item.time)}</Td>
-                  <Td fontFamily="mono">{item.name}</Td>
-                  <Td fontFamily="mono">{item.ip}</Td>
-                  <Td>{item.msg}</Td>
-                  <Td fontFamily="mono">{item.status}</Td>
-                </Tr>
-              )
-            )}
-          </Tbody>
-        </Table>
+    <Flex flexDirection="column" maxHeight="100vh" p="56px">
+      <Flex flex="none" p="24px" flexDirection="row-reverse" alignItems="center">
+        <HStack spacing="12px">
+          <IconButton
+            variant="outline"
+            aria-label="Previous page"
+            icon={<BackIcon />}
+            disabled={page <= 1}
+            onClick={() => setPage(page - 1)}
+          />
+          <IconButton
+            variant="outline"
+            aria-label="Previous page"
+            icon={<ForwardIcon />}
+            disabled={data!.length < ITEM_COUNT_PER_PAGE}
+            onClick={() => setPage(page + 1)}
+          />
+          <Popover>
+            <PopoverTrigger>
+              <IconButton variant="outline" aria-label="Jump to page" icon={<AimIcon />} />
+            </PopoverTrigger>
+            <PopoverContent maxWidth="12rem">
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverBody p="12px">
+                <Text fontSize="sm" mb="4px">
+                  跳转到指定页
+                </Text>
+                <HStack
+                  as="form"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    setPage(pageInputRef!.current!.valueAsNumber);
+                  }}
+                >
+                  <Input type="number" ref={pageInputRef} size="sm" />
+                  <Button size="sm" type="submit">
+                    确认
+                  </Button>
+                </HStack>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </HStack>
+        <Text mr="24px">第 {page} 页</Text>
       </Flex>
-    </Container>
+      <Table flex="1" size="sm" maxWidth="100%">
+        <Thead>
+          <Tr>
+            <Th>时间</Th>
+            <Th>用户</Th>
+            <Th>IP</Th>
+            <Th>信息</Th>
+            <Th>状态</Th>
+          </Tr>
+        </Thead>
+        <Tbody fontSize="xs">
+          {[...(page === 1 ? newLogs.current : []), ...data!].map((item, index) =>
+            index === 0 && page === 1 && newLogs.current.length > 0 ? (
+              <Tr key={item.time + item.name + item.msg} animation={fadeAnimation}>
+                <Td fontFamily="mono">{formatDate(item.time)}</Td>
+                <Td fontFamily="mono">{item.name}</Td>
+                <Td fontFamily="mono">{item.ip}</Td>
+                <Td>{item.msg}</Td>
+                <Td fontFamily="mono">{item.status}</Td>
+              </Tr>
+            ) : (
+              <Tr key={item.time + item.name + item.msg}>
+                <Td fontFamily="mono">{formatDate(item.time)}</Td>
+                <Td fontFamily="mono">{item.name}</Td>
+                <Td fontFamily="mono">{item.ip}</Td>
+                <Td>{item.msg}</Td>
+                <Td fontFamily="mono">{item.status}</Td>
+              </Tr>
+            )
+          )}
+        </Tbody>
+      </Table>
+    </Flex>
   );
 };
