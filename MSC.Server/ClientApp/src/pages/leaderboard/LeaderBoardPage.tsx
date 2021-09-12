@@ -16,7 +16,7 @@ import { INFO_API } from '../../redux/info.api';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { LineChart } from 'echarts/charts';
-import { LegendComponent } from 'echarts/components';
+import { LegendComponent, DataZoomComponent } from 'echarts/components';
 import { GridComponent, TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 
@@ -28,12 +28,16 @@ function formatTime(time: string) {
 export const LeaderBoardPage: FC = () => {
   const { isLoading, error, data } = INFO_API.useGetScoreBoardQuery();
 
-  const chartData = useMemo(() => data?.topDetail.map((item) => ({
+  const chartData = useMemo(
+    () =>
+      data?.topDetail.map((item) => ({
         type: 'line',
         step: 'end',
         name: item.userName,
         data: item.timeLine.map((item) => [item.time, item.score])
-      })), [data]);
+      })),
+    [data]
+  );
 
   useEffect(() => {
     echarts.use([
@@ -42,7 +46,8 @@ export const LeaderBoardPage: FC = () => {
       GridComponent,
       LineChart,
       CanvasRenderer,
-      LegendComponent
+      LegendComponent,
+      DataZoomComponent
     ]);
   }, []);
 
@@ -56,8 +61,8 @@ export const LeaderBoardPage: FC = () => {
 
   return (
     <Container minH="100vh" p="24px" maxWidth="80ch">
-      <Center mb="6px">
-        <Heading size="md">前十名分数变化图</Heading>
+      <Center mb="24px">
+        <Heading size="md">前十名分数变化</Heading>
       </Center>
       <ReactEChartsCore
         echarts={echarts}
@@ -97,12 +102,25 @@ export const LeaderBoardPage: FC = () => {
           },
           legend: {
             orient: 'horizontal',
-            top: 'bottom',
+            top: 'top',
             textStyle: {
               fontSize: 12,
               color: '#ffffffeb'
             }
           },
+          dataZoom: [
+            {
+              type: 'inside',
+              start: 0,
+              end: 100,
+              filterMode: 'none'
+            },
+            {
+              start: 0,
+              end: 100,
+              showDetail: false
+            }
+          ],
           series: chartData
         }}
       />
