@@ -19,9 +19,9 @@ export const UserStatus: FC = () => {
         <Heading size="md">{user.name}</Heading>
         <Text>{user.email}</Text>
         <HStack>
-          <Link to="/change-email">
+          <Link to="/account-manage">
             <Button size="sm" variant="ghost">
-              修改邮箱
+              账户管理
             </Button>
           </Link>
           <Link to="/change-info">

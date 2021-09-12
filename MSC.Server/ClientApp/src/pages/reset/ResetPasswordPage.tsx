@@ -74,7 +74,7 @@ export const ResetPasswordPage: FC = () => {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={!password || isLoading || isSuccess}
+            disabled={!password || isLoading}
           >
             提交
           </Button>

@@ -113,7 +113,7 @@ export const USER_API = createApi({
         body: dto
       })
     }),
-    changePassword: builder.query<void, UserChangePasswordDto>({
+    changePassword: builder.mutation<void, UserChangePasswordDto>({
       query: (dto) => ({
         url: 'changepassword',
         method: 'PUT',

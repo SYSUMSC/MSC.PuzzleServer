@@ -11,7 +11,7 @@ import { LeaderBoardPage } from './pages/leaderboard/LeaderBoardPage';
 import { PuzzleDetailPage } from './pages/puzzle-detail/PuzzleDetailPage';
 import { ResetPasswordPage } from './pages/reset/ResetPasswordPage';
 import { VerifyEmailPage } from './pages/verify/VerifyEmailPage';
-import { UpdateEmailPage } from './pages/update-email/UpdateEmailPage';
+import { AccountManagePage } from './pages/account-manage/AccountManagePage';
 import { ChangeInfoPage } from './pages/change-info/ChangeInfoPage';
 import { LogsPage } from './pages/logs/LogsPage';
 
@@ -30,9 +30,9 @@ export const App: FC = () => {
         <Route path="/verify">
           <VerifyEmailPage />
         </Route>
-        <AuthRoute path="/change-email">
+        <AuthRoute path="/account-manage">
           <WithNavBar>
-            <UpdateEmailPage />
+            <AccountManagePage />
           </WithNavBar>
         </AuthRoute>
         <AuthRoute path="/change-info">
