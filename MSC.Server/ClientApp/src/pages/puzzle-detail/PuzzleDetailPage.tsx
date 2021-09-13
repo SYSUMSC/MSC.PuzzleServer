@@ -14,6 +14,7 @@ import { LoadingMask } from 'src/common/components/LoadingMask';
 import { resolveMessage } from 'src/common/utils';
 import { PUZZLE_API } from 'src/redux/puzzle.api';
 import marked from 'marked';
+import '../../common/utils/marked.css';
 
 export interface PuzzleDetailPageProps {
   id: number;
@@ -72,18 +73,15 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
   }
 
   return (
-    <Container display="flex" flexDirection="column" height="100vh">
+    <Container display="flex" flexDirection="column" height="100vh" maxWidth="50vw">
       <Flex flex="none" alignItems="center" mt="10vh">
         <Heading color="gray.300" size="2xl" textShadow="xl">
           # {data!.title}
         </Heading>
       </Flex>
-      <Box
-        flex="1"
-        my="24px"
-        overflow="auto"
-        dangerouslySetInnerHTML={{ __html: marked(data!.content) }}
-      />
+      <Box flex="1" my="24px" overflow="auto">
+        <div className="marked" dangerouslySetInnerHTML={{ __html: marked(data!.content) }} />
+      </Box>
       <Box flex="none" p="12px" roundedTopLeft="xl" roundedTopRight="xl" bg="gray.700">
         <Flex as="form" onSubmit={onSubmit}>
           <Input

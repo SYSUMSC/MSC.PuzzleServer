@@ -1,8 +1,6 @@
 import React, { FC } from 'react';
 import { LoadingMask } from 'src/common/components/LoadingMask';
 import {
-  Box,
-  Center,
   Container,
   Heading,
   VStack,
@@ -13,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { INFO_API, Announcement } from '../../redux/info.api';
 import marked from 'marked';
+import '../../common/utils/marked.css';
 
 function formatTime(time: string) {
   const date = new Date(time);
@@ -20,32 +19,19 @@ function formatTime(time: string) {
 }
 
 const AnnouncementCard: FC<Announcement> = ({ time, isPinned, content, title }) => (
-  <Box
-    rounded="lg"
-    bg="gray.700"
-    overflow="hidden"
-    w="100%"
-    shadow="xl"
-    _hover={{ background: 'gray.600' }}
-    transition="background 0.2s ease"
-  >
-    <Flex justifyContent="space-between" alignItems="flex-end">
-      <VStack px="18px" py="12px" align="sketch" spacing="0">
-        <Heading color="gray.300" size="2xl" textShadow="xl">
-          # {title}
-        </Heading>
-        <Box
-          flex="1"
-          my="24px"
-          overflow="auto"
-          dangerouslySetInnerHTML={{ __html: marked(content) }}
-        />
-        <Text fontFamily="mono" textAlign="right" color="gray.400">
-          # {formatTime(time)}
-        </Text>
-      </VStack>
-    </Flex>
-  </Box>
+  <Flex justifyContent="space-between" alignItems="flex-end">
+    <VStack px="18px" py="12px" align="sketch" spacing="0">
+      <Heading color="gray.300" size="xl" textShadow="xl" pb="15px">
+        # {title}
+      </Heading>
+      <div className="marked"
+        dangerouslySetInnerHTML={{ __html: marked(content) }}
+      />
+      <Text pt="15px" fontFamily="mono" textAlign="right" color="gray.400">
+        {formatTime(time)}
+      </Text>
+    </VStack>
+  </Flex>
 );
 
 export const PortalPage: FC = () => {
@@ -56,13 +42,8 @@ export const PortalPage: FC = () => {
   }
 
   return (
-    <Container minHeight="100vh">
-      <Center h="100vh">
-        <Box>
-          <Heading textShadow="2xl">欢迎来到 SYSUMSC 解谜游戏</Heading>
-        </Box>
-      </Center>
-      <Wrap spacing="45px" justify="center">
+    <Container minHeight="100vh" maxWidth="70vw">
+      <Wrap spacing="45px" justify="center" py="2em">
         {data?.map((a) => (
           <WrapItem key={a.title + a.time}>
             <AnnouncementCard {...a} />
