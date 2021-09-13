@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
@@ -82,10 +81,10 @@ public class InfoController : ControllerBase
     }
 
     /// <summary>
-    /// 公告接口
+    /// 积分榜接口
     /// </summary>
     /// <remarks>
-    /// 使用此接口获取公告，需要已登录权限
+    /// 使用此接口获取积分榜，需要已登录权限
     /// </remarks>
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功获取积分榜</response>
@@ -94,12 +93,10 @@ public class InfoController : ControllerBase
     [ProducesResponseType(typeof(List<Announcement>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Announcements(CancellationToken token)
     {
-        if (!cache.TryGetValue(CacheKey.Announcements, out List<Announcement> result))
+        if (cache.TryGetValue(CacheKey.Announcements, out List<Announcement> result))
             return Ok(result);
 
         result = await announcementRepository.GetAnnouncements(0, 3, token);
-
-        LogHelper.SystemLog(logger, "重构缓存：Announcements");
 
         cache.Set(CacheKey.Announcements, result, TimeSpan.FromHours(10));
 

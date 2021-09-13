@@ -22,7 +22,7 @@ public class AnnouncementRepository : RepositoryBase, IAnnouncementRepository
     }
 
     public Task<Announcement?> GetAnnouncementById(int Id, CancellationToken token)
-        => context.Announcements.SingleOrDefaultAsync(x => x.Id == Id, token);
+        => context.Announcements.FirstOrDefaultAsync(x => x.Id == Id, token);
 
     public async Task<List<Announcement>> GetAnnouncements(int skip, int count, CancellationToken token)
     {

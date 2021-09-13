@@ -51,9 +51,9 @@ public class AdminController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IList<LogMessageModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<LogMessageModel>>> Logs([FromQuery] LogRequestModel model, CancellationToken token)
+    public async Task<IActionResult> Logs([FromQuery] LogRequestModel model, CancellationToken token)
     {
-        return await logRepository.GetLogs(model.Skip, model.Count, model.Level, token);
+        return Ok(await logRepository.GetLogs(model.Skip, model.Count, model.Level, token));
     }
 
     /// <summary>
@@ -79,23 +79,23 @@ public class AdminController : ControllerBase
     /// <remarks>
     /// 使用此接口添加或更新公告，需要Admin权限
     /// </remarks>
-    /// <param name="Id">公告Id</param>
     /// <param name="model"></param>
-    /// <param name="token"></param>
+    /// <param name="token">操作取消token</param>
+    /// <param name="Id">公告Id</param>
     /// <response code="404">公告未找到</response>
-    /// <response code="404">公告无效</response>
+    /// <response code="400">公告无效</response>
     /// <response code="200">成功完成操作</response>
-    [HttpPost("Publish/{Id?}")]
+    [HttpPost("{Id:int?}")]
     [ProducesResponseType(typeof(Announcement), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Publish(int? Id, UpdateAnnouncementModel model, CancellationToken token)
+    public async Task<IActionResult> Notice(int? Id, [FromBody] UpdateAnnouncementModel model, CancellationToken token)
     {
         Announcement? announcement;
 
         if (Id is null)
         {
-            if(model.Title is null || model.Content is null)
+            if (model.Title is null || model.Content is null)
                 return BadRequest(new RequestResponse("公告无效"));
 
             announcement = new()
@@ -111,7 +111,7 @@ public class AdminController : ControllerBase
             announcement = await announcementRepository.GetAnnouncementById((int)Id, token);
 
             if (announcement is null)
-                return BadRequest(new RequestResponse("公告未找到", 404));
+                return NotFound(new RequestResponse("公告未找到", 404));
 
             announcement.Title = model.Title ?? announcement.Title;
             announcement.Content = model.Content ?? announcement.Content;

@@ -18,5 +18,6 @@ public class Announcement
     public bool IsPinned { get; set; } = false;
 
     [Required]
+    [JsonPropertyName("time")]
     public DateTimeOffset PublishTimeUTC { get; set; } = DateTimeOffset.UtcNow;
 }

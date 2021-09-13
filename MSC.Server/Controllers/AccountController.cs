@@ -96,7 +96,7 @@ public class AccountController : ControllerBase
     /// <response code="400">校验失败</response>
     /// <response code="404">用户不存在</response>
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Recovery([FromBody] RecoveryModel model)
@@ -413,7 +413,7 @@ public class AccountController : ControllerBase
     /// <param name="Id">用户Id</param>
     /// <response code="200">用户成功被删除</response>
     /// <response code="400">删除失败</response>
-    [HttpDelete("{Id}")]
+    [HttpDelete("{Id:guid}")]
     [RequireAdmin]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]

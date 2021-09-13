@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MSC.Server.Middlewares;
 using MSC.Server.Models;
 using MSC.Server.Repositories.Interface;
@@ -38,7 +37,7 @@ public class SubmissionController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功获取提交</response>
     /// <response code="401">无权访问</response>
-    [HttpGet("/api/[controller]/{Id}")]
+    [HttpGet("/api/[controller]/{Id:int}")]
     [RequireSignedIn]
     [ProducesResponseType(typeof(List<Submission>), StatusCodes.Status200OK)]
     public async Task<IActionResult> SelfHistory(int Id, CancellationToken token)
@@ -59,7 +58,7 @@ public class SubmissionController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功获取提交</response>
     /// <response code="401">无权访问</response>
-    [HttpGet("{Id?}")]
+    [HttpGet("{Id:int?}")]
     [RequireMonitor]
     [ProducesResponseType(typeof(List<Submission>), StatusCodes.Status200OK)]
     public async Task<IActionResult> History(int? Id, CancellationToken token)

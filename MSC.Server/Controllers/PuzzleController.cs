@@ -61,7 +61,7 @@ public class PuzzleController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功新建题目</response>
     /// <response code="400">校验失败</response>
-    [HttpPost("New")]
+    [HttpPost]
     [RequireAdmin]
     [ProducesResponseType(typeof(PuzzleResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
@@ -91,7 +91,7 @@ public class PuzzleController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功更新题目</response>
     /// <response code="400">校验失败</response>
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     [RequireAdmin]
     [ProducesResponseType(typeof(PuzzleResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
@@ -120,7 +120,7 @@ public class PuzzleController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功获取题目</response>
     /// <response code="401">无权访问或题目无效</response>
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [RequireSignedIn]
     [ProducesResponseType(typeof(UserPuzzleModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
@@ -148,7 +148,7 @@ public class PuzzleController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功删除题目</response>
     /// <response code="400">题目删除失败</response>
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     [RequireAdmin]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
@@ -217,7 +217,7 @@ public class PuzzleController : ControllerBase
     /// <response code="200">答案正确</response>
     /// <response code="400">答案错误</response>
     /// <response code="401">无权访问或题目无效</response>
-    [HttpPost("Submit/{id}")]
+    [HttpPost("Submit/{id:int}")]
     [RequireSignedIn]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]

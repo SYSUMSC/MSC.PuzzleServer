@@ -17,6 +17,13 @@ export interface PuzzleScoreBoard {
   }[];
 }
 
+export interface Announcement {
+  time: string;
+  title: string;
+  content: string;
+  isPinned: boolean;
+}
+
 export const INFO_API = createApi({
   reducerPath: 'infoApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'api/info' }),
@@ -26,6 +33,9 @@ export const INFO_API = createApi({
   endpoints: (builder) => ({
     getScoreBoard: builder.query<PuzzleScoreBoard, void>({
       query: () => 'scoreboard'
+    }),
+    getAnnouncements: builder.query<Announcement[], void>({
+      query: () => 'announcements'
     })
   })
 });
