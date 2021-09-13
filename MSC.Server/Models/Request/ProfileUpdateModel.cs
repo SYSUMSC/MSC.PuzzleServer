@@ -22,13 +22,11 @@ public class ProfileUpdateModel
     /// <summary>
     /// 学号
     /// </summary>
-    [RegularExpression("^[0-9]{8}$", ErrorMessage = "学号格式错误")]
     public string? StudentId { get; set; } = string.Empty;
 
     /// <summary>
     /// 手机号
     /// </summary>
-    [Phone(ErrorMessage = "手机号格式错误")]
     public string? PhoneNumber { get; set; } = string.Empty;
 
     /// <summary>
