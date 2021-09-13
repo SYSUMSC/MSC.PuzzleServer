@@ -94,6 +94,11 @@ public static class CacheKey
     public const string ScoreBoard = "_ScoreBoard";
 
     /// <summary>
+    /// 公告
+    /// </summary>
+    public const string Announcements = "_Announcements";
+
+    /// <summary>
     /// 可访问的谜题列表
     /// </summary>
     /// <param name="accessLevel">访问等级</param>

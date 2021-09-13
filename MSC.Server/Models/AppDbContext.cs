@@ -13,6 +13,8 @@ public class AppDbContext : IdentityDbContext<UserInfo>
     public DbSet<Submission> Submissions { get; set; } = default!;
     public DbSet<Rank> Ranks { get; set; } = default!;
     public DbSet<Puzzle> Puzzles { get; set; } = default!;
+    public DbSet<Announcement> Announcements { get; set; } = default!;
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

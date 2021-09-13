@@ -25,15 +25,18 @@ public class InfoController : ControllerBase
     private readonly IRankRepository rankRepository;
     private readonly ISubmissionRepository submissionRepository;
     private readonly IMemoryCache cache;
+    private readonly IAnnouncementRepository announcementRepository;
 
     public InfoController(
         IMemoryCache memoryCache,
         ISubmissionRepository _submissionRepository,
+        IAnnouncementRepository _announcementRepository,
         IRankRepository _rankRepository)
     {
         cache = memoryCache;
         rankRepository = _rankRepository;
         submissionRepository = _submissionRepository;
+        announcementRepository = _announcementRepository;
     }
 
     /// <summary>
@@ -74,6 +77,29 @@ public class InfoController : ControllerBase
         LogHelper.SystemLog(logger, "重构缓存：ScoreBoard");
 
         cache.Set(CacheKey.ScoreBoard, result, TimeSpan.FromHours(10));
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// 公告接口
+    /// </summary>
+    /// <remarks>
+    /// 使用此接口获取公告，需要已登录权限
+    /// </remarks>
+    /// <param name="token">操作取消token</param>
+    /// <response code="200">成功获取积分榜</response>
+    /// <response code="401">无权访问</response>
+    [HttpGet]
+    [ProducesResponseType(typeof(List<Announcement>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Announcements(CancellationToken token)
+    {
+        if (!cache.TryGetValue(CacheKey.Announcements, out List<Announcement> result))
+            return Ok(result);
+
+        result = await announcementRepository.GetAnnouncements(0, 3, token);
+
+        cache.Set(CacheKey.Announcements, result, TimeSpan.FromHours(10));
 
         return Ok(result);
     }

@@ -24,12 +24,15 @@ public class AdminController : ControllerBase
     private readonly ILogRepository logRepository;
     private readonly IRankRepository rankRepository;
     private readonly IMemoryCache cache;
+    private readonly IAnnouncementRepository announcementRepository;
 
     public AdminController(ILogRepository _logRepository,
         IMemoryCache memoryCache,
+        IAnnouncementRepository _announcementRepository,
         IRankRepository _rankRepository)
     {
         cache = memoryCache;
+        announcementRepository = _announcementRepository;
         logRepository = _logRepository;
         rankRepository = _rankRepository;
     }
@@ -56,6 +59,9 @@ public class AdminController : ControllerBase
     /// <summary>
     /// 检查用户提交并核对排名分数
     /// </summary>
+    /// <remarks>
+    /// 使用此接口检查用户提交并核对排名分数，需要Admin权限
+    /// </remarks>
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功完成操作</response>
     [HttpGet]
@@ -65,5 +71,60 @@ public class AdminController : ControllerBase
         await rankRepository.CheckRankScore(token);
         cache.Remove(CacheKey.ScoreBoard);
         return Ok();
+    }
+
+    /// <summary>
+    /// 添加或更新公告
+    /// </summary>
+    /// <remarks>
+    /// 使用此接口添加或更新公告，需要Admin权限
+    /// </remarks>
+    /// <param name="Id">公告Id</param>
+    /// <param name="model"></param>
+    /// <param name="token"></param>
+    /// <response code="404">公告未找到</response>
+    /// <response code="404">公告无效</response>
+    /// <response code="200">成功完成操作</response>
+    [HttpPost("Publish/{Id?}")]
+    [ProducesResponseType(typeof(Announcement), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Publish(int? Id, UpdateAnnouncementModel model, CancellationToken token)
+    {
+        Announcement? announcement;
+
+        if (Id is null)
+        {
+            if(model.Title is null || model.Content is null)
+                return BadRequest(new RequestResponse("公告无效"));
+
+            announcement = new()
+            {
+                Title = model.Title,
+                Content = model.Content,
+                IsPinned = model.IsPinned ?? false,
+                PublishTimeUTC = DateTimeOffset.UtcNow
+            };
+        }
+        else
+        {
+            announcement = await announcementRepository.GetAnnouncementById((int)Id, token);
+
+            if (announcement is null)
+                return BadRequest(new RequestResponse("公告未找到", 404));
+
+            announcement.Title = model.Title ?? announcement.Title;
+            announcement.Content = model.Content ?? announcement.Content;
+            announcement.IsPinned = model.IsPinned ?? announcement.IsPinned;
+            announcement.PublishTimeUTC = DateTimeOffset.UtcNow;
+        }
+
+        announcement = await announcementRepository.AddOrUpdateAnnouncement(announcement, token);
+
+        LogHelper.SystemLog(logger, $"成功更新公告#{announcement.Id}");
+
+        cache.Remove(CacheKey.Announcements);
+
+        return Ok(announcement);
     }
 }
