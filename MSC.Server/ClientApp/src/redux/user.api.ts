@@ -63,7 +63,10 @@ export const USER_API = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'api/account' }),
   endpoints: (builder) => ({
     status: builder.query<User, void>({
-      query: () => 'me'
+      query: () => ({
+        url: 'me',
+        method: 'POST'
+      })
     }),
     register: builder.mutation<void, UserRegisterDto>({
       query: (dto) => ({
