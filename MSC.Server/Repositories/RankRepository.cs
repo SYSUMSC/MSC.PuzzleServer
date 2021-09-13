@@ -46,7 +46,9 @@ public class RankRepository : RepositoryBase, IRankRepository
 
     public Task<List<RankMessageModel>> GetRank(CancellationToken token, int skip = 0, int count = 100)
         => (from rank in context.Ranks.OrderByDescending(r => r.Score)
-                .Skip(skip).Take(count).Include(r => r.User).ThenInclude(u => u!.Submissions)
+                .Include(r => r.User).ThenInclude(u => u!.Submissions)
+                .Where(r => r.User!.Privilege == Privilege.User)
+                .Skip(skip).Take(count)
             select new RankMessageModel
             {
                 Score = rank.Score,

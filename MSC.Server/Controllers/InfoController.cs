@@ -81,13 +81,13 @@ public class InfoController : ControllerBase
     }
 
     /// <summary>
-    /// 积分榜接口
+    /// 公告接口
     /// </summary>
     /// <remarks>
-    /// 使用此接口获取积分榜，需要已登录权限
+    /// 使用此接口获取公告，需要已登录权限
     /// </remarks>
     /// <param name="token">操作取消token</param>
-    /// <response code="200">成功获取积分榜</response>
+    /// <response code="200">成功获取公告</response>
     /// <response code="401">无权访问</response>
     [HttpGet]
     [ProducesResponseType(typeof(List<Announcement>), StatusCodes.Status200OK)]
