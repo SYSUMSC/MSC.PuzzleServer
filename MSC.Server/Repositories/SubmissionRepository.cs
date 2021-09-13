@@ -55,7 +55,7 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
 
         foreach (var sub in user.Submissions)
         {
-            if (!puzzleIds.Contains(sub.PuzzleId))
+            if (!puzzleIds.Contains(sub.PuzzleId) && sub.Score != 0)
             {
                 currentScore += sub.Score;
                 result.Add(new TimeLineModel()
