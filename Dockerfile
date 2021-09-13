@@ -19,7 +19,7 @@ WORKDIR "/src/MSC.Server"
 RUN dotnet build "MSC.Server.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "MSC.Server.csproj" -c Release -o /app/publish
+RUN dotnet publish "MSC.Server.csproj" -c Release -o /app/publish -r linux-x64 /p:PublishReadyToRun=true /p:PublishReadyToRunComposite=true /p:PublishTrimmed=true /p:TrimMode=Link
 
 
 RUN apt remove -y --auto-remove wget gnupg2 &&\
