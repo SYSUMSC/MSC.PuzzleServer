@@ -99,6 +99,8 @@ public class InfoController : ControllerBase
 
         result = await announcementRepository.GetAnnouncements(0, 3, token);
 
+        LogHelper.SystemLog(logger, "重构缓存：Announcements");
+
         cache.Set(CacheKey.Announcements, result, TimeSpan.FromHours(10));
 
         return Ok(result);
