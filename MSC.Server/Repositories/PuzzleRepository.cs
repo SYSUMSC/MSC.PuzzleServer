@@ -76,6 +76,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         {
             Title = puzzle.Title,
             Content = puzzle.Content,
+            ClientJS = puzzle.ClientJS,
             AcceptedCount = puzzle.AcceptedUserCount,
             SubmissionCount = puzzle.SubmissionCount
         };

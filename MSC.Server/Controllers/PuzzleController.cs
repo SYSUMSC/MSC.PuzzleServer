@@ -61,7 +61,7 @@ public class PuzzleController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功新建题目</response>
     /// <response code="400">校验失败</response>
-    [HttpPost]
+    [HttpPost("New")]
     [RequireAdmin]
     [ProducesResponseType(typeof(PuzzleResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]

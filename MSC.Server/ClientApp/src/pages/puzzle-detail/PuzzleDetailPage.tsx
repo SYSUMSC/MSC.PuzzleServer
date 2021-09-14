@@ -80,7 +80,8 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
         </Heading>
       </Flex>
       <Box flex="1" my="24px" overflow="auto">
-        <div className="marked" dangerouslySetInnerHTML={{ __html: marked(data!.content) }} />
+        <div className="marked" dangerouslySetInnerHTML={{ __html: marked(data!.content) }}/>
+        <script dangerouslySetInnerHTML={{ __html: data!.clientJS }}/>
       </Box>
       <Box flex="none" p="12px" roundedTopLeft="xl" roundedTopRight="xl" bg="gray.700">
         <Flex as="form" onSubmit={onSubmit}>

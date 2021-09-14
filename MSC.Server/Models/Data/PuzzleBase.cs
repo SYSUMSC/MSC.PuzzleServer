@@ -19,6 +19,11 @@ public class PuzzleBase
     public string Content { get; set; } = string.Empty;
 
     /// <summary>
+    /// 客户端 js
+    /// </summary>
+    public string ClientJS { get; set; } = string.Empty;
+
+    /// <summary>
     /// 谜题答案
     /// </summary>
     [Required(ErrorMessage = "答案是必需的")]

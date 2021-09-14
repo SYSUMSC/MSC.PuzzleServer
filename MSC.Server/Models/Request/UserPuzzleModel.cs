@@ -16,6 +16,11 @@ public class UserPuzzleModel
     public string? Content { get; set; }
 
     /// <summary>
+    /// 客户端脚本
+    /// </summary>
+    public string? ClientJS {  get; set; }
+
+    /// <summary>
     /// 已解出人数
     /// </summary>
     public int AcceptedCount { get; set; }

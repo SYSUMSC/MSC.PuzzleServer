@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export interface PuzzleDto {
   title: string;
   content: string;
+  clientJS: string;
   answer: string;
   accessLevel: number;
   solvedCount: number;
