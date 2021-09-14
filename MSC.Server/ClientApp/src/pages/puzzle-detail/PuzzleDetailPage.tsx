@@ -56,6 +56,20 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
     }
   }, [error]);
 
+  useEffect(() => {
+    if(!isLoading)
+    {
+      let clientjs = document.createElement('script');
+      clientjs.type = 'text/javascript';
+      clientjs.id = 'clientjs';
+      clientjs.text = data?.clientJS ?? "";
+      document.getElementsByClassName('marked').item(0)?.appendChild(clientjs);
+    }
+    return (() => {
+      document.getElementById('clientjs')?.remove();
+    });
+  },[isLoading, data]);
+
   if (Object.is(NaN, id)) {
     return (
       <Center h="100%">
@@ -81,7 +95,6 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
       </Flex>
       <Box flex="1" my="24px" overflow="auto">
         <div className="marked" dangerouslySetInnerHTML={{ __html: marked(data!.content) }}/>
-        <script dangerouslySetInnerHTML={{ __html: data!.clientJS }}/>
       </Box>
       <Box flex="none" p="12px" roundedTopLeft="xl" roundedTopRight="xl" bg="gray.700">
         <Flex as="form" onSubmit={onSubmit}>
