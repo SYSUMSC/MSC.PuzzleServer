@@ -53,7 +53,7 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
                 正确率
               </Text>
               <Text fontFamily="mono" textAlign="right">
-                {((acceptedCount / submissionCount) * 100).toFixed(1) || 0}%
+                {(submissionCount && ((acceptedCount / submissionCount) * 100).toFixed(1)) || 0}%
               </Text>
             </VStack>
             <VStack spacing="0" align="sketch">
