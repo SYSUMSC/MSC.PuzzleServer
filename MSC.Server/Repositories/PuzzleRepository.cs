@@ -99,7 +99,7 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
         return puzzle;
     }
 
-    public async Task<VerifyResult> VerifyAnswer(int id, string? answer, int accessLevel, bool hasSolved, CancellationToken token)
+    public async Task<VerifyResult> VerifyAnswer(int id, string? answer, UserInfo user, bool hasSolved, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(answer))
         {
@@ -115,18 +115,21 @@ public class PuzzleRepository : RepositoryBase, IPuzzleRepository
             return new VerifyResult(AnswerResult.Unauthorized);
         }
 
-        if(puzzle.AccessLevel > accessLevel)
+        if(puzzle.AccessLevel > user.AccessLevel)
         {
             LogHelper.SystemLog(logger, $"未授权的题目访问#{id}", TaskStatus.Denied);
             return new VerifyResult(AnswerResult.Unauthorized);
         }
 
-        ++puzzle.SubmissionCount;
-
         bool check = string.Equals(puzzle.Answer, answer);
 
         var result = check ? new VerifyResult(AnswerResult.Accepted, puzzle.CurrentScore, puzzle.UpgradeAccessLevel)
                 : new VerifyResult(AnswerResult.WrongAnswer);
+
+        if (user.Privilege != Privilege.User)
+            return result;
+
+        ++puzzle.SubmissionCount;
 
         if (check)
         {

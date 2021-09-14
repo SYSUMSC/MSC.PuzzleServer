@@ -45,11 +45,11 @@ public interface IPuzzleRepository
     /// </summary>
     /// <param name="id">题目Id</param>
     /// <param name="answer">答案</param>
-    /// <param name="accessLevel">用户访问权限</param>
+    /// <param name="user">用户对象</param>
     /// <param name="hasSolved">是否已经有过成功的提交</param>
     /// <param name="token">操作取消token</param>
     /// <returns></returns>
-    public Task<VerifyResult> VerifyAnswer(int id, string? answer, int accessLevel, bool hasSolved, CancellationToken token);
+    public Task<VerifyResult> VerifyAnswer(int id, string? answer, UserInfo user, bool hasSolved, CancellationToken token);
 
     /// <summary>
     /// 获取可访问题目列表

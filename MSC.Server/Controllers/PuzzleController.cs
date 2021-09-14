@@ -229,7 +229,7 @@ public class PuzzleController : ControllerBase
 
         var hasSolved = await submissionRepository.HasSubmitted(id, user.Id, token);
 
-        var result = await puzzleRepository.VerifyAnswer(id, model.Answer, user.AccessLevel, hasSolved, token);
+        var result = await puzzleRepository.VerifyAnswer(id, model.Answer, user, hasSolved, token);
 
         Submission sub = new()
         {
@@ -250,8 +250,9 @@ public class PuzzleController : ControllerBase
             return Unauthorized(new RequestResponse("无权访问或题目无效", 401));
         }
 
-        for (int i = 0; i <= MAX_ACCESS_LEVEL; ++i)
-            cache.Remove(CacheKey.AccessiblePuzzles(i));
+        if(user.Privilege == Privilege.User)
+            for (int i = 0; i <= MAX_ACCESS_LEVEL; ++i)
+                cache.Remove(CacheKey.AccessiblePuzzles(i));
 
         if (result.Result == AnswerResult.WrongAnswer)
         {
