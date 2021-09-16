@@ -1,13 +1,13 @@
 import { ChakraProvider, extendTheme, withDefaultColorScheme } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { App } from './App';
 import { store } from './redux/store';
+import * as PromisePolyfill from 'es6-promise';
 
-const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') || undefined;
-const rootElement = document.getElementById('root');
 const theme = extendTheme(
   {
     config: {
@@ -48,13 +48,32 @@ const theme = extendTheme(
   withDefaultColorScheme({ colorScheme: 'brand' })
 );
 
-ReactDOM.render(
-  <BrowserRouter basename={baseUrl}>
-    <ChakraProvider theme={theme}>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </ChakraProvider>
-  </BrowserRouter>,
-  rootElement
-);
+PromisePolyfill.polyfill();
+
+let Global = global as any;
+Global.ReactDOM = ReactDOM;
+Global.React = React;
+Global.ReactDOMServer = ReactDOMServer;
+Global.AppComponent = (props: any) => <StaticRouter basename='/'>
+  <ChakraProvider theme={theme}>
+    <Provider store={store}>
+      <App {...props} />
+    </Provider>
+  </ChakraProvider>
+</StaticRouter>;
+
+if (typeof window !== 'undefined') {
+  const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') || undefined;
+  const rootElement = document.getElementById('root');
+
+  ReactDOM.render(
+    <BrowserRouter basename={baseUrl}>
+      <ChakraProvider theme={theme}>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </ChakraProvider>
+    </BrowserRouter>,
+    rootElement
+  );
+}

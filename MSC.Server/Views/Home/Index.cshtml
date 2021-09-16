@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "主页";
+}
+<environment exclude="Development">
+    @Html.ReactRouter("AppComponent", new { });
+    @section Scripts {
+        @Html.ReactInitJavaScript()
+    }
+</environment>
