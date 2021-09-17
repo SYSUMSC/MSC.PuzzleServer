@@ -60,13 +60,15 @@ export interface UserConfirmChangingEmailDto {
 
 export const USER_API = createApi({
   reducerPath: 'userApi',
+  tagTypes: ['User'],
   baseQuery: fetchBaseQuery({ baseUrl: 'api/account' }),
   endpoints: (builder) => ({
     status: builder.query<User, void>({
       query: () => ({
         url: 'me',
         method: 'POST'
-      })
+      }),
+      providesTags: ['User'],
     }),
     register: builder.mutation<void, UserRegisterDto>({
       query: (dto) => ({
@@ -107,14 +109,16 @@ export const USER_API = createApi({
       query: () => ({
         url: 'logout',
         method: 'POST'
-      })
+      }),
+      invalidatesTags: ['User']
     }),
     updateInfo: builder.mutation<void, UserUpdateInfoDto>({
       query: (dto) => ({
         url: 'update',
         method: 'PUT',
         body: dto
-      })
+      }),
+      invalidatesTags: ['User']
     }),
     changePassword: builder.mutation<void, UserChangePasswordDto>({
       query: (dto) => ({
