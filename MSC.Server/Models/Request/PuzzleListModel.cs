@@ -39,4 +39,9 @@ public class PuzzleItem
     /// 提交的人数
     /// </summary>
     public int SubmissionCount { get; set; } = 0;
+
+    /// <summary>
+    /// 当前分数
+    /// </summary>
+    public int Score { get; set; } = 0;
 }

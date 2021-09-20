@@ -1,7 +1,7 @@
 const createProxyMiddleware = require('http-proxy-middleware');
 const { env } = require('process');
 
-const target = env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://puzzle.sysums.club';
+const target = env.NODE_ENV == 'development' ? 'http://localhost:5000' : 'https://puzzle.sysums.club';
 
 const httpEndpoints = ['/api', '/swagger'];
 const wsEndpoints = ['/hub'];

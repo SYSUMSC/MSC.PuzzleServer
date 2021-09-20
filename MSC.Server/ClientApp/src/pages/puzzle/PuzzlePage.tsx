@@ -21,6 +21,7 @@ interface PuzzleCardProps {
   isSolved: boolean;
   acceptedCount: number;
   submissionCount: number;
+  score: number;
   title: string;
 }
 
@@ -29,6 +30,7 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
   isSolved,
   acceptedCount,
   submissionCount,
+  score,
   title
 }) => (
   <Link to={`puzzle/${id}`}>
@@ -43,8 +45,11 @@ const PuzzleCard: FC<PuzzleCardProps> = ({
     >
       <Box w="100%" h="4px" bg={isSolved ? 'green.400' : 'gray.400'} />
       <VStack px="18px" py="12px" align="sketch" spacing="0">
-        <Text isTruncated noOfLines={1} fontWeight="bold" mb="24px">
+        <Text isTruncated noOfLines={1} fontWeight="bold">
           {title}
+        </Text>
+        <Text py="10px" align="center" color="brand.300" fontFamily="mono" my="16px" fontSize="xl">
+          {score}&nbsp;pt
         </Text>
         <Flex justifyContent="space-between" alignItems="flex-end">
           <HStack spacing="12px">
@@ -90,6 +95,7 @@ export const PuzzlePage: FC = () => {
       title: item.title,
       acceptedCount: item.acceptedCount,
       submissionCount: item.submissionCount,
+      score: item.score,
       isSolved: data.solved.includes(item.id)
     }));
   }, [data]);

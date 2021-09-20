@@ -21,6 +21,7 @@ export interface PuzzleList {
     title: string;
     acceptedCount: number;
     submissionCount: number;
+    score: number;
   }[];
 }
 
