@@ -62,7 +62,7 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
       let clientjs = document.createElement('script');
       clientjs.type = 'text/javascript';
       clientjs.id = 'clientjs';
-      clientjs.text = data?.clientJS ?? "";
+      clientjs.text = window.atob(data?.clientJS ?? "");
       document.getElementsByClassName('marked').item(0)?.appendChild(clientjs);
     }
     return (() => {
