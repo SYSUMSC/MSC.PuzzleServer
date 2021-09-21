@@ -8,7 +8,7 @@ export const WithNavBar: FC = ({ children }) => {
       <Box maxH="100vh" minH="100vh" flex="none" mx="24px" boxShadow="2xl">
         <NavBar />
       </Box>
-      <Box maxH="100vh" minH="100vh" flex="1" overflow="scroll">
+      <Box maxH="100vh" minH="100vh" flex="1" overflowY="scroll">
         {children}
       </Box>
     </Flex>

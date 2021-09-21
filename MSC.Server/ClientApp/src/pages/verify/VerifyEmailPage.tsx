@@ -3,7 +3,7 @@ import { USER_API } from '../../redux/user.api';
 import { Redirect } from 'react-router';
 import { useQueryParams } from '../../common/hooks/use-query-params';
 import { LoadingMask } from '../../common/components/LoadingMask';
-import { Box, VStack, Heading } from '@chakra-ui/react';
+import { Box, VStack, Heading, Center } from '@chakra-ui/react';
 
 export const VerifyEmailPage: FC = () => {
   const [verify, { isLoading, error, isSuccess }] = USER_API.useVerifyEmailMutation();
@@ -47,11 +47,13 @@ export const VerifyEmailPage: FC = () => {
   }
 
   return (
-    <Box h="100vh" w="100vw">
+    <Center h="100vh" w="100vw">
       <VStack>
         <Heading size="2xl">验证成功</Heading>
-        <Heading size="lg" pt="1em">即将跳转至登陆页</Heading>
+        <Heading size="lg" pt="1em">
+          即将跳转至登陆页
+        </Heading>
       </VStack>
-    </Box>
+    </Center>
   );
 };
