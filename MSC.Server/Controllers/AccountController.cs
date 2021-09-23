@@ -352,7 +352,8 @@ public class AccountController : ControllerBase
     /// <param name="model"></param>
     /// <response code="200">用户成功更改邮箱</response>
     /// <response code="400">校验失败或无效邮箱</response>
-    /// <response code="401">无权访问</response>
+    /// <response code="401">未授权用户</response>
+    /// <response code="403">无权访问</response>
     [HttpPost]
     [RequireSignedIn]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -384,7 +385,7 @@ public class AccountController : ControllerBase
     /// 使用此接口获取用户信息，需要SignedIn权限
     /// </remarks>
     /// <response code="200">用户成功获取信息</response>
-    /// <response code="401">无权访问</response>
+    /// <response code="401">未授权用户</response>
     [HttpPost]
     [RequireSignedIn]
     [ProducesResponseType(typeof(ClientUserInfoModel), StatusCodes.Status200OK)]

@@ -19,6 +19,7 @@ namespace MSC.Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
+[ProducesResponseType(typeof(RequestResponse), StatusCodes.Status403Forbidden)]
 [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
 public class PuzzleController : ControllerBase
 {
@@ -61,6 +62,8 @@ public class PuzzleController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功新建题目</response>
     /// <response code="400">校验失败</response>
+    /// <response code="401">未授权用户</response>
+    /// <response code="403">无权访问</response>
     [HttpPost("New")]
     [RequireAdmin]
     [ProducesResponseType(typeof(PuzzleResponse), StatusCodes.Status200OK)]
@@ -91,6 +94,8 @@ public class PuzzleController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功更新题目</response>
     /// <response code="400">校验失败</response>
+    /// <response code="401">未授权用户</response>
+    /// <response code="403">无权访问</response>
     [HttpPut("{id:int}")]
     [RequireAdmin]
     [ProducesResponseType(typeof(PuzzleResponse), StatusCodes.Status200OK)]
@@ -119,11 +124,14 @@ public class PuzzleController : ControllerBase
     /// <param name="id">题目Id</param>
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功获取题目</response>
-    /// <response code="401">无权访问或题目无效</response>
+    /// <response code="401">题目无效</response>
+    /// <response code="403">无权访问</response>
     [HttpGet("{id:int}")]
+    [TimeCheck]
     [RequireSignedIn]
     [ProducesResponseType(typeof(UserPuzzleModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Get(int id, CancellationToken token)
     {
         var user = await userManager.GetUserAsync(User);
@@ -148,6 +156,8 @@ public class PuzzleController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">成功删除题目</response>
     /// <response code="400">题目删除失败</response>
+    /// <response code="401">未授权用户</response>
+    /// <response code="403">无权访问</response>
     [HttpDelete("{id:int}")]
     [RequireAdmin]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -179,11 +189,12 @@ public class PuzzleController : ControllerBase
     /// </remarks>
     /// <param name="token">操作取消token</param>
     /// <response code="200">答案正确</response>
-    /// <response code="401">无权访问</response>
+    /// <response code="401">未授权用户</response>
+    /// <response code="403">无权访问</response>
     [HttpGet("List")]
+    [TimeCheck]
     [RequireSignedIn]
     [ProducesResponseType(typeof(PuzzleListModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetPuzzleList(CancellationToken token)
     {
         var user = await userManager.GetUserAsync(User);
@@ -216,12 +227,13 @@ public class PuzzleController : ControllerBase
     /// <param name="token">操作取消token</param>
     /// <response code="200">答案正确</response>
     /// <response code="400">答案错误</response>
-    /// <response code="401">无权访问或题目无效</response>
+    /// <response code="401">未授权用户</response>
+    /// <response code="403">无权访问</response>
     [HttpPost("Submit/{id:int}")]
+    [TimeCheck]
     [RequireSignedIn]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Submit(int id, [FromBody] AnswerSubmitModel model, CancellationToken token)
     {
         var user = await userManager.Users.Include(u => u.Rank)

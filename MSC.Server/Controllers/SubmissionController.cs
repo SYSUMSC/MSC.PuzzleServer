@@ -16,6 +16,7 @@ namespace MSC.Server.Controllers;
 [Route("api/[controller]/[action]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(RequestResponse), StatusCodes.Status403Forbidden)]
 public class SubmissionController : ControllerBase
 {
     private static readonly Logger logger = LogManager.GetLogger("SubmissionController");

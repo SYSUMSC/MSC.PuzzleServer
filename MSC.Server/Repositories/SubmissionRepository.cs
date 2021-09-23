@@ -10,8 +10,11 @@ namespace MSC.Server.Repositories;
 public class SubmissionRepository : RepositoryBase, ISubmissionRepository
 {
     private static readonly Logger logger = LogManager.GetLogger("SubmissionRepository");
-    public SubmissionRepository(AppDbContext context) : base(context)
+    private readonly IConfiguration configuration;
+
+    public SubmissionRepository(AppDbContext context, IConfiguration config) : base(context)
     {
+        configuration = config;
     }
 
     public async Task AddSubmission(Submission sub, CancellationToken token)
@@ -46,9 +49,11 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
         HashSet<int> puzzleIds = new();
         List<TimeLineModel> result = new();
 
+        var success = DateTimeOffset.TryParse(configuration["StartTime"], out DateTimeOffset start);
+
         result.Add(new TimeLineModel
         {
-            Time = user.RegisterTimeUTC,
+            Time = (success && start > user.RegisterTimeUTC) ? start : user.RegisterTimeUTC,
             TotalScore = 0,
             PuzzleId = -1,
         });
