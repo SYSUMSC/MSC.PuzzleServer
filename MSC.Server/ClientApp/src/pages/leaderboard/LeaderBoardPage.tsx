@@ -56,7 +56,7 @@ export const LeaderBoardPage: FC = () => {
   }
 
   if (data!.rank.length <= 0) {
-    return <Center>暂无数据</Center>;
+    return <LoadingMask message='暂无数据'/>;
   }
 
   return (
