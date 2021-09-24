@@ -66,7 +66,7 @@ export const LeaderBoardPage: FC = () => {
   }
 
   return (
-    <Container minH="100vh" p="24px" maxWidth="80ch">
+    <Container minH="100vh" p="24px" maxWidth="90ch">
       <Center mb="5px">
         <Heading size="md">前十名分数变化</Heading>
       </Center>
@@ -90,6 +90,7 @@ export const LeaderBoardPage: FC = () => {
             axisLabel: {
               formatter: '{value} 分'
             },
+            max: (value) => {return (Math.floor(value.max/1000) + 1) * 1000;},
             splitLine: {
               show: true,
               lineStyle: {
@@ -118,17 +119,33 @@ export const LeaderBoardPage: FC = () => {
           grid: {
             y: 50,
             y2: 140,
+            x2: 90
           },
           dataZoom: [
             {
               type: 'inside',
               start: 0,
               end: 100,
+              xAxisIndex: 0,
               filterMode: 'none'
             },
             {
               start: 0,
               end: 100,
+              xAxisIndex: 0,
+              showDetail: false
+            },
+            {
+              type: 'inside',
+              start: 0,
+              end: 100,
+              yAxisIndex: 0,
+              filterMode: 'none'
+            },
+            {
+              start: 0,
+              end: 100,
+              yAxisIndex: 0,
               showDetail: false
             }
           ],
@@ -169,7 +186,7 @@ export const LeaderBoardPage: FC = () => {
                 </HStack>
               </Td>
               <Td p="2px">
-                <Text maxWidth="24em" isTruncated>
+                <Text maxWidth="20em" isTruncated>
                   {item.descr}
                 </Text>
               </Td>
