@@ -142,7 +142,7 @@ export const LeaderBoardPage: FC = () => {
             <Th>
               <Text textAlign="right">分数</Text>
             </Th>
-            <Th>
+            <Th minW='140px'>
               <Text textAlign="right">更新时间</Text>
             </Th>
           </Tr>
