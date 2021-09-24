@@ -52,7 +52,7 @@ public class MailSender : IMailSender
 
             isSuccess = true;
 
-            LogHelper.SystemLog(logger, "发送邮件：" + sendMailAddress, TaskStatus.Success, NLog.LogLevel.Info);
+            LogHelper.SystemLog(logger, "发送邮件：" + to, TaskStatus.Success, NLog.LogLevel.Info);
         }
         catch (Exception e)
         {
