@@ -165,6 +165,9 @@ public class AccountController : ControllerBase
         if (user is null)
             return BadRequest(new RequestResponse("无效的邮件地址"));
 
+        if (user.EmailConfirmed)
+            return Ok();
+
         var result = await userManager.ConfirmEmailAsync(user, Codec.Base64.Decode(model.Token));
 
         if (!result.Succeeded)
