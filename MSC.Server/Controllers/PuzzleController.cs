@@ -268,7 +268,7 @@ public class PuzzleController : ControllerBase
 
         if (result.Result == AnswerResult.WrongAnswer)
         {
-            LogHelper.Log(logger, "答案错误：" + model.Answer, user, TaskStatus.Fail);
+            LogHelper.Log(logger, $"#{id} 答案错误：{model.Answer}", user, TaskStatus.Fail);
             return BadRequest(new RequestResponse("答案错误"));
         }
 

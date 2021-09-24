@@ -56,7 +56,8 @@ public class RankRepository : RepositoryBase, IRankRepository
                 UserName = rank.User!.UserName,
                 Descr = rank.User.Description,
                 UserId = rank.UserId,
-                User = rank.User
+                User = rank.User,
+                IsSYSU = rank.User!.IsSYSU
             }).ToListAsync(token);
 
     public async Task UpdateRank(Rank rank, int score, CancellationToken token)

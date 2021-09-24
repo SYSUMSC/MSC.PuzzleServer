@@ -2,13 +2,15 @@ import {
   Center,
   Container,
   Heading,
+  HStack,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
-  Text
+  Text,
+  Box
 } from '@chakra-ui/react';
 import React, { FC, useEffect, useMemo } from 'react';
 import { LoadingMask } from '../../common/components/LoadingMask';
@@ -16,6 +18,7 @@ import { INFO_API } from '../../redux/info.api';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { LineChart } from 'echarts/charts';
+import { SYSUIcon } from '../../common/components/SYSUIcon';
 import { LegendComponent, DataZoomComponent } from 'echarts/components';
 import { GridComponent, TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -56,7 +59,7 @@ export const LeaderBoardPage: FC = () => {
   }
 
   if (data!.rank.length <= 0) {
-    return <LoadingMask message='暂无数据'/>;
+    return <LoadingMask message="暂无数据" />;
   }
 
   return (
@@ -148,7 +151,14 @@ export const LeaderBoardPage: FC = () => {
           {data?.rank.map((item) => (
             <Tr key={item.name + item.descr} fontSize="sm">
               <Td>
-                <Text>{item.name}</Text>
+                <HStack>
+                  {item.isSYSU && (
+                    <Center h="18px" w="18px" color="brand.100">
+                      <SYSUIcon width="18px" height="18px"/>
+                    </Center>
+                  )}
+                  <Text>{item.name}</Text>
+                </HStack>
               </Td>
               <Td p="2px">
                 <Text maxWidth="24em" isTruncated>

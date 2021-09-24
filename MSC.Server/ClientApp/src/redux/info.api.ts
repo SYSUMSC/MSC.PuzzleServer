@@ -7,6 +7,7 @@ export interface PuzzleScoreBoard {
     time: string;
     name: string;
     descr: string;
+    isSYSU: boolean;
   }[];
   topDetail: {
     userName: string;

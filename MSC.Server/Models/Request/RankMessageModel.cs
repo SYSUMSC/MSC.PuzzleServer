@@ -32,6 +32,12 @@ public class RankMessageModel
     public string? Descr { get; set; }
 
     /// <summary>
+    /// 是否为中大认证
+    /// </summary>
+    [JsonPropertyName("isSYSU")]
+    public bool IsSYSU { get; set; } = false;
+
+    /// <summary>
     /// 用户Id
     /// </summary>
     [JsonIgnore]
