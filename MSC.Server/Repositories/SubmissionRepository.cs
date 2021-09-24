@@ -58,7 +58,7 @@ public class SubmissionRepository : RepositoryBase, ISubmissionRepository
             PuzzleId = -1,
         });
 
-        foreach (var sub in user.Submissions)
+        foreach (var sub in user.Submissions.OrderBy(s => s.SubmitTimeUTC))
         {
             if (!puzzleIds.Contains(sub.PuzzleId) && sub.Score != 0)
             {
