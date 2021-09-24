@@ -22,9 +22,13 @@ import { LegendComponent, DataZoomComponent } from 'echarts/components';
 import { GridComponent, TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 
+function formatNumber(num: number) {
+  return num < 10 ? '0' + num : num;
+}
+
 function formatTime(time: string) {
   const date = new Date(time);
-  return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+  return `${formatNumber(date.getMonth() + 1)}/${formatNumber(date.getDate())} ${formatNumber(date.getHours())}:${formatNumber(date.getMinutes())}`;
 }
 
 export const LeaderBoardPage: FC = () => {
