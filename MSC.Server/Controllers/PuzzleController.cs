@@ -203,7 +203,7 @@ public class PuzzleController : ControllerBase
         if (!cache.TryGetValue(CacheKey.AccessiblePuzzles(accessLevel), out List<PuzzleItem> accessible))
         {
             accessible = await puzzleRepository.GetAccessiblePuzzles(accessLevel, token);
-            LogHelper.SystemLog(logger, $"重构缓存：AccessiblePuzzles#{accessLevel}");
+            // LogHelper.SystemLog(logger, $"重构缓存：AccessiblePuzzles#{accessLevel}");
             cache.Set(CacheKey.AccessiblePuzzles(accessLevel), accessible, TimeSpan.FromMinutes(10));
         }
 

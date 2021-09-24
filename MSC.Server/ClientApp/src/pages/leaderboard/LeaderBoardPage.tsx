@@ -9,8 +9,7 @@ import {
   Th,
   Thead,
   Tr,
-  Text,
-  Box
+  Text
 } from '@chakra-ui/react';
 import React, { FC, useEffect, useMemo } from 'react';
 import { LoadingMask } from '../../common/components/LoadingMask';
@@ -64,13 +63,13 @@ export const LeaderBoardPage: FC = () => {
 
   return (
     <Container minH="100vh" p="24px" maxWidth="80ch">
-      <Center mb="24px">
+      <Center mb="5px">
         <Heading size="md">前十名分数变化</Heading>
       </Center>
       <ReactEChartsCore
         echarts={echarts}
         style={{
-          height: 400
+          height: 460
         }}
         option={{
           xAxis: {
@@ -104,12 +103,17 @@ export const LeaderBoardPage: FC = () => {
             backgroundColor: '#414141'
           },
           legend: {
-            orient: 'horizontal',
-            top: 'top',
+            orient: 'vertical',
+            bottom: 60,
+            height: '40px',
             textStyle: {
-              fontSize: 12,
+              fontSize: 10,
               color: '#ffffffeb'
             }
+          },
+          grid: {
+            y: 50,
+            y2: 140,
           },
           dataZoom: [
             {
