@@ -134,7 +134,7 @@ export const USER_API = createApi({
         body: dto
       })
     }),
-    confirmChangingEmail: builder.query<void, UserConfirmChangingEmailDto>({
+    confirmChangingEmail: builder.mutation<void, UserConfirmChangingEmailDto>({
       query: (dto) => ({
         url: 'mailchangeconfirm',
         method: 'POST',

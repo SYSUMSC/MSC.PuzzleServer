@@ -14,6 +14,7 @@ import { VerifyEmailPage } from './pages/verify/VerifyEmailPage';
 import { AccountManagePage } from './pages/account-manage/AccountManagePage';
 import { ChangeInfoPage } from './pages/change-info/ChangeInfoPage';
 import { LogsPage } from './pages/logs/LogsPage';
+import { EmailConfirmPage } from './pages/email-confirm/EmailConfirmPage';
 
 export const App: FC = () => {
   return (
@@ -29,6 +30,9 @@ export const App: FC = () => {
         </Route>
         <Route path="/verify">
           <VerifyEmailPage />
+        </Route>
+        <Route path="/confirm">
+          <EmailConfirmPage />
         </Route>
         <AuthRoute path="/account-manage">
           <WithNavBar>
