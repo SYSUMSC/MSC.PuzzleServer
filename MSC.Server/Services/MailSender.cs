@@ -51,6 +51,8 @@ public class MailSender : IMailSender
             await smtp.SendMailAsync(msg);
 
             isSuccess = true;
+
+            LogHelper.SystemLog(logger, "发送邮件：" + sendMailAddress, TaskStatus.Success, NLog.LogLevel.Info);
         }
         catch (Exception e)
         {
