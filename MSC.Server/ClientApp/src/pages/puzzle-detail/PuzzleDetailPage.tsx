@@ -43,8 +43,9 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
         title: '回答正确',
         description: '恭喜你找到了这道谜题的答案！',
         status: 'success',
-        duration: 5000
+        duration: 3000
       });
+      setTimeout(() => {window.location.href = '/puzzle'}, 3000);
     }
   }, [isAnswerSuccess, toast]);
 
