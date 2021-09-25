@@ -18,6 +18,7 @@ import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { SYSUIcon } from '../../common/components/SYSUIcon';
+import { Top1Icon, Top2Icon, Top3Icon } from '../../common/components/TopIcon';
 import { LegendComponent, DataZoomComponent } from 'echarts/components';
 import { GridComponent, TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -66,7 +67,7 @@ export const LeaderBoardPage: FC = () => {
   }
 
   return (
-    <Container minH="100vh" p="24px" maxWidth="90ch">
+    <Container minH="100vh" p="24px" maxWidth="95ch">
       <Center mb="5px">
         <Heading size="md">前十名分数变化</Heading>
       </Center>
@@ -159,6 +160,9 @@ export const LeaderBoardPage: FC = () => {
         <Thead>
           <Tr>
             <Th>
+              <Text textAlign="left">排名</Text>
+            </Th>
+            <Th>
               <Text textAlign="left">名称</Text>
             </Th>
             <Th>
@@ -173,8 +177,18 @@ export const LeaderBoardPage: FC = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {data?.rank.map((item) => (
-            <Tr key={item.name + item.descr} fontSize="sm">
+          {data?.rank.map((item, idx) => (
+            <Tr key={item.name + idx} fontSize="sm">
+              <Td>
+                <Center h="20px" w="20px" color={
+                  idx === 0 ? "brand.100" : idx === 1 ? "brand.200" : idx === 2 ? "brand.300" : "gray.100"
+                }>
+                  {idx === 0 && <Top1Icon width="20px" height="20px" />}
+                  {idx === 1 && <Top2Icon width="20px" height="20px" />}
+                  {idx === 2 && <Top3Icon width="20px" height="20px" />}
+                  {idx >= 3 && <Text fontFamily="mono" fontSize="1.2em">{idx + 1}</Text>}
+                </Center>
+              </Td>
               <Td>
                 <HStack>
                   {item.isSYSU && (
