@@ -50,10 +50,8 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
   }, [isAnswerSuccess, toast]);
 
   useEffect(() => {
-    if (error?.['title'].includes('无权')) {
-      setTimeout(() => {
-        window.location.href = '/puzzle';
-      }, 2000);
+    if (error && error['data']['title'].includes('无权')) {
+      window.location.href = '/404';
     }
   }, [error]);
 

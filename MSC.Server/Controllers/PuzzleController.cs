@@ -140,7 +140,10 @@ public class PuzzleController : ControllerBase
         if (puzzle is null)
         {
             LogHelper.Log(logger, $"试图获取未授权题目#{id}", user, TaskStatus.Denied);
-            return Unauthorized(new RequestResponse("无权访问或题目无效"));
+            return new JsonResult(new RequestResponse("无权访问或题目无效", 403))
+            {
+                StatusCode = 403
+            };
         }
 
         return Ok(puzzle);
