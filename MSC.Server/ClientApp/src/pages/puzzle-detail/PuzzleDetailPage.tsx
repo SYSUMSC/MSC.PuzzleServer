@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import React, { FC, FormEvent, useCallback, useEffect, useState } from 'react';
 import { LoadingMask } from 'src/common/components/LoadingMask';
-import { resolveMessageForPuzzle } from 'src/common/utils';
+import { resolveMessageForRateLimit } from 'src/common/utils';
 import { PUZZLE_API } from 'src/redux/puzzle.api';
 import marked from 'marked';
 import '../../common/utils/marked.css';
@@ -110,7 +110,7 @@ export const PuzzleDetailPage: FC<PuzzleDetailPageProps> = ({ id }) => {
             disabled={!answer || isAnswering}
             isLoading={isAnswering}
           >
-            {answerError && resolveMessageForPuzzle(answerError)}
+            {answerError && resolveMessageForRateLimit(answerError)}
             {!answerError && '提交'}
           </Button>
         </Flex>

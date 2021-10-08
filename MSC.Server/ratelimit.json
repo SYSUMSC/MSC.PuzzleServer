@@ -12,6 +12,11 @@
         "Limit": 3
       },
       {
+        "Endpoint": "*:/api/account/register",
+        "Period": "150s",
+        "Limit": 1
+      },
+      {
         "Endpoint": "*:/api/*",
         "Period": "30s",
         "Limit": 120

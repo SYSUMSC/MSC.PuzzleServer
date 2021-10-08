@@ -16,7 +16,7 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react';
-import { or, resolveMessage } from '../../common/utils';
+import { or, resolveMessageForRateLimit } from '../../common/utils';
 import React, { FC, FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { LogoIcon } from '../../common/components/LogoIcon';
 import { useQueryParams } from '../../common/hooks/use-query-params';
@@ -85,7 +85,7 @@ export const LoginPage: FC = () => {
     if (isRegisterSuccess) {
       toast({
         title: '注册成功',
-        description: '你的邮箱将会收到一封验证邮件，请跟随邮件内容指示操作',
+        description: '你的邮箱将会收到一封验证邮件，如未收到请查看垃圾邮件',
         status: 'success',
         duration: 10000
       });
@@ -166,7 +166,7 @@ export const LoginPage: FC = () => {
                   }
                 />
                 {registerError && (
-                  <FormErrorMessage>{resolveMessage(registerError)}</FormErrorMessage>
+                  <FormErrorMessage>{resolveMessageForRateLimit(registerError)}</FormErrorMessage>
                 )}
               </FormControl>
               <Flex mt="24px">
@@ -201,7 +201,7 @@ export const LoginPage: FC = () => {
                   value={loginDto.password}
                   onChange={(event) => setLoginDto({ ...loginDto, password: event.target.value })}
                 />
-                {loginError && <FormErrorMessage>{resolveMessage(loginError)}</FormErrorMessage>}
+                {loginError && <FormErrorMessage>{resolveMessageForRateLimit(loginError)}</FormErrorMessage>}
               </FormControl>
               <Flex mt="24px">
                 <Button variant="link" onClick={onOpen}>

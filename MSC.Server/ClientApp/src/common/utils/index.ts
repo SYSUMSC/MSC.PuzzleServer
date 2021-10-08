@@ -9,6 +9,6 @@ export function resolveMessage(error: FetchBaseQueryError | SerializedError) {
   return (error as any).data?.title || (error as any).message || '未知错误';
 }
 
-export function resolveMessageForPuzzle(error: FetchBaseQueryError | SerializedError) {
+export function resolveMessageForRateLimit(error: FetchBaseQueryError | SerializedError) {
   return (error as any).data?.title || (error as any).message || '过于频繁';
 }
