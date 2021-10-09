@@ -14,7 +14,7 @@
       {
         "Endpoint": "*:/api/account/register",
         "Period": "150s",
-        "Limit": 1
+        "Limit": 10
       },
       {
         "Endpoint": "*:/api/*",
