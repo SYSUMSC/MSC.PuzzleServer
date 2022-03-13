@@ -56,7 +56,7 @@ LogManager.Configuration.Variables["connectionString"] = builder.Configuration.G
 #region AppDbContext
 
 builder.Services.AddDbContext<AppDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
     provideropt => provideropt.EnableRetryOnFailure(3, TimeSpan.FromSeconds(10), null)));
 
 #endregion
@@ -154,6 +154,11 @@ builder.Services.AddControllersWithViews().ConfigureApiBehaviorOptions(options =
 });
 
 var app = builder.Build();
+
+using(var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.CreateScope())
+{
+    serviceScope?.ServiceProvider.GetService<AppDbContext>()?.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {
