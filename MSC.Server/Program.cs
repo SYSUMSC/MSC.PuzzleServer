@@ -55,6 +55,10 @@ LogManager.Configuration.Variables["connectionString"] = builder.Configuration.G
 
 #region AppDbContext
 
+builder.Services.AddDbContext<AppDbContextSource>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("SourceConnection"),
+    provideropt => provideropt.EnableRetryOnFailure(3, TimeSpan.FromSeconds(10), null)));
+
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
     provideropt => provideropt.EnableRetryOnFailure(3, TimeSpan.FromSeconds(10), null)));
@@ -155,9 +159,37 @@ builder.Services.AddControllersWithViews().ConfigureApiBehaviorOptions(options =
 
 var app = builder.Build();
 
-using(var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.CreateScope())
+var logger = LogManager.GetLogger("Main");
+
+using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
-    serviceScope?.ServiceProvider.GetService<AppDbContext>()?.Database.Migrate();
+    var target = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    var source = serviceScope.ServiceProvider.GetRequiredService<AppDbContextSource>();
+
+    var a = await source.Puzzles.ToArrayAsync();
+    LogHelper.SystemLog(logger, $"{a.Length} puzzles loaded");
+    await target.AddRangeAsync(a);
+    
+    var b = await source.Ranks.ToArrayAsync();
+    LogHelper.SystemLog(logger, $"{b.Length} ranks loaded");
+    await target.AddRangeAsync(b);
+    
+    var c = await source.Submissions.ToArrayAsync();
+    LogHelper.SystemLog(logger, $"{c.Length} submissions loaded");
+    await target.AddRangeAsync(c);
+    
+    var d = await source.Announcements.ToArrayAsync();
+    LogHelper.SystemLog(logger, $"{d.Length} announcements loaded");
+    await target.AddRangeAsync(d);
+    
+    var e = await source.Users.ToArrayAsync();
+    LogHelper.SystemLog(logger, $"{e.Length} users loaded");
+    await target.AddRangeAsync(e);
+
+    await target.SaveChangesAsync();
+
+    LogHelper.SystemLog(logger, "Success");
 }
 
 if (app.Environment.IsDevelopment())
@@ -203,7 +235,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapFallbackToFile("index.html");
 });
 
-var logger = LogManager.GetLogger("Main");
 
 try
 {

@@ -14,7 +14,7 @@ namespace MSC.Server.Controllers;
 /// 数据相关接口
 /// </summary>
 [ApiController]
-[RequireSignedIn]
+// [RequireSignedIn]
 [Route("api/[controller]/[action]")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(RequestResponse), StatusCodes.Status401Unauthorized)]
@@ -64,7 +64,7 @@ public class InfoController : ControllerBase
         foreach (var r in result.Rank.Take(10))
         {
             if(r.User is not null && r.User.EmailConfirmed)
-                result.TopDetail.Add(new ScoreBoardTimeLine()
+                result.TopDetail.Add(new()
                 {
                     UserName = r.UserName,
                     TimeLine = submissionRepository.GetTimeLine(r.User, token)
